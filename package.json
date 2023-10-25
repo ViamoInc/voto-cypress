@@ -1,0 +1,22 @@
+{
+  "name": "voto5-cypress-testing",
+  "version": "1.0.0",
+  "description": "Voto5 cypress automation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/voto/voto5-cypress-testing.git"
+  },
+  "author": "VOTO",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://bitbucket.org/voto/voto5-cypress-testing/issues"
+  },
+  "homepage": "https://bitbucket.org/voto/voto5-cypress-testing#readme",
+  "devDependencies": {
+    "cypress": "^10.7.0"
+  }
+}
