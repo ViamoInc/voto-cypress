@@ -5,6 +5,8 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
-    specPattern: "cypress/e2e/**/*.{js,jsx,ts,tsx,feature}"
+    specPattern: "cypress/e2e/**/*.{js,jsx,ts,tsx,feature}",
+    excludeSpecPattern: "cypress/e2e/other/*.js",
+    baseUrl: "https://darkmatter.votomobile.org"
   },
 });

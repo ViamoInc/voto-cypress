@@ -1,4 +1,5 @@
 // ***********************************************
+
 // This example commands.js shows you how to
 // create various custom commands and overwrite
 // existing commands.
@@ -20,6 +21,21 @@
 // -- This is a dual command --
 // Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
 //
-//
+Cypress.Commands.add('loginToVoto', () => {
+    
+    const defaultlogin ={
+        email:'qa@viamo.io',
+        password:'automation@vqa'
+    }
+      cy.get('[name="email"]').type(defaultlogin.email)
+      cy.get('[name="password"]').type(defaultlogin.password)
+      cy.get('[type="submit"]').click()
+})
+
+Cypress.Commands.add('logoutOfVoto', () => {
+    
+    cy.get('[data-key="account-settings"]').click()
+    cy.contains('a','Logout').click()
+})
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
