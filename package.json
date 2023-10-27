@@ -4,7 +4,8 @@
   "description": "Voto5 cypress automation",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cy_open": "node_modules/.bin/cypress open"
   },
   "repository": {
     "type": "git",
