@@ -1,3 +1,5 @@
+import SubscriberPage_Object from "../../support/Page_Objects/smoke-testObjects/subscriber_Object";
+
 ///<reference types="cypress" />
 
 
@@ -13,23 +15,18 @@ describe('contact', () => {
         cy.loginToVoto();
         
       });
-
+      const subscriber_object = new SubscriberPage_Object();
+    
     it('should create contact', () => {
-        cy.get('[data-key="campaign-subscribers"]').click()
-        cy.get('[rel="subscribers"]').click()
+
+        subscriber_object.visitSubscriberPage();
+
         //create a contact
-        cy.contains('a','New Contact').click()
-        cy.get('[name="phone"]').type(data.phone_number)
-        cy.get('[type="text"]').first().type(data.name)
-        cy.get('[type="text"]').eq(1).type(data.location)
+        subscriber_object.createSubscriber(data.phone_number,data.name,data.location,data.language,data.channel);
 
-        cy.get('[name="preferred_language"]').select(data.language)
-        cy.get('[name="preferred_content_type"]').select(data.channel)
         //save contact 
-        cy.contains('button','Add Contacts').click()
-        cy.wait(1000)
+        subscriber_object.saveSubscriber();
         //logout
-
         cy.logoutOfVoto();
     });
 

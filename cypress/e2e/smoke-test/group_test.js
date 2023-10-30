@@ -1,3 +1,5 @@
+import GroupPage_Objects from  "../../support/Page_Objects/smoke-testObjects/group_Objects";
+
 ///<reference types="cypress" />
 
 describe('contact', () => {
@@ -12,26 +14,19 @@ describe('contact', () => {
         cy.loginToVoto();
         
       });
+      const group_objects = new GroupPage_Objects();
       it('should create group & add contact', () => {
         const currentDate = new Date();
         const Configs = {
             timestamp: currentDate.getTime()
            }
         // creating group 
-        
-        cy.get('[data-key="campaign-subscribers"]').click()
-        cy.get('[rel="groups"]').click()
-        cy.contains('a','New Group').click()
-        cy.get('#name').type(data.name + Configs.timestamp)
-        cy.get('[id="description"]').type(data.description +' created @ ' + Configs.timestamp)
-        cy.wait(800)
-        cy.contains('a','Choose Contacts...').click()
-        cy.wait(800)
-        cy.get('[name="js-filter-by-name"]').type(data.contact_name)
-        cy.get('[class="js-open-subscriber-name"]').first().click()
-        cy.contains('button','Save Selection').click()
-        cy.contains('button','Add group').click()
-        cy.wait(1000)
+        group_objects.visitGroupPage();
+        group_objects.createGroup(data.name + Configs.timestamp,data.description +' created @ ' + Configs.timestamp);
+       //add subscriber to group
+        group_objects.addSubscriberToGroup(data.contact_name);
+      // save the group
+        group_objects.saveGroup();
         //logout
         cy.logoutOfVoto();
 
