@@ -9,7 +9,7 @@ module.exports = defineConfig({
     },
     specPattern: "cypress/e2e/**/*.{js,jsx,ts,tsx,feature}",
     excludeSpecPattern: "cypress/e2e/other/*.js",
-    baseUrl: "https://darkmatter.votomobile.org",
+    supportFile: 'cypress/support/commands.js'
     //reporter: 'mochawesome',
     
   },

@@ -11,7 +11,7 @@ describe('contact', () => {
         
       });
     beforeEach(() => {
-        cy.visit("/")
+       // cy.visit("/")
         cy.loginToVoto();
         
       });

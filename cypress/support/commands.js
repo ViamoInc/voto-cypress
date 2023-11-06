@@ -20,13 +20,22 @@
 //
 // -- This is a dual command --
 // Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
+
+
+// env configuration 
+
+// end of configuration
 Cypress.Commands.add('loginToVoto', () => {
+
+   // require('dotenv').config();
     
     const defaultlogin ={
-        email:'qa@viamo.io',
-        password:'automation@vqa'
+        email:Cypress.env('email'),
+        password:Cypress.env('password'),
+        BaseUrl:Cypress.env('baseUrl')
     }
+  
+      cy.visit(defaultlogin.BaseUrl)
       cy.get('[name="email"]').type(defaultlogin.email)
       cy.get('[name="password"]').type(defaultlogin.password)
       cy.get('[type="submit"]').click()
