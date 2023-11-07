@@ -7,7 +7,9 @@
 node_modules/
 dist/
 cypress.env.json
-cypress/reports/html/
+cypress/reports/
+cypress/videos/
+cypress/screenshots/
 # Compiled Java class files
 *.class
 
