@@ -6,7 +6,10 @@
 # Node artifact files
 node_modules/
 dist/
-
+cypress.env.json
+cypress/reports/
+cypress/videos/
+cypress/screenshots/
 # Compiled Java class files
 *.class
 

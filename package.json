@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cy_open": "node_modules/.bin/cypress open"
+    "cy_open": "node_modules/.bin/cypress open",
+    "triggerAll-Smoke-tests": "npx cypress run --spec ./cypress/e2e/smoke-test/*.js",
+    "triggerAll-Regression-tests": "npx cypress run --spec ./cypress/e2e/regression-test/*.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +20,9 @@
   },
   "homepage": "https://bitbucket.org/voto/voto5-cypress-testing#readme",
   "devDependencies": {
-    "cypress": "^10.7.0"
+    "cypress": "^10.7.0",
+    "cypress-mochawesome-reporter": "^3.6.1",
+    "dotenv": "^16.3.1",
+    "install": "^0.13.0"
   }
 }

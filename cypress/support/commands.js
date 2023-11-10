@@ -1,4 +1,5 @@
 // ***********************************************
+
 // This example commands.js shows you how to
 // create various custom commands and overwrite
 // existing commands.
@@ -19,7 +20,31 @@
 //
 // -- This is a dual command --
 // Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
+
+
+// env configuration 
+
+// end of configuration
+Cypress.Commands.add('loginToVoto', () => {
+
+   // require('dotenv').config();
+    
+    const defaultlogin ={
+        email:Cypress.env('email'),
+        password:Cypress.env('password'),
+        BaseUrl:Cypress.env('baseUrl')
+    }
+  
+      cy.visit(defaultlogin.BaseUrl)
+      cy.get('[name="email"]').type(defaultlogin.email)
+      cy.get('[name="password"]').type(defaultlogin.password)
+      cy.get('[type="submit"]').click()
+})
+
+Cypress.Commands.add('logoutOfVoto', () => {
+    
+    cy.get('[data-key="account-settings"]').click()
+    cy.contains('a','Logout').click()
+})
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
