@@ -39,6 +39,8 @@ After cloning the repository
     - Clone the repository.
     - Install dependencies with 'npm install'.
     - Run Cypress with 'npm test'.
+    - Use this script to run all the tests under smoke_test with report "triggerAll-Smoke-tests"
+    - Use this script to run all the tests under regression_test with report "triggerAll-Regression-tests"
 ### Test Data
 - Update test data in the 'fixtures/' folder to match your testing scenarios.
 ### Environment Configuration
