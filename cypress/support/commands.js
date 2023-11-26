@@ -46,5 +46,6 @@ Cypress.Commands.add('logoutOfVoto', () => {
     cy.get('[data-key="account-settings"]').click()
     cy.contains('a','Logout').click()
 })
+
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })

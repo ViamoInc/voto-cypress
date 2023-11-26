@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "cy_open": "node_modules/.bin/cypress open",
-    "triggerAll-Smoke-tests": "npx cypress run --spec ./cypress/e2e/smoke-test/*.js",
-    "triggerAll-Regression-tests": "npx cypress run --spec ./cypress/e2e/regression-test/*.js"
+    "triggerAll-Smoke-tests": "npx cypress run --spec ./cypress/e2e/smoke_test/*.js",
+    "triggerAll-Regression-tests": "npx cypress run --spec ./cypress/e2e/regression_test/*.js"
   },
   "repository": {
     "type": "git",

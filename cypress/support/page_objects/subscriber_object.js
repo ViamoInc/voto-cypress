@@ -13,7 +13,7 @@ class SubscriberPage_Object{
         cy.get('[name="preferred_language"]').select(language)
         cy.get('[name="preferred_content_type"]').select(channel)
     }
-
+    
     saveSubscriber(){
         cy.contains('button','Add Contacts').click()
     }
