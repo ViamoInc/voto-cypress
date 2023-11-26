@@ -15,6 +15,7 @@ class GroupPage_Objects{
         cy.get('[name="js-filter-by-name"]').type(contact_name)
         cy.get('[class="js-open-subscriber-name"]').eq(0).click()
     }
+  
 
     saveGroup(){
         cy.contains('button','Save Selection').click()
