@@ -1,0 +1,10 @@
+{
+    "label": "Cypress Message",
+    "afterEditPostFix": "Edit_Cypress MSG",
+    "resourceIVR": "02_flowers_for_albert.mp3",
+    "resourceSMS": "This is an SMS content for cypress test",
+    "resourceUSSD": "This is a USSD content for cypress test",
+    "exits_name": "Cy_Exit",
+    "exit_expression": "@block.value = 'banana'",
+    "tag_name":"my tag 1"
+}  

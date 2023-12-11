@@ -1,0 +1,10 @@
+{
+    "beforeEdit": "my_block",
+    "afterEditPostFix":"_updated",
+    "resourceIVR":"ThankYouHaveANiceDay.wav",
+    "resourceSMS":"How old are you SMS",
+    "resourceUSSD":"How old are you USSD",
+    "minimum":"13",
+    "maximum":"950",
+    "maxiDigit":"4"
+}

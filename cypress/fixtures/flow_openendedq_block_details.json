@@ -1,0 +1,10 @@
+{
+    "beforeEdit":"Open_my_block",
+    "afterEditPostFix":"_updatedOpen",
+    "resourceIVR":"ThankYouHaveANiceDay.wav",
+    "resourceSMS":"NAME for sms",
+    "resourceUSSD":"What is your name USSD",
+    "maxDuration":"15",
+    "endRecordingKey":"3"
+
+}
