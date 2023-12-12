@@ -128,6 +128,11 @@ class FlowBlock_Objects{
       cy.get('@digitSelector').contains('.multiselect__option', endRecordingKey).click()
     }
 
+    editFlowCreate(){
+        cy.EditFlow_tree()
+    }
+
+
 }
 
 export default FlowBlock_Objects;

@@ -51,28 +51,27 @@ Cypress.Commands.add('logoutOfVoto', () => {
 //creating a flow >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
-
-Cypress.Commands.add('createFlow', (label, languages = ['English'], Channels = ['IVR', 'SMS', 'USSD']) => {
+Cypress.Commands.add('createFlow', ({label, languages = ['English'], Channels = ['IVR', 'SMS', 'USSD']}) => {
     
     //cy.get('#app').should('exist')
     cy.get('[data-key="campaign-content"]').click()
     cy.get('[rel="trees"]').click()
 
-    cy.get('(//a[contains(text(), "New Flow")])[1]').click()
-  
+   // cy.get('(//a[contains(text(), "New Flow")])[1]').click()
+   cy.get('[href="/flows/new"]').click()
   
     cy.get('[data-cy="flow-label--editor"]')
       .find('textarea')
       .type(label)
   
-  
+
     for (const language of languages) {
       cy.get('[data-cy="languages--selector"]').click()
       cy.contains('.multiselect__option', language).click()
     }
   
     for (const channel of Channels) {
-        cy.get('[data-cy="languages--selector"]').click()
+        cy.get('[data-cy="modes--selector"]').click()
         cy.contains('.multiselect__option', channel).click()
       }
     cy.get('[data-cy="create--btn"]').click()
@@ -94,6 +93,50 @@ Cypress.Commands.add('createFlow', (label, languages = ['English'], Channels = [
     }
   });
   
+//>>>>>>>Save flow 
+Cypress.Commands.add('save', () => {
+    cy.get('[data-cy="save--btn"]')
+      .as('saveBtn')
+      .should('not.have.attr', 'disabled')
+  
+    cy.get('@saveBtn').click({
+      // May be covered with a toast
+      force: true,
+    })
+  })
+
+  //>>>>>>> Drag and drop blocks 
+
+  Cypress.Commands.add('dragAndDropTo', {prevSubject: 'element'}, (subject, targetSelectorOrAlias) => {
+    cy.wrap(subject).scrollIntoView()
+    cy.wrap(subject).should('be.visible')
+    cy.get(targetSelectorOrAlias).should('be.visible')
+  
+    cy.wrap(subject)
+      .realHover()
+      .realMouseDown()
+  
+    cy.get(targetSelectorOrAlias)
+      .realMouseMove(0, 0, {position: 'center'})
+      .realMouseUp({position: 'center'})
+  })
+
+  //>>>>>>> Edit flow 
+  Cypress.Commands.add('EditFlow_tree', () => {
+    cy.get("(//a[@aria-label='Edit draft'])[1]")
+      .as('editBtn')
+  
+    cy.get('@editBtn').click({
+      // May be covered with a toast
+      force: true,
+    })
+  })
+
+  //>>>>>>>>>Delete flow/tree created 
+  Cypress.Commands.add('DeleteFlow_tree', () => {
+    cy.get("(//a[contains(.,('More'))])[1]").click()
+    cy.get("(//a[contains(.,('Delete Flow'))])[1]").click()
+  })
 
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })

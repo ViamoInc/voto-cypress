@@ -4,29 +4,39 @@ import FlowBlock_Objects from  "../../support/page_objects/flow_block_objects";
 
 
 describe('mutate flow state for CONTENT blocks', () => {
-    let messageData, numericData, openendedData;
+    let message, numeric,openended;
     before(() => {
         cy.loginToVoto();
         cy.createFlow({
         label: 'flow block test',
       })
 // Initialize data using fixture loading
-cy.fixture('flow_message_block_details').then(data => { messageData = data; });
-cy.fixture('flow_numeric_block_details').then(data => { numericData = data; });
-cy.fixture('flow_openendedq_block_details').then(data => { openendedData = data; });
+cy.fixture('flow_message_block_details').then((data)=> { message = data; }) ;
+cy.fixture('flow_numeric_block_details').then(data => { numeric = data; });
+cy.fixture('flow_openendedq_block_details').then(data => { openended = data; });
    });
    const flow = new FlowBlock_Objects()
 
-    it('Should add & configure Message Block', (messageData) => {
+    it('Should add & configure Message Block', () => {
         cy.addBlock(['Message'])
-        flow.addMessageConfig(messageData.label, messageData.afterEditPostFix, messageData.resourceIVR,messageData.resourceSMS, messageData.resourceUSSD);
-        flow.advancedMessageConfig(messageData.exits_name, messageData.exit_expression, messageData.tag_name);
+        
+       flow.addMessageConfig(message.label,message.afterEditPostFix, message.resourceIVR,message.resourceSMS,message.resourceUSSD);
+        flow.advancedMessageConfig(message.exits_name, message.exit_expression, message.tag_name);
     });
 
-    it('Should add & configure Numeric Block', (numericData) => {
+    it('Should add & configure Numeric Block', () => {
         cy.addBlock(['Numeric Question'])
-        flow.addNumericConfig(numericData.beforeEdit, numericData.afterEditPostFix, numericData.resourceIVR, numericData.resourceSMS, numericData.resourceUSSD)
-        flow.advancedNumericConfig(numericData.minimum, numericData.maximum, numericData.maxiDigit)
-    })
+        flow.addNumericConfig(numeric.beforeEdit, numeric.afterEditPostFix, numeric.resourceIVR, numeric.resourceSMS, numeric.resourceUSSD)
+        flow.advancedNumericConfig(numeric.minimum, numeric.maximum, numeric.maxiDigit)
+    });
+
+    it('Should add & configure Open-Ended Question', () => {
+        cy.addBlock(['Open-Ended Question'])
+        flow.addResponseBlockConfig(openended.beforeEdit,openended.afterEditPostFix,openended.resourceIVR,openended.resourceSMS, openended.resourceUSSD)
+        flow.advancedResponseBlockConfig(openended.maxDuration, openended.endRecordingKey)
+        cy.wait(50);
+        cy.save();
+    });
+
 
 })
