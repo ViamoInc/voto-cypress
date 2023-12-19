@@ -9,6 +9,8 @@ class FlowBlock_Objects{
         //Edit block label 
         cy.get('[data-cy="name-editor--edit-btn"]').click()
         cy.get('[data-cy="name-editor--input"]')
+          .find('textarea')
+          .clear()
           .type(afterEditPostFix)
         cy.get('[data-cy="name-editor--save-btn"]').click()
             // ####### Resource UIs
@@ -58,6 +60,8 @@ class FlowBlock_Objects{
 
         cy.get('[data-cy="name-editor--edit-btn"]').click()
         cy.get('[data-cy="name-editor--input"]')
+        .find('textarea')
+        .clear()
           .type(afterEditPostFix)
         cy.get('[data-cy="name-editor--save-btn"]').click()
 
@@ -102,6 +106,8 @@ class FlowBlock_Objects{
   
         cy.get('[data-cy="name-editor--edit-btn"]').click()
         cy.get('[data-cy="name-editor--input"]')
+        .find('textarea')
+        .clear()
           .type(afterEditPostFix)
         cy.get('[data-cy="name-editor--save-btn"]').click()
               // ####### Resource UIs
@@ -132,6 +138,9 @@ class FlowBlock_Objects{
         cy.EditFlow_tree()
     }
 
+    flowAssertion(){
+      cy.get('body').contains('Cypress flow block test').should('exist');
+    }
 
 }
 

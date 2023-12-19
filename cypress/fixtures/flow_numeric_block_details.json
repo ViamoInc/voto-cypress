@@ -1,6 +1,6 @@
 {
     "beforeEdit": "my_block",
-    "afterEditPostFix":"_updated",
+    "afterEditPostFix":"updated",
     "resourceIVR":"Recorded by (233548227720)",
     "resourceSMS":"How old are you SMS",
     "resourceUSSD":"How old are you USSD",

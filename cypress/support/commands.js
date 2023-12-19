@@ -48,7 +48,7 @@ Cypress.Commands.add('logoutOfVoto', () => {
     cy.contains('a','Logout').click()
 })
 
-//creating a flow >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//creating a flow >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
 Cypress.Commands.add('createFlow', ({label, languages = ['English'], Channels = ['IVR', 'SMS', 'USSD']}) => {
@@ -122,21 +122,42 @@ Cypress.Commands.add('save', () => {
   })
 
   //>>>>>>> Edit flow 
+
   Cypress.Commands.add('EditFlow_tree', () => {
-    cy.get("(//a[@aria-label='Edit draft'])[1]")
-      .as('editBtn')
-  
-    cy.get('@editBtn').click({
-      // May be covered with a toast
-      force: true,
-    })
+    cy.get('[href="/trees"]').click()
+  /*  if (cy.get('body').contains(/Create an account/i)) {
+      cy.log('Found "Create an account" text. Logging in...');
+      const defaultlogin = {
+        email: Cypress.env('email'),
+        password: Cypress.env('password'),
+      };
+
+      cy.get('[name="email"]').type(defaultlogin.email);
+      cy.get('[name="password"]').type(defaultlogin.password);
+      cy.get('[type="submit"]').click();
+    }else {
+      cy.log('Did not find "Create an account" text. Skipping login.');
+    }
+*/
+    
+    cy.get('[data-icon="edit"]').first().click();
+
   })
 
   //>>>>>>>>>Delete flow/tree created 
-  Cypress.Commands.add('DeleteFlow_tree', () => {
-    cy.get("(//a[contains(.,('More'))])[1]").click()
-    cy.get("(//a[contains(.,('Delete Flow'))])[1]").click()
+  Cypress.Commands.add('DeleteFlow', () => {
+    cy.contains('a','More').first().click()
+    cy.contains('a','Delete Flow').first().click()
+    cy.wait(150)
+    cy.contains('button','Delete').click()
   })
+//>>>>>>>>>>>>>>>>>>>>Publish Flow \
+
+Cypress.Commands.add('PublishFlow', () => {
+  cy.contains('a','Publish').click()
+  cy.wait(100)
+  cy.contains('button','Publish').click()
+})
 
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })

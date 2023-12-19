@@ -1,6 +1,6 @@
 {
     "label": "Cypress Message",
-    "afterEditPostFix": "Edit_Cypress MSG",
+    "afterEditPostFix": "EditCypressMSG",
     "resourceIVR": "Recorded by (233548227720)",
     "resourceSMS": "This is an SMS content for cypress test",
     "resourceUSSD": "This is a USSD content for cypress test",
