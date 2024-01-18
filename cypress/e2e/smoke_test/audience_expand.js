@@ -21,14 +21,15 @@ describe('group', () => {
             timestamp: currentDate.getTime()
            }
         // creating group  using the imported group objects
+        cy.switchOrgToPlatformOrg();
         group.visitGroupPage();
-        group.createGroup(data.name + Configs.timestamp,data.description +' created @ ' + Configs.timestamp);
-   
-        //Insert Select audience targeting here,    
+        group.editGroup();
+        group.expandGroup();
         group.selectAudienceTargeting();
-
         group.expandAudienceTargeting();
-        //logout
+        group.editGroup();
+        group.shrinkGroup();
+        group.selectAudienceTargeting();
         cy.logoutOfVoto();
 
     });

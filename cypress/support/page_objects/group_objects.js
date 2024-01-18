@@ -9,7 +9,22 @@ class GroupPage_Objects{
         cy.get('#name').type(name)
         cy.get('[id="description"]').type(description)
     }
-
+    editGroup(name, description){
+        cy.get('a[aria-label="Edit"]:first').click();
+    }
+    populateGroup(audienceTargetingName,description){
+        cy.contains('a','New Group').click()
+        cy.get('#name').type(audienceTargetingName)
+        cy.get('[id="description"]').type(description)
+    }    
+    expandGroup(){
+        cy.contains('label.form-check-label', 'Add more contacts').find('input[type="radio"]').check();
+        cy.contains('label.form-check-label', 'Add more contacts').find('input[type="radio"]').should('be.checked');
+    }
+    shrinkGroup(){
+        cy.contains('label.form-check-label', 'Remove some contacts').find('input[type="radio"]').check();
+        cy.contains('label.form-check-label', 'Remove some contacts').find('input[type="radio"]').should('be.checked');
+    }
     addSubscriberToGroup(contact_name){
         cy.contains('a','Choose Contacts...').click()
         cy.get('[name="js-filter-by-name"]').type(contact_name)

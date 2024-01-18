@@ -25,6 +25,10 @@
 // env configuration 
 
 // end of configuration
+Cypress.Commands.add('searchAndSubmit', (searchText) => {
+    cy.get('input[type="text"]').type(searchText).type('{enter}');
+  });
+
 Cypress.Commands.add('loginToVoto', () => {
 
    // require('dotenv').config();
@@ -32,7 +36,8 @@ Cypress.Commands.add('loginToVoto', () => {
     const defaultlogin ={
         email:Cypress.env('email'),
         password:Cypress.env('password'),
-        BaseUrl:Cypress.env('baseUrl')
+        BaseUrl:Cypress.env('baseUrl'),
+        platformOrg:Cypress.env('platformOrgName')
     }
   
       cy.visit(defaultlogin.BaseUrl)
@@ -47,5 +52,12 @@ Cypress.Commands.add('logoutOfVoto', () => {
     cy.contains('a','Logout').click()
 })
 
+Cypress.Commands.add('switchOrgToPlatformOrg',()=>{
+
+    cy.get('.menu-label').contains('Account').click();
+    cy.get('.multiselect__placeholder').contains('Switch Organization').click();
+    cy.searchAndSubmit('HNI 321 Uganda');
+
+})
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
