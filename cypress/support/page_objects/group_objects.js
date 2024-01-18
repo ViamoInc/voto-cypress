@@ -16,7 +16,17 @@ class GroupPage_Objects{
         cy.get('[class="js-open-subscriber-name"]').eq(0).click()
     }
   
+    selectAudienceTargeting(){
+        cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').check();
+        cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').should('be.checked');
+      
+    }
+    expandAudienceTargeting(){
+        cy.get('#date-picker-input-91').click();
+        cy.contains('li', 'Last 7 Days').click();
+        cy.get('[data-test="submit-button"]').click();
 
+    }
     saveGroup(){
         cy.contains('button','Save Selection').click()
         cy.contains('button','Add group').click()
