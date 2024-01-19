@@ -15,7 +15,7 @@ describe('group', () => {
       });
       // declaring a constant to hold the group class that contains objects.
       const group = new GroupPage_Objects();
-      it('should create group & add contact', () => {
+      it('should expand group via criteria', () => {
         const currentDate = new Date();
         const Configs = {
             timestamp: currentDate.getTime()
@@ -23,13 +23,11 @@ describe('group', () => {
         // creating group  using the imported group objects
         cy.switchOrgToPlatformOrg();
         group.visitGroupPage();
+        group.populateGroup();
         group.editGroup();
         group.expandGroup();
         group.selectAudienceTargeting();
         group.expandAudienceTargeting();
-        group.editGroup();
-        group.shrinkGroup();
-        group.selectAudienceTargeting();
         cy.logoutOfVoto();
 
     });

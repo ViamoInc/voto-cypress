@@ -12,10 +12,18 @@ class GroupPage_Objects{
     editGroup(name, description){
         cy.get('a[aria-label="Edit"]:first').click();
     }
-    populateGroup(audienceTargetingName,description){
+    populateGroup(name,description){
         cy.contains('a','New Group').click()
-        cy.get('#name').type(audienceTargetingName)
+        cy.get('#name').type(name)
         cy.get('[id="description"]').type(description)
+        cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').check();
+        cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').should('be.checked');
+        cy.contains('h3.title', 'Demographics').click();
+        cy.get('button#gender').click();
+        cy.get('input#gender-female').uncheck();
+
+        cy.get('[data-test="submit-button"]').click();
+
     }    
     expandGroup(){
         cy.contains('label.form-check-label', 'Add more contacts').find('input[type="radio"]').check();

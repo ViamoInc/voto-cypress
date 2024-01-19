@@ -37,7 +37,7 @@ Cypress.Commands.add('loginToVoto', () => {
         email:Cypress.env('email'),
         password:Cypress.env('password'),
         BaseUrl:Cypress.env('baseUrl'),
-        platformOrg:Cypress.env('platformOrgName')
+        OrgName:Cypress.env('OrgName')
     }
   
       cy.visit(defaultlogin.BaseUrl)
@@ -52,12 +52,12 @@ Cypress.Commands.add('logoutOfVoto', () => {
     cy.contains('a','Logout').click()
 })
 
-Cypress.Commands.add('switchOrgToPlatformOrg',()=>{
+Cypress.Commands.add('switchOrg', () => {
+    const switchOrgName = Cypress.env('OrgName');
 
     cy.get('.menu-label').contains('Account').click();
     cy.get('.multiselect__placeholder').contains('Switch Organization').click();
-    cy.searchAndSubmit('HNI 321 Uganda');
-
-})
+    cy.searchAndSubmit(switchOrgName);  
+});
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
