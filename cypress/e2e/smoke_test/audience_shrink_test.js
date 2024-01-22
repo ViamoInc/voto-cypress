@@ -26,7 +26,6 @@ describe('group', () => {
         group.populateGroup(data.name + Configs.timestamp,data.description +' created @ ' + Configs.timestamp);
         group.editGroup();
         group.shrinkGroup();
-        group.selectAudienceTargeting();
         cy.logoutOfVoto();
 
     });
