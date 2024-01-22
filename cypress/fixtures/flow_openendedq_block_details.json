@@ -1,0 +1,10 @@
+{
+    "beforeEdit":"Open_my_block",
+    "afterEditPostFix":"updatedOpen",
+    "resourceIVR":"Recorded by (233548227720)",
+    "resourceSMS":"NAME for sms",
+    "resourceUSSD":"What is your name USSD",
+    "maxDuration":"60",
+    "endRecordingKey":"3"
+
+}
