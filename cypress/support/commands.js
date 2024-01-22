@@ -41,6 +41,15 @@ Cypress.Commands.add('loginToVoto', () => {
       cy.get('[type="submit"]').click()
 })
 
+Cypress.Commands.add('switchOrg', (orgName) => {
+
+    cy.get('[data-key="account-settings"]').click()
+    cy.get('div.multiselect__select').click()
+    cy.get('input[placeholder="Switch Organization"]').type(orgName)
+    cy.contains('li', orgName).click()
+    cy.contains('.footer', orgName).should('be.visible')
+})
+
 Cypress.Commands.add('logoutOfVoto', () => {
     
     cy.get('[data-key="account-settings"]').click()

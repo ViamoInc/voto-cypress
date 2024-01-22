@@ -14,11 +14,16 @@ class GroupPage_Objects{
         cy.contains('a','Choose Contacts...').click()
         cy.get('[name="js-filter-by-name"]').type(contact_name)
         cy.get('[class="js-open-subscriber-name"]').eq(0).click()
+        cy.contains('button','Save Selection').click()
     }
   
+    addSubscribersToGroupUsingAudienceTarget(){
+        cy.get('input[type="radio"][value="criteria_based"]').click()
+        cy.contains('Select Criteria(s)').should('be.visible')
+        cy.get('.total-contacts-number').should('be.visible')
+    }
 
     saveGroup(){
-        cy.contains('button','Save Selection').click()
         cy.contains('button','Add group').click()
     }
 

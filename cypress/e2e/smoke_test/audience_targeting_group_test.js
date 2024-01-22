@@ -2,9 +2,9 @@ import GroupPage_Objects from  "../../support/page_objects/group_objects";
 
 ///<reference types="cypress" />
 
-describe('group', () => {
+describe('audience targeting group', () => {
     before(function(){
-        cy.fixture('group_details').then(function(data){
+        cy.fixture('audience_targeting_group_details').then(function(data){
             globalThis.data = data; 
         })  
         
@@ -12,11 +12,12 @@ describe('group', () => {
     beforeEach(() => {
        // cy.visit("/")
         cy.loginToVoto();
-                
+        cy.switchOrg(data.audienceTargetGroup)
+        
       });
       // declaring a constant to hold the group class that contains objects.
       const group = new GroupPage_Objects();
-      it('should create group & add contact', () => {
+      it('should create group & add contact using audience targeting', () => {
         const currentDate = new Date();
         const Configs = {
             timestamp: currentDate.getTime()
@@ -25,7 +26,7 @@ describe('group', () => {
         group.visitGroupPage();
         group.createGroup(data.name + Configs.timestamp,data.description +' created @ ' + Configs.timestamp);
        //add subscriber to group
-        group.addSubscriberToGroup(data.contact_name);
+        group.addSubscribersToGroupUsingAudienceTarget();
       // save the group
         group.saveGroup();
         //logout
