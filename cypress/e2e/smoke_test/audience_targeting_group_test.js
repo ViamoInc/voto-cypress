@@ -12,7 +12,7 @@ describe('audience targeting group', () => {
     beforeEach(() => {
        // cy.visit("/")
         cy.loginToVoto();
-        cy.switchOrg(data.audienceTargetGroup)
+        cy.switchOrg(data.audienceTargetingOrg)
         
       });
       // declaring a constant to hold the group class that contains objects.
