@@ -6,8 +6,8 @@ class GroupPage_Objects{
 
     createGroup(name,description){
         cy.contains('a','New Group').click()
-        cy.get('#name').type(name)
-        cy.get('[id="description"]').type(description)
+        cy.get('#name').type(name).should('have.value', name)
+        cy.get('[id="description"]').type(description).should('have.value', description)
     }
     editGroup(name, description){
         cy.get('a[aria-label="Edit"]:first').click();
@@ -44,24 +44,20 @@ class GroupPage_Objects{
         cy.contains('a','Choose Contacts...').click()
         cy.get('[name="js-filter-by-name"]').type(contact_name)
         cy.get('[class="js-open-subscriber-name"]').eq(0).click()
+        cy.contains('button','Save Selection').click()
     }
   
-    selectAudienceTargeting(){
-        cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').check();
-        cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').should('be.checked');
-      
+    addSubscribersToGroupUsingAudienceTarget(){
+        cy.get('input[type="radio"][value="criteria_based"]').click()
+        cy.wait(2000)
+        cy.contains('h4','Select Criteria').should('be.visible')
     }
-    expandAudienceTargeting(){
-        cy.get('#date-picker-input-91').click();
-        cy.contains('li', 'Last 7 Days').click();
-        cy.get('[data-test="submit-button"]').click();
 
-    }
     saveGroup(){
-        cy.contains('button','Save Selection').click()
+        cy.get('.total-contacts-number').should('be.visible')
         cy.contains('button','Add group').click()
+        cy.get('.alert-success').should('be.visible')
     }
-
 
 }
 export default GroupPage_Objects;
