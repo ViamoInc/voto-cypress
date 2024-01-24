@@ -1,0 +1,10 @@
+{
+    "beforeEdit": "my_block",
+    "afterEditPostFix":"updated",
+    "resourceIVR":"Recorded by (233548227720)",
+    "resourceSMS":"How old are you SMS",
+    "resourceUSSD":"How old are you USSD",
+    "minimum":"10",
+    "maximum":"1500",
+    "maxiDigit":"4"
+}
