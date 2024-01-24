@@ -22,15 +22,19 @@ describe('audience targeting group', () => {
         const Configs = {
             timestamp: currentDate.getTime()
            }
+
+        const groupName = data.name + Configs.timestamp
+        const description = data.description +' created @ ' + Configs.timestamp
+        
         // creating group  using the imported group objects
         group.visitGroupPage();
-        group.createGroup(data.name + Configs.timestamp,data.description +' created @ ' + Configs.timestamp);
+        group.createGroup(groupName, description)
        //add subscriber to group
-        group.addSubscribersToGroupUsingAudienceTarget();
+        group.addSubscribersToGroupUsingAudienceTarget()
       // save the group
-        group.saveGroup();
+        group.saveGroup()
         //logout
-        cy.logoutOfVoto();
+        cy.logoutOfVoto()
 
     });
 
