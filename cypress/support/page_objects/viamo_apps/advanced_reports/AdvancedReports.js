@@ -1,47 +1,76 @@
 class AdvancedReports {
+  constructor(reportName) {
+    this.reportName = reportName;
+  }
 
-    constructor(reportName) {
-        this.reportName = reportName;
+  visitInteractionReportPage() {
+    cy.get(":nth-child(4) > .via-button > .tw-flex").click();
+    cy.get(".tw-pb-0 > .via-link").click();
+    this.validatePageTitleIsReport();
+  }
+
+  validatePageTitleIsReport() {
+    cy.get(".text-uppercase").should("have.text", "Reports"); // It's in caps on the UI: CSS conversion
+  }
+
+  clickNewReportBtn(btn = "button", btnName = "New Report") {
+    cy.contains(btn, btnName).click();
+  }
+
+  enterReportName(name, saveName = true) {
+    cy.get(".no-room-below > input").click();
+    cy.get(".no-room-below > input").type(name).should("have.value", name);
+
+    if (saveName) {
+      cy.get("form > .sm-room-above > .btn-primary").click();
+    } else {
+      cy.get(".sm-room-above > .btn-secondary").click();
     }
+  }
 
-    // TODO:: Add assertions 
-    // 01. We are on the page 
-    //     page browser titles
-    //     page titles e.g. Reports
+  /**
+   * Report Configuration
+   */
+  openReportConfig() {
+    cy.get(".flight-monitor > .btn-primary").click();
+  }
 
-    visitInteractionReportPage(){
-        cy.get(':nth-child(4) > .via-button > .tw-flex').click()
-        cy.get('.tw-pb-0 > .via-link').click()
-        this.validatePageTitleIsReport()
+  saveReportConfig(saveConfig = true) {
+    if (saveConfig) {
+      cy.get(".text-right > .btn-primary").click();
+    } else {
+      cy.get(".btn-link").click();
     }
+  }
 
-    validatePageTitleIsReport(){
-        cy.get('.text-uppercase').should('have.text', 'Reports') // It's in caps on the UI: CSS conversion
+  closeReportConfig() {
+    cy.get(".via-sidebar__header > .close > span").click();
+  }
+
+  /**
+   * Column Data Selection
+   */
+  addTreeResults(selectAllBlocks = true, addBlockInteractions = true) {
+    if (selectAllBlocks) {
+      cy.get(".select-all > :nth-child(1)").click();
+      if (addBlockInteractions) {
+        cy.get(".modal-footer > .btn-primary").click();
+      } else {
+        cy.get(".btn-light").click();
+      }
+    } else {
+      cy.get(".select-all > :nth-child(2)").click();
     }
+  }
 
-    clickNewReportBtn(btn = "button", btnName = "New Report"){
-        cy.contains(btn, btnName).click()
-    }
+  /**
+   * Run/Refresh reports data
+   */
+  runReport(btn = "button", btnLabel = "Run") {
+    cy.contains(btn, btnLabel).click();
+  }
 
-    enterReportName(name, saveName=true){
-        cy.contains('button','Untitled report').click()
-        cy.get('input').type(name).should('have.value', name)
-
-        if(saveName){
-            cy.contains('button','Save').click()
-        }else{
-            cy.contains('button','Cancel').click()
-        }
-    }
-
-    openReportConfig(saveConfig=true){
-        
-        if(saveConfig){
-            cy.contains('button','Save').click()
-        }else{
-            cy.contains('button','Cancel').click()
-        }
-    }
+  //   TDOD:: validate reports data is loaded
 }
 
-export default AdvancedReports
+export default AdvancedReports;

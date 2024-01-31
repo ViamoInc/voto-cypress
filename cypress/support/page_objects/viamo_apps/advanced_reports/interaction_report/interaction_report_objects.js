@@ -6,11 +6,15 @@ class InteractionReport_Objects extends AdvancedReports {
         super(reportName)
     }
 
-    addFilters(columnType = "Tree Results", nameTree){
+    addFilters(nameTree, columnType = "Tree Results"){
+
+        // opens the 'Add filer' modal
+        cy.get('.content > .text-right > :nth-child(2)').click()
         
         if(columnType == "Tree Results"){
             cy.contains('a', columnType).click()
-            cy.get('input').type(nameTree).should('have.value', nameTree)
+            cy.get('.multiselect__tags').click()
+            cy.get('.multiselect__tags').type(`${nameTree} {enter}`)
         }
 
         if(columnType == "Tag Engagement"){

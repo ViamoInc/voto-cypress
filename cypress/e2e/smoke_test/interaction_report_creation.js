@@ -14,12 +14,18 @@ describe("Interaction Report", () => {
 
   const interactionReport = new InteractionReport_Objects();
 
-  it("should create a create a new interaction report", () => {
+  it("should add tree results to an interaction report", () => {
     interactionReport.visitInteractionReportPage();
     interactionReport.clickNewReportBtn();
     interactionReport.validatePageTitleIsReport();
-    interactionReport.enterReportName(data.enterReportName);
+    interactionReport.enterReportName("New Report Data");
+    interactionReport.openReportConfig();
+    interactionReport.addFilters("Advanced Report Data (for Automated Testing");
+    interactionReport.addTreeResults();
+    interactionReport.saveReportConfig();
+    interactionReport.closeReportConfig();
+    interactionReport.runReport();
 
-    cy.logoutOfVoto(); 
+    cy.logoutOfVoto();
   });
 });
