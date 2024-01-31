@@ -1,8 +1,4 @@
 class AdvancedReports {
-  constructor(reportName) {
-    this.reportName = reportName;
-  }
-
   visitInteractionReportPage() {
     cy.get(":nth-child(4) > .via-button > .tw-flex").click();
     cy.get(".tw-pb-0 > .via-link").click();
@@ -70,7 +66,7 @@ class AdvancedReports {
     cy.contains(btn, btnLabel).click();
   }
 
-  //   TDOD:: validate reports data is loaded
+  //   TODO:: validate reports data is loaded
 }
 
 export default AdvancedReports;
