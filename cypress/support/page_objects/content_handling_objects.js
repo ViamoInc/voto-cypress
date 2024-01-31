@@ -5,8 +5,8 @@ class ContentHandling_Objects{
     }
     createMessage(name){
         cy.contains('a','New Message').click()
-        cy.wait(500)
-        cy.get('#message-title-input').type(name)
+        cy.wait(5000)
+        cy.get('#message-title-input').should('be.visible').type(name)
         cy.contains('label', 'Voice').click()
         cy.contains('label', 'SMS').click()
     }
@@ -17,9 +17,11 @@ class ContentHandling_Objects{
         cy.wait(5000)
         cy.get('[class = "via-helper-text tw-text-neutral-700"]').should('have.text',' Call in progress... '); // Verify initial state
         // Wait for 10 seconds, checking every 500 milliseconds if the text changed
-        cy.wait(10000, { delay: 500 }).then(() => {
+        cy.wait(10000, { delay: 5000 }).then(() => {
         cy.get('[class = "via-helper-text tw-text-neutral-700"]').should('not.have.text', ' Call Successful... ') // Assert after text change
         .then(() => {cy.log('Call stuck in progress!');}) 
+        
+        cy.get('[role="alert"]').should('have.text','You have successfully published a new message.')
   });
     }
     configureVoiceEnglish(audio_name){

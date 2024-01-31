@@ -7,19 +7,19 @@ describe('group', () => {
             console.error('Uncaught exception:', err);
             return false;
         };
+
+      });
+    beforeEach(() => {
+       // cy.visit("/")
+        cy.loginToVoto(); 
         cy.fixture('content_handling_details').then(function(data){
             globalThis.data = data;
         cy.on('uncaught:exception', uncaughtExceptionHandler);
         })  
         
       });
-    beforeEach(() => {
-       // cy.visit("/")
-        cy.loginToVoto(); 
-        
-      });
     
-      after(function () {
+      afterEach(function () {
         // Pass the same function reference used in cy.on
         cy.off('uncaught:exception', uncaughtExceptionHandler);
     });
