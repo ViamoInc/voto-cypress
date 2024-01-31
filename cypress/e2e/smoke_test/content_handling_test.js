@@ -39,6 +39,7 @@ describe('group', () => {
         ctr.configureSmsEnglish(data.descriptionEnglish + Configs.timestamp)
       // save CTR
       ctr.saveCtrMessage();
+      cy.wait(5000);
       cy.logoutOfVoto();
     });
 // Call to record 

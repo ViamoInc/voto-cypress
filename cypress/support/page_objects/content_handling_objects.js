@@ -1,17 +1,18 @@
 class ContentHandling_Objects{
     visitMessagePage(){
-        cy.get('[data-key="campaign-content"]').click()
-        cy.get('[rel="messages"]').click()
+        cy.get('[data-icon="message-dots"]').click()
+        cy.contains('a','Messages').click()
     }
     createMessage(name){
         cy.contains('a','New Message').click()
+        cy.wait(500)
         cy.get('#message-title-input').type(name)
         cy.contains('label', 'Voice').click()
         cy.contains('label', 'SMS').click()
     }
     callSubscriberToRecord(){
         cy.contains('span','Call to Record').click()
-        cy.contains('label','pascal').click()
+        cy.contains('label','Cypress').click()
         cy.contains('span','Call This Phone Number').click()
         cy.wait(5000)
         cy.get('[class = "via-helper-text tw-text-neutral-700"]').should('have.text',' Call in progress... '); // Verify initial state

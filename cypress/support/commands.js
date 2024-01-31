@@ -44,8 +44,8 @@ Cypress.Commands.add('loginToVoto', () => {
 
 Cypress.Commands.add('logoutOfVoto', () => {
     
-    cy.get('[data-key="account-settings"]').click()
-    cy.contains('a','Logout').click()
+    cy.get('[data-icon="user"]').click()
+    cy.get('[data-icon="arrow-right-from-bracket"]').click()
 })
 
 //creating a flow >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -164,8 +164,8 @@ Cypress.Commands.add('SendOutboundMessage', (message) => {
   const defaultlogin ={
       contact:Cypress.env('Outboundcontact')
   }
-  cy.get('[data-key="campaigns"]').click()
-  cy.contains('h4','Create New').click()
+  cy.get('[data-icon="paper-plane"]').click()
+  cy.contains('a','Create New').click({ force: true })
   cy.get('#recipient_all').select('Selected contacts');
   cy.contains('a','Choose contacts...').click()
   cy.get('[placeholder="Search contacts..."]').type(defaultlogin.contact)
@@ -173,6 +173,7 @@ Cypress.Commands.add('SendOutboundMessage', (message) => {
   cy.contains('button','Save Selection').click()
   cy.contains('.multiselect__single', message).click();
   cy.contains('[class="inline no-weight"]','Use a specific language as the default for this call').click()
+  cy.contains('[class="inline no-weight"]','English').click()
   cy.contains('button',' Save/Send Campaign').click()
   cy.contains('button','Confirm and Send Now').click()
 })
@@ -181,8 +182,8 @@ Cypress.Commands.add('SendOutboundTree', (tree_name) => {
   const defaultlogin ={
       contact:Cypress.env('Outboundcontact')
   }
-  cy.get('[data-key="campaigns"]').click()
-  cy.contains('h4','Create New').click()
+  cy.get('[data-icon="paper-plane"]').click()
+  cy.contains('a','Create New').click()
   cy.get('#recipient_all').select('Selected contacts');
   cy.contains('a','Choose contacts...').click()
   cy.get('[placeholder="Search contacts..."]').type(defaultlogin.contact)
