@@ -192,6 +192,7 @@ Cypress.Commands.add('SendOutboundTree', (tree_name) => {
   cy.contains('[class="inline no-weight mr-2"]','Trees / Flows').click()
   cy.contains('.multiselect__single', tree_name).click();
   cy.contains('[class="inline no-weight"]','Use a specific language as the default for this call').click()
+  cy.contains('[class="inline no-weight"]','English').click()
   cy.contains('button',' Save/Send Campaign').click()
   cy.contains('button','Confirm and Send Now').click()
 })
