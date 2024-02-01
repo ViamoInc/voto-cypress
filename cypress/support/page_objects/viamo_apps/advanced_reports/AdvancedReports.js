@@ -66,7 +66,41 @@ class AdvancedReports {
     cy.contains(btn, btnLabel).click();
   }
 
+  openLiveLinkConfig() {
+    cy.get(".dropdown-toggle").click();
+    cy.get(".dropdown-menu > :nth-child(3)").click();
+  }
+
+  enterLiveLinkNameAndSave(name, permissions = "Anyone") {
+    cy.get(".row > :nth-child(1) > .form-control").click();
+    cy.get(".row > :nth-child(1) > .form-control").type(name);
+    cy.get(":nth-child(3) > .flight-monitor > div > .btn").click();
+    // TODO: Validate the shareable link notification shows
+    // cy.get('.alert').should('have.text', "Shareable link created succesfully"); // validates the link is created
+    cy.get(".via-sidebar__header > .close > span").click(); // close the config sidebar using the 'X' icon
+    // TODO:: Add permission for specific people
+  }
+
+  exportsReportCSV() {
+    cy.get(".dropdown-toggle").click();
+    cy.get(".dropdown-menu > :nth-child(2)").click();
+    cy.get(":nth-child(1) > .alert-link").should(
+      "have.text",
+      "View exports\n    "
+    );
+  }
+
+  openExportedReportCSV() {
+    cy.get(".alert-link").click();
+    //   TODO:: Validate exported reports data created and available for download
+  }
+
   //   TODO:: validate reports data is loaded
+
+  getCreationTimestamp() {
+    // TODO: Make the return timestamp in format: YYYY:MM:DD HH:MM:SS
+    return new Date().getTime();
+  }
 }
 
 export default AdvancedReports;
