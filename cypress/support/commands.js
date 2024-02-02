@@ -53,8 +53,8 @@ Cypress.Commands.add('switchOrg', (orgName) => {
 
 Cypress.Commands.add('logoutOfVoto', () => {
     
-    cy.get('[data-key="account-settings"]').click()
-    cy.contains('a','Logout').click()
+  cy.get('[data-icon="user"]').click()
+  cy.get('[data-icon="arrow-right-from-bracket"]').click()
 })
 
 //creating a flow >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
