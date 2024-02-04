@@ -21,7 +21,7 @@ class ContentHandling_Objects{
         cy.get('[class = "via-helper-text tw-text-neutral-700"]').should('not.have.text', ' Call Successful... ') // Assert after text change
         .then(() => {cy.log('Call stuck in progress!');}) 
         
-        //cy.get('[role="alert"]').should('have.text','You have successfully published a new message.')
+        cy.get('[role="alert"]').should('have.text','You have successfully published a new message.')
   });
     }
     configureVoiceEnglish(audio_name){
