@@ -33,6 +33,11 @@ class ContentHandling_Objects{
     }
     saveCtrMessage(){
         cy.contains('span','Save & Publish').click()
+        cy.wait(500)
+        cy.contains('a','More').first().click()
+        cy.get('[data-target="#confirm-delete-message-set"]').first().click()
+        cy.get('#confirm-delete-message-set_submit').should('be.visible').click()
+
     }
 }
 export default ContentHandling_Objects;
