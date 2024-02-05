@@ -5,6 +5,12 @@ class AdvancedReports {
     this.validatePageTitleIsReport();
   }
 
+  visitEngagementReportPage() {
+    cy.get(":nth-child(4) > .via-button > .tw-flex").click();
+    cy.get(":nth-child(3) > .via-link").click();
+    this.validatePageTitleIsReport();
+  }
+
   validatePageTitleIsReport() {
     cy.get(".text-uppercase").should("have.text", "Reports"); // It's in caps on the UI: CSS conversion
   }
