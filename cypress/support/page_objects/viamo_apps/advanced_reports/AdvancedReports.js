@@ -5,6 +5,11 @@ class AdvancedReports {
     this.validatePageTitleIsReport();
   }
 
+  visitContactReportPage(){
+    cy.get('[data-icon="cubes"]').click()
+    cy.contains('a','Contact Reports').click()
+  }
+
   validatePageTitleIsReport() {
     cy.get(".text-uppercase").should("have.text", "Reports"); // It's in caps on the UI: CSS conversion
   }
@@ -48,6 +53,7 @@ class AdvancedReports {
    */
   addTreeResults(selectAllBlocks = true, addBlockInteractions = true) {
     if (selectAllBlocks) {
+      cy.wait(1000);
       cy.get(".select-all > :nth-child(1)").click();
       if (addBlockInteractions) {
         cy.get(".modal-footer > .btn-primary").click();
@@ -64,6 +70,7 @@ class AdvancedReports {
    */
   runReport(btn = "button", btnLabel = "Run") {
     cy.contains(btn, btnLabel).click();
+    cy.wait(5000)
   }
 
   openLiveLinkConfig() {
@@ -100,6 +107,14 @@ class AdvancedReports {
   getCreationTimestamp() {
     // TODO: Make the return timestamp in format: YYYY:MM:DD HH:MM:SS
     return new Date().getTime();
+  }
+
+  deleteCreatedReport(){
+    cy.wait(500);
+    cy.get('[class="fa fa-trash"]').first().click();
+    cy.contains('button','Delete report').click();
+    cy.wait(2500);
+
   }
 }
 
