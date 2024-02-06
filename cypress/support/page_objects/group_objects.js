@@ -1,7 +1,7 @@
 class GroupPage_Objects{
     visitGroupPage(){
-        cy.get('[data-key="campaign-subscribers"]').click()
-        cy.get('[rel="groups"]').click()
+        cy.get('[data-test="nav-main-menu-item--contacts"]').click();
+        cy.get('[data-test="nav-menu-item--contact-groups"]').click();
     }
 
     createGroup(name,description){
@@ -18,7 +18,7 @@ class GroupPage_Objects{
         cy.get('[id="description"]').type(description)
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').check();
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').should('be.checked');
-        cy.contains('h3.title', 'Demographics').click();
+        cy.contains('h3', 'Demographics').click();
         cy.get('button#gender').click();
         cy.get('input#gender-female').uncheck();
 

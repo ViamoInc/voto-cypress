@@ -49,11 +49,12 @@ Cypress.Commands.add('loginToVoto', () => {
 
 Cypress.Commands.add('switchOrg', (orgName) => {
 
-    cy.get('[data-key="account-settings"]').click()
-    cy.get('div.multiselect__select').click()
-    cy.get('input[placeholder="Switch Organization"]').type(orgName)
+    cy.get('[data-test="nav-main-menu-item--organisations"]').click();
+    cy.get('.multiselect__tags').click();
+    cy.get('.multiselect__input').type(orgName)
     cy.contains('li', orgName).click()
-    cy.contains('.footer', orgName).should('be.visible')
+   // cy.contains('.footer', ).should('be.visible')
+    cy.get('footer').should('contain.text', orgName);
 })
 
 Cypress.Commands.add('logoutOfVoto', () => {
