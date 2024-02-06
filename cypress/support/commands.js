@@ -58,8 +58,8 @@ Cypress.Commands.add('switchOrg', (orgName) => {
 
 Cypress.Commands.add('logoutOfVoto', () => {
     
-    cy.get('[data-key="account-settings"]').click()
-    cy.contains('a','Logout').click()
+  cy.get('[data-icon="user"]').click()
+  cy.get('[data-icon="arrow-right-from-bracket"]').click()
 })
 
 //creating a flow >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -172,6 +172,45 @@ Cypress.Commands.add('PublishFlow', () => {
   cy.wait(100)
   cy.contains('button','Publish').click()
 })
+
+// >>>>>>>>>>command to send outbound campaign message out using any dynamic message
+Cypress.Commands.add('SendOutboundMessage', (message) => {
+  const defaultlogin ={
+      contact:Cypress.env('Outboundcontact')
+  }
+  cy.get('[data-icon="paper-plane"]').click()
+  cy.contains('a','Create New').click({ force: true })
+  cy.get('#recipient_all').select('Selected contacts');
+  cy.contains('a','Choose contacts...').click()
+  cy.get('[placeholder="Search contacts..."]').type(defaultlogin.contact)
+  cy.get('.js-open-subscriber-item').first().click()
+  cy.contains('button','Save Selection').click()
+  cy.contains('.multiselect__single', message).click();
+  cy.contains('[class="inline no-weight"]','Use a specific language as the default for this call').click()
+  cy.contains('[class="inline no-weight"]','English').click()
+  cy.contains('button',' Save/Send Campaign').click()
+  cy.contains('button','Confirm and Send Now').click()
+})
+//command to send outbound campaign tree out using any dynamic tree 
+Cypress.Commands.add('SendOutboundTree', (tree_name) => {
+  const defaultlogin ={
+      contact:Cypress.env('Outboundcontact')
+  }
+  cy.get('[data-icon="paper-plane"]').click()
+  cy.contains('a','Create New').click()
+  cy.get('#recipient_all').select('Selected contacts');
+  cy.contains('a','Choose contacts...').click()
+  cy.get('[placeholder="Search contacts..."]').type(defaultlogin.contact)
+  cy.get('.js-open-subscriber-item').first().click()
+  cy.contains('button','Save Selection').click()
+  cy.contains('[class="inline no-weight mr-2"]','Trees / Flows').click()
+  cy.contains('.multiselect__single', tree_name).click();
+  cy.contains('[class="inline no-weight"]','Use a specific language as the default for this call').click()
+  cy.contains('[class="inline no-weight"]','English').click()
+  cy.contains('button',' Save/Send Campaign').click()
+  cy.contains('button','Confirm and Send Now').click()
+})
+
 
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
