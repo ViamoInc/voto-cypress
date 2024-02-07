@@ -44,17 +44,18 @@ Cypress.Commands.add('loginToVoto', () => {
 
 Cypress.Commands.add('switchOrg', (orgName) => {
 
-    cy.get('[data-key="account-settings"]').click()
+    cy.get('[data-test="nav-main-menu-item--organisations"]').click()
     cy.get('div.multiselect__select').click()
     cy.get('input[placeholder="Switch Organization"]').type(orgName)
     cy.contains('li', orgName).click()
-    cy.contains('.footer', orgName).should('be.visible')
+    cy.wait(2000);
+    cy.contains('footer', orgName).should('be.visible')
 })
 
 Cypress.Commands.add('logoutOfVoto', () => {
     
-  cy.get('[data-icon="user"]').click()
-  cy.get('[data-icon="arrow-right-from-bracket"]').click()
+  cy.get('[data-test="nav-main-menu-item--organisations"]').click()
+  cy.get('[data-test="nav-menu--logout-btn"]').click()
 })
 
 //creating a flow >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
