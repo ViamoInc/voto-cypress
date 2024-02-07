@@ -27,6 +27,8 @@ describe("Engagement Report", () => {
     engagementReport.saveReportConfig();
     engagementReport.closeReportConfig();
     engagementReport.runReport();
+    engagementReport.visitEngagementReportPage();
+    engagementReport.deleteCreatedReport();
     cy.logoutOfVoto();
   });
 
@@ -35,7 +37,7 @@ describe("Engagement Report", () => {
     engagementReport.clickNewReportBtn();
     engagementReport.validatePageTitleIsReport();
     engagementReport.enterReportName(
-      data.report_name + " " + engagementReport.getCreationTimestamp()
+      data.engagement_report_name + " " + engagementReport.getCreationTimestamp()
     );
     engagementReport.openReportConfig();
     engagementReport.addFilters(data.tree_name);
@@ -49,6 +51,8 @@ describe("Engagement Report", () => {
     );
     engagementReport.exportsReportCSV();
     engagementReport.openExportedReportCSV();
+    engagementReport.visitEngagementReportPage();
+    engagementReport.deleteCreatedReport();
 
     cy.logoutOfVoto();
   });

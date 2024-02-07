@@ -82,7 +82,7 @@ class AdvancedReports {
 
   openLiveLinkConfig() {
     cy.get(".dropdown-toggle").click();
-    cy.get(".dropdown-menu > :nth-child(3)").click();
+    cy.contains('a', 'Create live data link').click();
   }
 
   enterLiveLinkNameAndSave(name, permissions = "Anyone") {
