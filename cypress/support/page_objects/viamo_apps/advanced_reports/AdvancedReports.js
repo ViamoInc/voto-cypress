@@ -5,9 +5,16 @@ class AdvancedReports {
     this.validatePageTitleIsReport();
   }
 
+  visitEngagementReportPage() {
+    cy.get(":nth-child(4) > .via-button > .tw-flex").click();
+    cy.get(":nth-child(3) > .via-link").click();
+    this.validatePageTitleIsReport();
+  }
+
   visitContactReportPage(){
     cy.get('[data-icon="cubes"]').click()
     cy.contains('a','Contact Reports').click()
+
   }
 
   validatePageTitleIsReport() {
@@ -75,7 +82,7 @@ class AdvancedReports {
 
   openLiveLinkConfig() {
     cy.get(".dropdown-toggle").click();
-    cy.get(".dropdown-menu > :nth-child(3)").click();
+    cy.contains('a', 'Create live data link').click();
   }
 
   enterLiveLinkNameAndSave(name, permissions = "Anyone") {
