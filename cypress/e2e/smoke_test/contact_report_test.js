@@ -13,7 +13,7 @@ describe("Contact Report", () => {
   });
   afterEach(() => {
     contactReport.visitContactReportPage();
-    contactReportReport.deleteCreatedReport();
+    contactReport.deleteCreatedReport();
     cy.logoutOfVoto();
   });
 
