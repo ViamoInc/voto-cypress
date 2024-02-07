@@ -12,6 +12,12 @@ describe("Interaction Report", () => {
     cy.loginToVoto();
   });
 
+  afterEach(() => {
+    interactionReport.visitInteractionReportPage();
+    interactionReport.deleteCreatedReport();
+    cy.logoutOfVoto();
+  });
+
   const interactionReport = new InteractionReport_Objects();
 
   it("should create interaction report and configure it with a tree results", () => {
@@ -27,10 +33,6 @@ describe("Interaction Report", () => {
     interactionReport.saveReportConfig();
     interactionReport.closeReportConfig();
     interactionReport.runReport();
-    interactionReport.visitInteractionReportPage();
-    interactionReport.deleteCreatedReport();
-
-    cy.logoutOfVoto();
   });
 
   it("should create a live link and export interaction report", () => {
@@ -52,9 +54,6 @@ describe("Interaction Report", () => {
     );
     interactionReport.exportsReportCSV();
     interactionReport.openExportedReportCSV();
-    interactionReport.visitInteractionReportPage();
-    interactionReport.deleteCreatedReport();
 
-    cy.logoutOfVoto();
   });
 });
