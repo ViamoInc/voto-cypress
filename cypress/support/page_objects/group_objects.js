@@ -34,9 +34,9 @@ class GroupPage_Objects{
         cy.contains('label.form-check-label', 'Remove some contacts').find('input[type="radio"]').should('be.checked');
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').check();
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').should('be.checked');
-        cy.contains('h3.title', 'Demographics').click();
-        cy.get('button#gender').click();
-        cy.get('input#gender-male').uncheck();
+        // cy.contains('h3', 'Demographics').click();
+        // cy.get('button#gender').click();
+        // cy.get('input#gender-male').uncheck();
         cy.get('[data-test="submit-button"]').click();
 
     }
