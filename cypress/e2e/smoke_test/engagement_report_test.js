@@ -8,9 +8,17 @@ describe("Engagement Report", () => {
       globalThis.data = data;
     });
   });
+
   beforeEach(() => {
     cy.loginToVoto();
   });
+
+  afterEach(() => {
+    engagementReport.visitEngagementReportPage();
+    engagementReport.deleteCreatedReport();
+    cy.logoutOfVoto();
+  });
+
 
   const engagementReport = new EngagementReport_Objects();
 
@@ -27,9 +35,6 @@ describe("Engagement Report", () => {
     engagementReport.saveReportConfig();
     engagementReport.closeReportConfig();
     engagementReport.runReport();
-    engagementReport.visitEngagementReportPage();
-    engagementReport.deleteCreatedReport();
-    cy.logoutOfVoto();
   });
 
   it("should create a live link and export engagement report", () => {
@@ -51,10 +56,6 @@ describe("Engagement Report", () => {
     );
     engagementReport.exportsReportCSV();
     engagementReport.openExportedReportCSV();
-    engagementReport.visitEngagementReportPage();
-    engagementReport.deleteCreatedReport();
-
-    cy.logoutOfVoto();
   });
 
   

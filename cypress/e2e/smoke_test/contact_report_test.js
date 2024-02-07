@@ -11,6 +11,11 @@ describe("Contact Report", () => {
   beforeEach(() => {
     cy.loginToVoto();
   });
+  afterEach(() => {
+    contactReport.visitContactReportPage();
+    contactReportReport.deleteCreatedReport();
+    cy.logoutOfVoto();
+  });
 
   const contactReport = new ContactReport_Objects();
 
@@ -27,11 +32,7 @@ describe("Contact Report", () => {
     contactReport.saveReportConfig();
     contactReport.closeReportConfig();
     contactReport.runReport();
-    contactReport.visitContactReportPage();
-    contactReport.deleteCreatedReport();
 
-
-    cy.logoutOfVoto();
   });
 
   it("should create a live link and export contact report", () => {
@@ -53,9 +54,6 @@ describe("Contact Report", () => {
     );
     contactReport.exportsReportCSV();
     contactReport.openExportedReportCSV();
-    contactReport.visitContactReportPage();
-    contactReport.deleteCreatedReport();
 
-    cy.logoutOfVoto();
   });
 });
