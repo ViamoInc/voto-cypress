@@ -27,6 +27,8 @@ describe('audience targeting group', () => {
         group.populateGroup(data.name + Configs.timestamp,data.description +' created @ ' + Configs.timestamp);
         group.editGroup();
         group.shrinkGroup();
+        group.cleanup(); 
+        cy.switchBacktoDefault(data.defaultOrg);
         cy.logoutOfVoto();
 
     });

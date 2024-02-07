@@ -57,6 +57,15 @@ Cypress.Commands.add('switchOrg', (orgName) => {
     cy.get('footer').should('contain.text', orgName);
 })
 
+Cypress.Commands.add('switchBacktoDefault', (defaultOrg) => {
+
+  cy.get('[data-test="nav-main-menu-item--organisations"]').click();
+  cy.get('.multiselect__tags').click();
+  cy.get('.multiselect__input').type(defaultOrg)
+  cy.contains('li', defaultOrg).click()
+ // cy.contains('.footer', ).should('be.visible')
+})
+
 Cypress.Commands.add('logoutOfVoto', () => {
     
   cy.get('[data-icon="user"]').click()

@@ -11,6 +11,9 @@ class GroupPage_Objects{
     }
     editGroup(name, description){
         cy.get('a[aria-label="Edit"]:first').click();
+        cy.get('button[data-test="submit-button"]').click();
+
+        
     }
     populateGroup(name,description){
         cy.contains('a','New Group').click()
@@ -18,6 +21,7 @@ class GroupPage_Objects{
         cy.get('[id="description"]').type(description)
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').check();
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').should('be.checked');
+        cy.wait(500)
         cy.contains('h3', 'Demographics').click();
         cy.get('button#gender').click();
         cy.get('input#gender-female').uncheck();
@@ -58,6 +62,15 @@ class GroupPage_Objects{
         cy.contains('button','Add group').click()
         cy.get('.alert-success').should('be.visible')
     }
+    cleanup(){
+       // cy.wait(60000);
 
+        cy.get('span.badge-warning').should('contain.text', 'Saving...100%');
+
+        cy.get('tbody tr:first-child td:nth-child(8) div:first-child a:nth-child(3) div:first-child svg').click()
+        cy.get('button#confirm-delete-group_submit').click();
+
+
+    }
 }
 export default GroupPage_Objects;

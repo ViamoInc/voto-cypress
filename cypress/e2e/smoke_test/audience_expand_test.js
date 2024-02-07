@@ -23,11 +23,12 @@ describe('audience targeting group', () => {
             timestamp: currentDate.getTime()
            }
         // creating group  using the imported group objects
-       // cy.switchOrgToPlatformOrg();
         group.visitGroupPage();
         group.populateGroup(data.name + Configs.timestamp,data.description +' created @ ' + Configs.timestamp);
         group.editGroup();
         group.expandGroup();
+       // group.cleanup(); 
+        cy.switchBacktoDefault(data.defaultOrg);
         cy.logoutOfVoto();
 
     });
