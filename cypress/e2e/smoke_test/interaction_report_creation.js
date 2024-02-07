@@ -27,6 +27,8 @@ describe("Interaction Report", () => {
     interactionReport.saveReportConfig();
     interactionReport.closeReportConfig();
     interactionReport.runReport();
+    interactionReport.visitInteractionReportPage();
+    interactionReport.deleteCreatedReport();
 
     cy.logoutOfVoto();
   });
@@ -50,6 +52,8 @@ describe("Interaction Report", () => {
     );
     interactionReport.exportsReportCSV();
     interactionReport.openExportedReportCSV();
+    interactionReport.visitInteractionReportPage();
+    interactionReport.deleteCreatedReport();
 
     cy.logoutOfVoto();
   });
