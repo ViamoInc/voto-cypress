@@ -1,7 +1,7 @@
 class GroupPage_Objects{
     visitGroupPage(){
-        cy.get('[data-test="nav-main-menu-item--contacts"]').click();
-        cy.get('[data-test="nav-menu-item--contact-groups"]').click();
+        cy.get('[data-test="nav-main-menu-item--contacts"]').click()
+        cy.get('[data-test="nav-menu-item--contact-groups"]').click()
     }
 
     createGroup(name,description){
@@ -53,7 +53,7 @@ class GroupPage_Objects{
   
     addSubscribersToGroupUsingAudienceTarget(){
         cy.get('input[type="radio"][value="criteria_based"]').click()
-        cy.wait(2000)
+        cy.wait(3000)
         cy.contains('h4','Select Criteria').should('be.visible')
     }
 
