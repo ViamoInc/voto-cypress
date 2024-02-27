@@ -26,6 +26,10 @@
 // env configuration 
 
 // end of configuration
+Cypress.Commands.add('searchAndSubmit', (searchText) => {
+    cy.get('input[type="text"]').type(searchText).type('{enter}');
+  });
+
 Cypress.Commands.add('loginToVoto', () => {
 
   // require('dotenv').config();
@@ -33,7 +37,8 @@ Cypress.Commands.add('loginToVoto', () => {
   const defaultlogin = {
     email: Cypress.env('email'),
     password: Cypress.env('password'),
-    BaseUrl: Cypress.env('baseUrl')
+    BaseUrl: Cypress.env('baseUrl'),
+    OrgName: Cypress.env('OrgName')
   }
 
   cy.visit(defaultlogin.BaseUrl)
