@@ -28,32 +28,32 @@
 // end of configuration
 Cypress.Commands.add('loginToVoto', () => {
 
-   // require('dotenv').config();
-    
-    const defaultlogin ={
-        email:Cypress.env('email'),
-        password:Cypress.env('password'),
-        BaseUrl:Cypress.env('baseUrl')
-    }
-  
-      cy.visit(defaultlogin.BaseUrl)
-      cy.get('[name="email"]').type(defaultlogin.email)
-      cy.get('[name="password"]').type(defaultlogin.password)
-      cy.get('[type="submit"]').click()
+  // require('dotenv').config();
+
+  const defaultlogin = {
+    email: Cypress.env('email'),
+    password: Cypress.env('password'),
+    BaseUrl: Cypress.env('baseUrl')
+  }
+
+  cy.visit(defaultlogin.BaseUrl)
+  cy.get('[name="email"]').type(defaultlogin.email)
+  cy.get('[name="password"]').type(defaultlogin.password)
+  cy.get('[type="submit"]').click()
 })
 
 Cypress.Commands.add('switchOrg', (orgName) => {
 
-    cy.get('[data-test="nav-main-menu-item--organisations"]').click()
-    cy.get('div.multiselect__select').click()
-    cy.get('input[placeholder="Switch Organization"]').type(orgName)
-    cy.contains('li', orgName).click()
-    cy.wait(2000);
-    cy.contains('footer', orgName).should('be.visible')
+  cy.get('[data-test="nav-main-menu-item--organisations"]').click()
+  cy.get('div.multiselect__select').click()
+  cy.get('input[placeholder="Switch Organization"]').type(orgName)
+  cy.contains('li', orgName).click()
+  cy.wait(2000);
+  cy.contains('footer', orgName).should('be.visible')
 })
 
 Cypress.Commands.add('logoutOfVoto', () => {
-    
+
   cy.get('[data-test="nav-main-menu-item--organisations"]').click()
   cy.get('[data-test="nav-menu--logout-btn"]').click()
 })
@@ -61,80 +61,80 @@ Cypress.Commands.add('logoutOfVoto', () => {
 //creating a flow >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
-Cypress.Commands.add('createFlow', ({label, languages = ['English'], Channels = ['IVR', 'SMS', 'USSD']}) => {
-    
-    //cy.get('#app').should('exist')
-    cy.get('[data-key="campaign-content"]').click()
-    cy.get('[rel="trees"]').click()
+Cypress.Commands.add('createFlow', ({ label, languages = ['English'], Channels = ['IVR', 'SMS', 'USSD'] }) => {
 
-   // cy.get('(//a[contains(text(), "New Flow")])[1]').click()
-   cy.get('[href="/flows/new"]').click()
-  
-    cy.get('[data-cy="flow-label--editor"]')
-      .find('textarea')
-      .type(label)
-  
+  //cy.get('#app').should('exist')
+  cy.get('[data-key="campaign-content"]').click()
+  cy.get('[rel="trees"]').click()
 
-    for (const language of languages) {
-      cy.get('[data-cy="languages--selector"]').click()
-      cy.contains('.multiselect__option', language).click()
-    }
-  
-    for (const channel of Channels) {
-        cy.get('[data-cy="modes--selector"]').click()
-        cy.contains('.multiselect__option', channel).click()
-      }
-    cy.get('[data-cy="create--btn"]').click()
-  
-  })
+  // cy.get('(//a[contains(text(), "New Flow")])[1]').click()
+  cy.get('[href="/flows/new"]').click()
+
+  cy.get('[data-cy="flow-label--editor"]')
+    .find('textarea')
+    .type(label)
 
 
-  //Add block >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  for (const language of languages) {
+    cy.get('[data-cy="languages--selector"]').click()
+    cy.contains('.multiselect__option', language).click()
+  }
 
-  Cypress.Commands.add('addBlock', (menuChoices) => {
-    // Loop through each menu choice
-    for (const choice of menuChoices) {
-      cy.get('[data-cy="blocks--menu"]')
+  for (const channel of Channels) {
+    cy.get('[data-cy="modes--selector"]').click()
+    cy.contains('.multiselect__option', channel).click()
+  }
+  cy.get('[data-cy="create--btn"]').click()
+
+})
+
+
+//Add block >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Cypress.Commands.add('addBlock', (menuChoices) => {
+  // Loop through each menu choice
+  for (const choice of menuChoices) {
+    cy.get('[data-cy="blocks--menu"]')
       .contains('[data-cy="blocks--menu-item"]', choice) // Find the menu item with the specific choice
       .click({ force: true }); // Click on the menu item with force to handle potential hidden elements
-  
-      // Wait for the block creation to be registered
-      cy.wait(100); // Replace with your actual wait time
-    }
-  });
-  
+
+    // Wait for the block creation to be registered
+    cy.wait(100); // Replace with your actual wait time
+  }
+});
+
 //>>>>>>>Save flow 
 Cypress.Commands.add('save', () => {
-    cy.get('[data-cy="save--btn"]')
-      .as('saveBtn')
-      .should('not.have.attr', 'disabled')
-  
-    cy.get('@saveBtn').click({
-      // May be covered with a toast
-      force: true,
-    })
+  cy.get('[data-cy="save--btn"]')
+    .as('saveBtn')
+    .should('not.have.attr', 'disabled')
+
+  cy.get('@saveBtn').click({
+    // May be covered with a toast
+    force: true,
   })
+})
 
-  //>>>>>>> Drag and drop blocks 
+//>>>>>>> Drag and drop blocks 
 
-  Cypress.Commands.add('dragAndDropTo', {prevSubject: 'element'}, (subject, targetSelectorOrAlias) => {
-    cy.wrap(subject).scrollIntoView()
-    cy.wrap(subject).should('be.visible')
-    cy.get(targetSelectorOrAlias).should('be.visible')
-  
-    cy.wrap(subject)
-      .realHover()
-      .realMouseDown()
-  
-    cy.get(targetSelectorOrAlias)
-      .realMouseMove(0, 0, {position: 'center'})
-      .realMouseUp({position: 'center'})
-  })
+Cypress.Commands.add('dragAndDropTo', { prevSubject: 'element' }, (subject, targetSelectorOrAlias) => {
+  cy.wrap(subject).scrollIntoView()
+  cy.wrap(subject).should('be.visible')
+  cy.get(targetSelectorOrAlias).should('be.visible')
 
-  //>>>>>>> Edit flow 
+  cy.wrap(subject)
+    .realHover()
+    .realMouseDown()
 
-  Cypress.Commands.add('EditFlow_tree', () => {
-    cy.get('[href="/trees"]').click()
+  cy.get(targetSelectorOrAlias)
+    .realMouseMove(0, 0, { position: 'center' })
+    .realMouseUp({ position: 'center' })
+})
+
+//>>>>>>> Edit flow 
+
+Cypress.Commands.add('EditFlow_tree', () => {
+  cy.get('[href="/trees"]').click()
   /*  if (cy.get('body').contains(/Create an account/i)) {
       cy.log('Found "Create an account" text. Logging in...');
       const defaultlogin = {
@@ -149,64 +149,69 @@ Cypress.Commands.add('save', () => {
       cy.log('Did not find "Create an account" text. Skipping login.');
     }
 */
-    
-    cy.get('[data-icon="edit"]').first().click();
 
-  })
+  cy.get('[data-icon="edit"]').first().click();
 
-  //>>>>>>>>>Delete flow/tree created 
-  Cypress.Commands.add('DeleteFlow', () => {
-    cy.contains('a','More').first().click()
-    cy.contains('a','Delete Flow').first().click()
-    cy.wait(150)
-    cy.contains('button','Delete').click()
-  })
+})
+
+//>>>>>>>>>Delete flow/tree created 
+Cypress.Commands.add('DeleteFlow', () => {
+  cy.contains('a', 'More').first().click()
+  cy.contains('a', 'Delete Flow').first().click()
+  cy.wait(150)
+  cy.contains('button', 'Delete').click()
+})
 //>>>>>>>>>>>>>>>>>>>>Publish Flow \
 
 Cypress.Commands.add('PublishFlow', () => {
-  cy.contains('a','Publish').click()
+  cy.contains('a', 'Publish').click()
   cy.wait(100)
-  cy.contains('button','Publish').click()
+  cy.contains('button', 'Publish').click()
 })
 
 // >>>>>>>>>>command to send outbound campaign message out using any dynamic message
 Cypress.Commands.add('SendOutboundMessage', (message) => {
-  const defaultlogin ={
-      contact:Cypress.env('Outboundcontact')
+  const defaultlogin = {
+    contact: Cypress.env('Outboundcontact')
   }
   cy.get('[data-icon="paper-plane"]').click()
-  cy.contains('a','Create New').click({ force: true })
+  cy.contains('a', 'Create New').click({ force: true })
   cy.get('#recipient_all').select('Selected contacts');
-  cy.contains('a','Choose contacts...').click()
+  cy.contains('a', 'Choose contacts...').click()
   cy.get('[placeholder="Search contacts..."]').type(defaultlogin.contact)
   cy.get('.js-open-subscriber-item').first().click()
-  cy.contains('button','Save Selection').click()
+  cy.contains('button', 'Save Selection').click()
   cy.contains('.multiselect__single', message).click();
-  cy.contains('[class="inline no-weight"]','Use a specific language as the default for this call').click()
-  cy.contains('[class="inline no-weight"]','English').click()
-  cy.contains('button',' Save/Send Campaign').click()
-  cy.contains('button','Confirm and Send Now').click()
+  cy.contains('[class="inline no-weight"]', 'Use a specific language as the default for this call').click()
+  cy.contains('[class="inline no-weight"]', 'English').click()
+  cy.contains('button', ' Save/Send Campaign').click()
+  cy.contains('button', 'Confirm and Send Now').click()
 })
 //command to send outbound campaign tree out using any dynamic tree 
 Cypress.Commands.add('SendOutboundTree', (tree_name) => {
-  const defaultlogin ={
-      contact:Cypress.env('Outboundcontact')
+  const defaultlogin = {
+    contact: Cypress.env('Outboundcontact')
   }
   cy.get('[data-icon="paper-plane"]').click()
-  cy.contains('a','Create New').click()
+  cy.contains('a', 'Create New').click()
   cy.get('#recipient_all').select('Selected contacts');
-  cy.contains('a','Choose contacts...').click()
+  cy.contains('a', 'Choose contacts...').click()
   cy.get('[placeholder="Search contacts..."]').type(defaultlogin.contact)
   cy.get('.js-open-subscriber-item').first().click()
-  cy.contains('button','Save Selection').click()
-  cy.contains('[class="inline no-weight mr-2"]','Trees / Flows').click()
+  cy.contains('button', 'Save Selection').click()
+  cy.contains('[class="inline no-weight mr-2"]', 'Trees / Flows').click()
   cy.contains('.multiselect__single', tree_name).click();
-  cy.contains('[class="inline no-weight"]','Use a specific language as the default for this call').click()
-  cy.contains('[class="inline no-weight"]','English').click()
-  cy.contains('button',' Save/Send Campaign').click()
-  cy.contains('button','Confirm and Send Now').click()
+  cy.contains('[class="inline no-weight"]', 'Use a specific language as the default for this call').click()
+  cy.contains('[class="inline no-weight"]', 'English').click()
+  cy.contains('button', ' Save/Send Campaign').click()
+  cy.contains('button', 'Confirm and Send Now').click()
 })
 
+Cypress.Commands.add('navigateTo', (navigation_object) => {
+   cy.get(navigation_object.categoryLinkSelector).click()
+   cy.get(navigation_object.linkSelector).click()
+})
 
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
