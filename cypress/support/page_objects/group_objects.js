@@ -1,7 +1,7 @@
+import { ContactNavigation  } from "./../../support/navigations";
 class GroupPage_Objects{
     visitGroupPage(){
-        cy.get('[data-test="nav-main-menu-item--contacts"]').click()
-        cy.get('[data-test="nav-menu-item--contact-groups"]').click()
+        cy.navigateTo(ContactNavigation.GROUP)
     }
 
     createGroup(name,description){
