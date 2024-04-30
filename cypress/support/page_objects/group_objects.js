@@ -4,8 +4,12 @@ class GroupPage_Objects{
         cy.navigateTo(ContactNavigation.GROUP)
     }
 
+    visitAddGroupPage(){
+        cy.navigateTo(ContactNavigation.ADD_GROUP)
+    }
+
     createGroup(name,description){
-        cy.contains('a','New Group').click()
+        this.visitAddGroupPage()
         cy.get('#name').type(name).should('have.value', name)
         cy.get('[id="description"]').type(description).should('have.value', description)
     }

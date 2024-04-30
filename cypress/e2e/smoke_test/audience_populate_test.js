@@ -27,7 +27,6 @@ describe('audience targeting group', () => {
         const description = data.description +' created @ ' + Configs.timestamp
         
         // creating group  using the imported group objects
-        group.visitGroupPage();
         group.createGroup(groupName, description)
        //add subscriber to group
         group.addSubscribersToGroupUsingAudienceTarget()
