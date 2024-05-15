@@ -142,6 +142,15 @@ class FlowBlock_Objects{
       cy.get('body').contains('Cypress flow block test').should('exist');
     }
 
+    flowDetails(){
+      cy.get('[data-cy="builder-toolbar--flow-details--btn"]').click()
+      cy.get('[data-cy="Open-response-label"]')
+      .find('textarea')
+      .type('Cypress flow block test edited')
+      cy.contains('button', 'Done').click()
+
+    }
+
 }
 
 export default FlowBlock_Objects;

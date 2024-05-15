@@ -1,7 +1,7 @@
 {
     "beforeEdit": "my_block",
     "afterEditPostFix":"updated",
-    "resourceIVR":"Recorded by (233548227720)",
+    "resourceIVR":"ThankYouHaveANiceDay.wav",
     "resourceSMS":"How old are you SMS",
     "resourceUSSD":"How old are you USSD",
     "minimum":"10",

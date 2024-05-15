@@ -1,7 +1,7 @@
 {
     "label": "Cypress Message",
     "afterEditPostFix": "EditCypressMSG",
-    "resourceIVR": "Recorded by (233548227720)",
+    "resourceIVR": "ThankYouHaveANiceDay.wav",
     "resourceSMS": "This is an SMS content for cypress test",
     "resourceUSSD": "This is a USSD content for cypress test",
     "exits_name": "Cy_Exit",
