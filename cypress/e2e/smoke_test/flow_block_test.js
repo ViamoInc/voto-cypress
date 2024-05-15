@@ -59,9 +59,7 @@ cy.fixture('flow_openendedq_block_details').then(data => { openended = data; });
         flow.flowDetails();
         cy.save();
         cy.wait(150);
-        cy.PublishFlow();
-        
-
+       // cy.PublishFlow();
     });
 
     it('Clean up test',()=>{
