@@ -20,9 +20,8 @@ describe("Contact Report", () => {
   const contactReport = new ContactReport_Objects();
 
   it("should create contact report and configure it with a tree results", () => {
-
+    
     cy.navigateToContactReportsPage();
-
     contactReport.clickNewReportBtn();
     contactReport.validatePageTitleIsReport();
     contactReport.enterReportName(
