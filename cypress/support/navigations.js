@@ -142,6 +142,10 @@ export const AppsNavigation = Object.freeze({
         categoryLinkSelector: Category.APPS,
         linkSelector: "[data-test='nav-menu-item--collaborative-filtering']"
     },
+    CONTACT_REPORTS: {
+        categoryLinkSelector: Category.APPS,
+        linkSelector: "[data-test='nav-menu-item--contact-reports']"
+    },
 });
 
 export const LanguageNavigation = Object.freeze({

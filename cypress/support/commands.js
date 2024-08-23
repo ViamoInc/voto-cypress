@@ -27,6 +27,7 @@
 
 // end of configuration
 import { ContentNavigation  } from "./../support/navigations";
+import { AppsNavigation  } from "./../support/navigations";
 Cypress.Commands.add('searchAndSubmit', (searchText) => {
     cy.get('input[type="text"]').type(searchText).type('{enter}');
   });
@@ -210,3 +211,7 @@ Cypress.Commands.add('navigateTo', (navigation_object) => {
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+Cypress.Commands.add('navigateToContactReportsPage', () => {
+  cy.get(AppsNavigation.CONTACT_REPORTS.categoryLinkSelector).click();
+  cy.get(AppsNavigation.CONTACT_REPORTS.linkSelector).click();
+});
