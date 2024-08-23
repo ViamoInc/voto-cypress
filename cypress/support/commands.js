@@ -26,6 +26,7 @@
 // env configuration 
 
 // end of configuration
+import { ContentNavigation  } from "./../support/navigations";
 Cypress.Commands.add('searchAndSubmit', (searchText) => {
     cy.get('input[type="text"]').type(searchText).type('{enter}');
   });
@@ -69,8 +70,10 @@ Cypress.Commands.add('logoutOfVoto', () => {
 Cypress.Commands.add('createFlow', ({ label, languages = ['English'], Channels = ['IVR', 'SMS', 'USSD'] }) => {
 
   //cy.get('#app').should('exist')
-  cy.get('[data-key="campaign-content"]').click()
-  cy.get('[rel="trees"]').click()
+  cy.navigateTo(ContentNavigation.TREE)
+
+  //cy.get('[data-key="campaign-content"]').click()
+  //cy.get('[rel="trees"]').click()
 
   // cy.get('(//a[contains(text(), "New Flow")])[1]').click()
   cy.get('[href="/flows/new"]').click()
@@ -139,28 +142,15 @@ Cypress.Commands.add('dragAndDropTo', { prevSubject: 'element' }, (subject, targ
 //>>>>>>> Edit flow 
 
 Cypress.Commands.add('EditFlow_tree', () => {
-  cy.get('[href="/trees"]').click()
-  /*  if (cy.get('body').contains(/Create an account/i)) {
-      cy.log('Found "Create an account" text. Logging in...');
-      const defaultlogin = {
-        email: Cypress.env('email'),
-        password: Cypress.env('password'),
-      };
-
-      cy.get('[name="email"]').type(defaultlogin.email);
-      cy.get('[name="password"]').type(defaultlogin.password);
-      cy.get('[type="submit"]').click();
-    }else {
-      cy.log('Did not find "Create an account" text. Skipping login.');
-    }
-*/
-
+  //cy.get('[href="/trees"]').click()
+  cy.navigateTo(ContentNavigation.TREE)
   cy.get('[data-icon="edit"]').first().click();
 
 })
 
 //>>>>>>>>>Delete flow/tree created 
 Cypress.Commands.add('DeleteFlow', () => {
+  cy.navigateTo(ContentNavigation.TREE)
   cy.contains('a', 'More').first().click()
   cy.contains('a', 'Delete Flow').first().click()
   cy.wait(150)
