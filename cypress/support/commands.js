@@ -56,6 +56,8 @@ Cypress.Commands.add('switchOrg', (orgName) => {
   cy.contains('li', orgName).click()
   cy.wait(2000);
   cy.contains('footer', orgName).should('be.visible')
+  cy.wait(200);
+
 })
 
 Cypress.Commands.add('logoutOfVoto', () => {

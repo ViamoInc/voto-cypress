@@ -25,7 +25,7 @@ class GroupPage_Objects{
         cy.get('[id="description"]').type(description)
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').check();
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').should('be.checked');
-        cy.wait(500)
+        cy.wait(600)
         cy.contains('h3', 'Demographics').click();
         cy.get('button#gender').click();
         cy.get('input#gender-female').uncheck();
