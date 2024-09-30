@@ -24,11 +24,11 @@ describe('audience targeting group', () => {
            }
         // creating group  using the imported group objects
         group.visitGroupPage();
-        group.populateGroup(data.name + Configs.timestamp,data.description +' created @ ' + Configs.timestamp);
+        //group.populateGroup(data.name + Configs.timestamp,data.description +' created @ ' + Configs.timestamp);
         group.editGroup();
         group.shrinkGroup();
-        group.cleanup(); 
-        cy.switchBacktoDefault(data.defaultOrg);
+        //group.cleanup(); 
+        cy.switchOrg(data.defaultOrg);
         cy.logoutOfVoto();
 
     });

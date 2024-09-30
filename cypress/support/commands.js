@@ -53,10 +53,12 @@ Cypress.Commands.add('switchOrg', (orgName) => {
 
   cy.get('[data-test="nav-main-menu-item--organisations"]').click()
   cy.get('div.multiselect__select').click()
-  cy.get('input[placeholder="Switch Organization"]').type(orgName)
+  cy.get('input[placeholder="Switch..."]').type(orgName)
   cy.contains('li', orgName).click()
   cy.wait(2000);
   cy.contains('footer', orgName).should('be.visible')
+  cy.wait(200);
+
 })
 
 Cypress.Commands.add('logoutOfVoto', () => {
