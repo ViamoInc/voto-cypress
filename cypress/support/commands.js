@@ -26,7 +26,12 @@
 // env configuration 
 
 // end of configuration
+<<<<<<< HEAD
 import { ContentNavigation, AppsNavigation  } from "./../support/navigations";
+=======
+import { ContentNavigation  } from "./../support/navigations";
+import { AppsNavigation  } from "./../support/navigations";
+>>>>>>> 0fff18168e485a4bb884dba26685b119e8c87fad
 Cypress.Commands.add('searchAndSubmit', (searchText) => {
     cy.get('input[type="text"]').type(searchText).type('{enter}');
   });
@@ -52,10 +57,12 @@ Cypress.Commands.add('switchOrg', (orgName) => {
 
   cy.get('[data-test="nav-main-menu-item--organisations"]').click()
   cy.get('div.multiselect__select').click()
-  cy.get('input[placeholder="Switch Organization"]').type(orgName)
+  cy.get('input[placeholder="Switch..."]').type(orgName)
   cy.contains('li', orgName).click()
   cy.wait(2000);
   cy.contains('footer', orgName).should('be.visible')
+  cy.wait(200);
+
 })
 
 Cypress.Commands.add('logoutOfVoto', () => {
