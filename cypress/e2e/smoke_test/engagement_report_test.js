@@ -14,7 +14,7 @@ describe("Engagement Report", () => {
   });
 
   afterEach(() => {
-    engagementReport.visitEngagementReportPage();
+    cy.navigateToEngagementReportsPage();
     engagementReport.deleteCreatedReport();
     cy.logoutOfVoto();
   });
@@ -23,7 +23,7 @@ describe("Engagement Report", () => {
   const engagementReport = new EngagementReport_Objects();
 
   it("should create engagement report and configure it with a tree results", () => {
-    engagementReport.visitEngagementReportPage();
+    cy.navigateToEngagementReportsPage();
     engagementReport.clickNewReportBtn();
     engagementReport.validatePageTitleIsReport();
     engagementReport.enterReportName(
@@ -38,7 +38,7 @@ describe("Engagement Report", () => {
   });
 
   it("should create a live link and export engagement report", () => {
-    engagementReport.visitEngagementReportPage();
+    cy.navigateToEngagementReportsPage();
     engagementReport.clickNewReportBtn();
     engagementReport.validatePageTitleIsReport();
     engagementReport.enterReportName(

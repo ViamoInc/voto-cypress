@@ -26,8 +26,12 @@
 // env configuration 
 
 // end of configuration
+<<<<<<< HEAD
+import { ContentNavigation, AppsNavigation  } from "./../support/navigations";
+=======
 import { ContentNavigation  } from "./../support/navigations";
 import { AppsNavigation  } from "./../support/navigations";
+>>>>>>> 0fff18168e485a4bb884dba26685b119e8c87fad
 Cypress.Commands.add('searchAndSubmit', (searchText) => {
     cy.get('input[type="text"]').type(searchText).type('{enter}');
   });
@@ -216,4 +220,14 @@ Cypress.Commands.add('navigateTo', (navigation_object) => {
 Cypress.Commands.add('navigateToContactReportsPage', () => {
   cy.get(AppsNavigation.CONTACT_REPORTS.categoryLinkSelector).click();
   cy.get(AppsNavigation.CONTACT_REPORTS.linkSelector).click();
+});
+
+Cypress.Commands.add('navigateToEngagementReportsPage', () => {
+  cy.get(AppsNavigation.ENGAGEMENT_REPORTS.categoryLinkSelector).click();
+  cy.get(AppsNavigation.ENGAGEMENT_REPORTS.linkSelector).click();
+});
+
+Cypress.Commands.add('navigateToInteractionReportsPage', () => {
+  cy.get(AppsNavigation.INTERACTION_REPORTS.categoryLinkSelector).click();
+  cy.get(AppsNavigation.INTERACTION_REPORTS.linkSelector).click();
 });
