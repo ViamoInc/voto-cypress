@@ -12,6 +12,17 @@ class GroupPage_Objects{
         this.visitAddGroupPage()
         cy.get('#name').type(name).should('have.value', name)
         cy.get('[id="description"]').type(description).should('have.value', description)
+        cy.get('a[data-test="choose-contacts"]').click();
+
+        cy.get('tr.js-open-subscriber-item').eq(1).click();
+        cy.wait(100)
+
+        cy.get('tr.js-open-subscriber-item').eq(2).click();
+        cy.wait(100)
+        cy.get('button[data-test="save-selection"]').click();
+        cy.wait(100)
+        cy.get('button[data-test="submit-button"]').click();
+        cy.wait(200)
     }
     editGroup(name, description){
         cy.get('a[aria-label="Edit"]:first').click();
@@ -34,8 +45,21 @@ class GroupPage_Objects{
 
     }    
     expandGroup(){
-        cy.contains('label.form-check-label', 'Add more contacts').find('input[type="radio"]').check();
-        cy.contains('label.form-check-label', 'Add more contacts').find('input[type="radio"]').should('be.checked');
+        cy.wait(1500);
+        cy.contains('a','More').eq(0).click();
+        cy.contains('a','Divide Group').click({ force: true });
+        cy.get('[id="number-of-groups"]').clear().type(2);
+        cy.contains('button', 'Proceed').click();
+        cy.contains('button', 'Close').click({force: true} );
+        cy.wait(1500);
+
+
+
+
+     
+          
+       // cy.contains('label.form-check-label', 'Add more contacts').find('input[type="radio"]').check();
+       // cy.contains('label.form-check-label', 'Add more contacts').find('input[type="radio"]').should('be.checked');
     }
     shrinkGroup(){
         cy.contains('label.form-check-label', 'Remove some contacts').find('input[type="radio"]').check();
@@ -67,12 +91,20 @@ class GroupPage_Objects{
         cy.get('.alert-success').should('be.visible')
     }
     cleanup(){
-       // cy.wait(60000);
+        cy.wait(6000);
+        cy.reload();
+        //cy.get('span.badge-warning').should('contain.text', 'Saving...100%');
 
-        cy.get('span.badge-warning').should('contain.text', 'Saving...100%');
+        // Select the second, third, and fourth checkboxes by index and click them
+        cy.get('[type="checkbox"]').eq(1).click(); // 2nd checkbox (index 1)
+        cy.get('[type="checkbox"]').eq(2).click(); // 3rd checkbox (index 2)
+        cy.get('[type="checkbox"]').eq(3).click(); // 4th checkbox (index 3)
+       //cy.get('[type="checkbox"]').eq(4).click(); // 5th checkbox (index 4)
 
-        cy.get('tbody tr:first-child td:nth-child(8) div:first-child a:nth-child(3) div:first-child svg').click()
-        cy.get('button#confirm-delete-group_submit').click();
+        cy.get('select[name="action_type"]').select('delete'); // Selects the option with value="delete"
+        cy.contains('button','GO').click();
+        cy.reload();
+
 
 
     }

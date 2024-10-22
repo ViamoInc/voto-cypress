@@ -50,8 +50,8 @@ Cypress.Commands.add('loginToVoto', () => {
 })
 
 Cypress.Commands.add('switchOrg', (orgName) => {
-
-  cy.get('[data-test="nav-main-menu-item--organisations"]').click()
+  cy.wait(700);
+  cy.get('[data-test="nav-main-menu-item--organisations"]').click({force:true})
   cy.get('div.multiselect__select').click()
   cy.get('input[placeholder="Switch..."]').type(orgName)
   cy.contains('li', orgName).click()

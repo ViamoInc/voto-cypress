@@ -33,6 +33,8 @@ describe('audience targeting group', () => {
       // save the group
         group.saveGroup()
         //logout
+        cy.switchOrg(data.defaultOrg);
+
         cy.logoutOfVoto()
 
     });
