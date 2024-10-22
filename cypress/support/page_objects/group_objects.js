@@ -53,13 +53,6 @@ class GroupPage_Objects{
         cy.contains('button', 'Close').click({force: true} );
         cy.wait(1500);
 
-
-
-
-     
-          
-       // cy.contains('label.form-check-label', 'Add more contacts').find('input[type="radio"]').check();
-       // cy.contains('label.form-check-label', 'Add more contacts').find('input[type="radio"]').should('be.checked');
     }
     shrinkGroup(){
         cy.contains('label.form-check-label', 'Remove some contacts').find('input[type="radio"]').check();
