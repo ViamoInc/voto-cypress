@@ -24,7 +24,7 @@ describe('audience targeting group', () => {
            }
         // creating group  using the imported group objects
         group.visitGroupPage();
-        group.createGroup(data.name +' created @ ' + Configs.timestamp, data.describe +' created @ ' + Configs.timestamp);
+        group.createGroupWithSubscriber(data.name +' created @ ' + Configs.timestamp, data.describe +' created @ ' + Configs.timestamp);
        // group.editGroup();
         group.expandGroup();
         group.cleanup(); 

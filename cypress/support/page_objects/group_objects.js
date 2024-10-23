@@ -8,7 +8,7 @@ class GroupPage_Objects{
         cy.navigateTo(ContactNavigation.ADD_GROUP)
     }
 
-    createGroup(name,description){
+    createGroupWithSubscriber(name,description){
         this.visitAddGroupPage()
         cy.get('#name').type(name).should('have.value', name)
         cy.get('[id="description"]').type(description).should('have.value', description)
@@ -23,6 +23,11 @@ class GroupPage_Objects{
         cy.wait(100)
         cy.get('button[data-test="submit-button"]').click();
         cy.wait(200)
+    }
+    createGroup(name,description){
+        this.visitAddGroupPage()
+        cy.get('#name').type(name).should('have.value', name)
+        cy.get('[id="description"]').type(description).should('have.value', description)
     }
     editGroup(name, description){
         cy.get('a[aria-label="Edit"]:first').click();
@@ -74,9 +79,10 @@ class GroupPage_Objects{
   
     addSubscribersToGroupUsingAudienceTarget(){
         cy.get('input[type="radio"][value="criteria_based"]').click()
-        cy.wait(3000)
+        cy.wait(3500)
         cy.contains('h4','Select Criteria').should('be.visible')
     }
+    
 
     saveGroup(){
         cy.get('.total-contacts-number').should('be.visible')
