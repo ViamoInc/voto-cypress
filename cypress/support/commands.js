@@ -56,6 +56,7 @@ Cypress.Commands.add('switchOrg', (orgName) => {
   cy.get('input[placeholder="Switch..."]').type(orgName)
   cy.contains('li', orgName).click()
   cy.wait(2000);
+  cy.reload();
   cy.contains('footer', orgName).should('be.visible')
   cy.wait(200);
 

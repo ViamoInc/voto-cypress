@@ -15,7 +15,7 @@ class GroupPage_Objects{
         cy.get('a[data-test="choose-contacts"]').click();
 
         cy.get('tr.js-open-subscriber-item').eq(1).click();
-        cy.wait(100)
+        cy.wait(100)// this due to an overlay that comes on the page , it allows us to load the dom completely
 
         cy.get('tr.js-open-subscriber-item').eq(2).click();
         cy.wait(100)
@@ -50,13 +50,13 @@ class GroupPage_Objects{
 
     }    
     expandGroup(){
-        cy.wait(1000);
+        cy.wait(1500);// this due to an overlay that comes on the page , it allows us to load the dom completely
         cy.contains('a','More').eq(0).click();
         cy.contains('a','Divide Group').click({ force: true });
         cy.get('[id="number-of-groups"]').clear().type(2);
         cy.contains('button', 'Proceed').click();
         cy.contains('button', 'Close').click({force: true} );
-        cy.wait(1000);
+        cy.wait(1500);// this due to an overlay that comes on the page , it allows us to load the dom completely
 
     }
     shrinkGroup(){
@@ -90,6 +90,7 @@ class GroupPage_Objects{
         cy.get('.alert-success').should('be.visible')
     }
     cleanup(){
+        cy.wait(6000);
         cy.reload();
         //cy.get('span.badge-warning').should('contain.text', 'Saving...100%');
 
