@@ -27,12 +27,14 @@ describe('audience targeting group', () => {
         const description = data.description +' created @ ' + Configs.timestamp
         
         // creating group  using the imported group objects
-        group.createGroup(groupName, description)
+        group.createGroup(groupName, description);
        //add subscriber to group
-        group.addSubscribersToGroupUsingAudienceTarget()
+        group.addSubscribersToGroupUsingAudienceTarget();
       // save the group
-        group.saveGroup()
+        group.saveGroup();
         //logout
+        cy.switchOrg(data.defaultOrg);
+
         cy.logoutOfVoto()
 
     });
