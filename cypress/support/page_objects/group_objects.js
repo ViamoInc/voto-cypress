@@ -50,13 +50,13 @@ class GroupPage_Objects{
 
     }    
     expandGroup(){
-        cy.wait(1500);
+        cy.wait(1000);
         cy.contains('a','More').eq(0).click();
         cy.contains('a','Divide Group').click({ force: true });
         cy.get('[id="number-of-groups"]').clear().type(2);
         cy.contains('button', 'Proceed').click();
         cy.contains('button', 'Close').click({force: true} );
-        cy.wait(1500);
+        cy.wait(1000);
 
     }
     shrinkGroup(){
@@ -90,7 +90,6 @@ class GroupPage_Objects{
         cy.get('.alert-success').should('be.visible')
     }
     cleanup(){
-        cy.wait(6000);
         cy.reload();
         //cy.get('span.badge-warning').should('contain.text', 'Saving...100%');
 
