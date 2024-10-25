@@ -26,12 +26,7 @@
 // env configuration 
 
 // end of configuration
-<<<<<<< HEAD
 import { ContentNavigation, AppsNavigation  } from "./../support/navigations";
-=======
-import { ContentNavigation  } from "./../support/navigations";
-import { AppsNavigation  } from "./../support/navigations";
->>>>>>> 0fff18168e485a4bb884dba26685b119e8c87fad
 Cypress.Commands.add('searchAndSubmit', (searchText) => {
     cy.get('input[type="text"]').type(searchText).type('{enter}');
   });
