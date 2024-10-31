@@ -1,3 +1,4 @@
+
 // ***********************************************
 
 // This example commands.js shows you how to
@@ -172,8 +173,12 @@ Cypress.Commands.add('SendOutboundMessage', (message) => {
   const defaultlogin = {
     contact: Cypress.env('Outboundcontact')
   }
-  cy.get('[data-icon="paper-plane"]').click()
-  cy.contains('a', 'Create New').click({ force: true })
+  cy.get('[data-test="nav-main-menu-item--campaigns"]').click()
+  //cy.get('[data-test="nav-menu-item--outbound-campaigns"]').click()
+
+  cy.get('[data-test="nav-menu-item-action--outgoing--create-new"]').click()
+
+ // cy.contains('a', 'Create New').click({ force: true })
   cy.get('#recipient_all').select('Selected contacts');
   cy.contains('a', 'Choose contacts...').click()
   cy.get('[placeholder="Search contacts..."]').type(defaultlogin.contact)

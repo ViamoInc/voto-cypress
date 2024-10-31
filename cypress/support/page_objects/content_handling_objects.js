@@ -18,7 +18,7 @@ class ContentHandling_Objects{
         cy.wait(5000)
         cy.get('[class = "via-helper-text tw-text-neutral-700"]').should('have.text',' Call in progress... '); // Verify initial state
         // Wait for 10 seconds, checking every 500 milliseconds if the text changed
-        cy.wait(10000, { delay: 5000 }).then(() => {
+        cy.wait(10000, { delay: 10000 }).then(() => {
         cy.get('[class = "via-helper-text tw-text-neutral-700"]').should('not.have.text', ' Call Successful... ') // Assert after text change
         .then(() => {cy.log('Call stuck in progress!');}) 
         
@@ -43,7 +43,7 @@ class ContentHandling_Objects{
     }
     saveCtrMessage(){
         cy.contains('span','Save & Publish').click()
-        cy.wait(500)
+        cy.wait(1000);
         cy.contains('a','More').first().click()
         cy.get('[data-target="#confirm-delete-message-set"]').first().click({force: true})
         cy.get('#confirm-delete-message-set_submit').should('be.visible').click()
