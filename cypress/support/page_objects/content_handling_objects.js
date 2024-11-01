@@ -21,6 +21,7 @@ class ContentHandling_Objects{
         cy.wait(10000, { delay: 10000 }).then(() => {
         cy.get('[class = "via-helper-text tw-text-neutral-700"]').should('not.have.text', ' Call Successful... ') // Assert after text change
         .then(() => {cy.log('Call stuck in progress!');}) 
+        cy.wait(5000)
         
       //  cy.get('[role="alert"]').should('have.text','You have successfully published a new message.')
   });
@@ -39,6 +40,7 @@ class ContentHandling_Objects{
 
     }
     configureSmsEnglish(descriptionEng){
+        cy.wait(5000);
         cy.get('[aria-label="sms content for English"]').eq(0).type(descriptionEng)     
     }
     saveCtrMessage(){
