@@ -12,6 +12,8 @@ describe('contact', () => {
       });
     beforeEach(() => {
        // cy.visit("/")
+       cy.clearCookies();
+       cy.clearLocalStorage();
         cy.loginToVoto();
         
       });

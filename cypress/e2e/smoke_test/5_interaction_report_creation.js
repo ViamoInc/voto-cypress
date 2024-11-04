@@ -16,6 +16,8 @@ describe("Interaction Report", () => {
     cy.navigateToInteractionReportsPage()
     interactionReport.deleteCreatedReport();
     cy.logoutOfVoto();
+    cy.clearCookies();
+    cy.clearLocalStorage();
   });
 
   const interactionReport = new InteractionReport_Objects();

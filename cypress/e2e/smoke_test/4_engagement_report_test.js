@@ -17,6 +17,8 @@ describe("Engagement Report", () => {
     cy.navigateToEngagementReportsPage();
     engagementReport.deleteCreatedReport();
     cy.logoutOfVoto();
+    cy.clearCookies();
+    cy.clearLocalStorage();
   });
 
 

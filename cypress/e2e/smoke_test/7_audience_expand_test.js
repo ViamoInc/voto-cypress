@@ -9,6 +9,8 @@ describe('audience targeting group', () => {
       
     });
     beforeEach(() => {
+      cy.clearCookies();
+      cy.clearLocalStorage();
        // cy.visit("/")
        Cypress.on('uncaught:exception', (err, runnable) => {
         // Ignore network errors or specific messages

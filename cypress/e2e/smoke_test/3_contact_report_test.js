@@ -15,6 +15,8 @@ describe("Contact Report", () => {
     contactReport.visitContactReportPage();
     contactReport.deleteCreatedReport();
     cy.logoutOfVoto();
+    cy.clearCookies();
+    cy.clearLocalStorage();
   });
 
   const contactReport = new ContactReport_Objects();

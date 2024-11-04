@@ -22,6 +22,8 @@ describe('group', () => {
       afterEach(function () {
         // Pass the same function reference used in cy.on
         cy.off('uncaught:exception', uncaughtExceptionHandler);
+        cy.clearCookies();
+        cy.clearLocalStorage();
     });
       // declaring a constant to hold the content_handling class that contains objects.
       const ctr = new ContentHandling_Objects();
@@ -56,7 +58,7 @@ describe('group', () => {
       ctr.configureSmsEnglish(data.descriptionEnglish + Configs.timestamp)
       ctr.saveCtrMessage();
       //logout
-        cy.logoutOfVoto();
+      cy.logoutOfVoto();
   });
     // send CTR message out 
     it('Should configure outbound call with CTR', () => {

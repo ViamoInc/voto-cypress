@@ -11,6 +11,8 @@ describe('audience targeting group', () => {
       });
     beforeEach(() => {
        // cy.visit("/")
+       cy.clearCookies();
+       cy.clearLocalStorage();
         cy.loginToVoto();
         cy.switchOrg(data.audienceTargetingOrg)
         
