@@ -1,8 +1,12 @@
 pipeline {
+  // Run everything inside the Cypress image (has Node+Chrome+Cypress)
   agent {
     docker {
       image 'cypress/included:13.7.3'
-      args '-u root:root --shm-size=2g'
+      // IMPORTANT: run as a non-root UID that matches your Jenkins user.
+      // On Amazon Linux/Ubuntu, 'ec2-user' or 'jenkins' is typically uid 1000.
+      // If your Jenkins user uses a different uid, change 1000:1000 to match.
+      args '-u 1000:1000 --shm-size=2g'
       reuseNode true
     }
   }
@@ -10,39 +14,63 @@ pipeline {
   options {
     timestamps()
     buildDiscarder(logRotator(numToKeepStr: '50'))
+    // We will do an explicit checkout after fixing perms
+    skipDefaultCheckout(true)
   }
 
-  triggers { cron('H 6 * * 1-5') } // Weekdays 06:00 – change/remove as you like
+  triggers { cron('H 6 * * 1-5') } // Weekdays 06:00; adjust/remove if you prefer
 
   environment {
     CYPRESS_baseUrl = 'https://darkmatter.votomobile.org'
-    JUNIT_OUTPUT = 'reports/junit/results-[hash].xml'
-    // Speed up npm a bit / reduce noise
+    JUNIT_OUTPUT    = 'reports/junit/results-[hash].xml'
     NPM_CONFIG_AUDIT = 'false'
     NPM_CONFIG_FUND  = 'false'
   }
 
   stages {
+    stage('Prepare workspace') {
+      steps {
+        sh '''
+          set -euxo pipefail
+          # Show current UID/GID so we know what owns files we create
+          id
+
+          # Take ownership of the workspace (in case previous runs wrote as a different user)
+          # If you previously ran as root, some files may be root-owned; fix that now.
+          chown -R $(id -u):$(id -g) "$WORKSPACE" || true
+
+          # Remove stale node_modules that Git can't clean due to perms
+          rm -rf node_modules || true
+        '''
+      }
+    }
+
+    stage('Checkout') {
+      steps {
+        checkout scm
+        // Optional: clean again now that perms are fixed
+        sh 'git clean -ffdx || true'
+      }
+    }
+
     stage('Install & Run Cypress (All)') {
       steps {
         sh '''
           set -euxo pipefail
 
-          # Heartbeat to keep Jenkins log active while npm is busy
+          # Heartbeat so Jenkins Durable Task never thinks we're idle
           ( while true; do echo "[heartbeat] npm still running $(date)"; sleep 30; done ) &
           HB=$!
 
-          # Install deps (be verbose enough to keep output flowing)
           npm ci --no-progress --foreground-scripts --loglevel=info
 
           kill $HB || true
 
-          # Verify Cypress is ready (fast in cypress/included)
           npx cypress verify
 
           mkdir -p reports/junit
 
-          # Run ALL specs (default specPattern), headless Chrome
+          # Run ALL tests (default cypress.config specPattern)
           npx cypress run \
             --browser chrome \
             --reporter junit \
