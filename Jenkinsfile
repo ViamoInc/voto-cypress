@@ -1,47 +1,40 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'cypress/included:13.7.3'      
+      args '-u root:root --shm-size=2g'    
+      reuseNode true
+    }
+  }
 
   options {
     timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '50'))
   }
 
   triggers {
-    cron('''
-H 6 * * 1-5
-H 23 * * 1-5
-''')
+    cron('H 6 * * 1-5')
+  }
+
+  environment {
+    CYPRESS_baseUrl = 'https://darkmatter.votomobile.org'
+    JUNIT_OUTPUT = 'reports/junit/results-[hash].xml'
   }
 
   stages {
-    stage('Checkout') {
+    stage('Install & Run Cypress (All)') {
       steps {
-        checkout scm
-      }
-    }
-
-    stage('Install & Run Cypress') {
-      steps {
-   
         sh '''
-          set -e
+          set -euxo pipefail
           npm ci
           npx cypress verify
 
           mkdir -p reports/junit
-
-          echo "=== SMOKE ==="
+          # Run ALL specs (default specPattern), headless Chrome
           npx cypress run \
             --browser chrome \
             --reporter junit \
-            --reporter-options "mochaFile=reports/junit/results-[hash].xml,toConsole=true" \
-            --spec "cypress/e2e/smoke/**/*.cy.{js,ts}"
-
-          echo "=== REGRESSION ==="
-          npx cypress run \
-            --browser chrome \
-            --reporter junit \
-            --reporter-options "mochaFile=reports/junit/results-[hash].xml,toConsole=true" \
-            --spec "cypress/e2e/regression/**/*.cy.{js,ts}"
+            --reporter-options "mochaFile=${JUNIT_OUTPUT},toConsole=true"
         '''
       }
     }
