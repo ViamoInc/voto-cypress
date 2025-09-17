@@ -1,11 +1,8 @@
 pipeline {
-  // Run everything inside the Cypress image (has Node+Chrome+Cypress)
   agent {
     docker {
       image 'cypress/included:13.7.3'
-      // IMPORTANT: run as a non-root UID that matches your Jenkins user.
-      // On Amazon Linux/Ubuntu, 'ec2-user' or 'jenkins' is typically uid 1000.
-      // If your Jenkins user uses a different uid, change 1000:1000 to match.
+      // Use the same uid:gid as your Jenkins user. If it's not 1000:1000, change it.
       args '-u 1000:1000 --shm-size=2g'
       reuseNode true
     }
@@ -14,17 +11,18 @@ pipeline {
   options {
     timestamps()
     buildDiscarder(logRotator(numToKeepStr: '50'))
-    // We will do an explicit checkout after fixing perms
     skipDefaultCheckout(true)
   }
 
-  triggers { cron('H 6 * * 1-5') } // Weekdays 06:00; adjust/remove if you prefer
+  // Weekdays 06:00 (server TZ). Adjust or remove if you prefer.
+  triggers { cron('H 6 * * 1-5') }
 
   environment {
-    CYPRESS_baseUrl = 'https://darkmatter.votomobile.org'
-    JUNIT_OUTPUT    = 'reports/junit/results-[hash].xml'
-    NPM_CONFIG_AUDIT = 'false'
-    NPM_CONFIG_FUND  = 'false'
+    CYPRESS_baseUrl   = 'https://darkmatter.votomobile.org'
+    JUNIT_DIR         = 'cypress/reports/junit'
+    JUNIT_OUTPUT      = 'cypress/reports/junit/results-[hash].xml'
+    NPM_CONFIG_AUDIT  = 'false'
+    NPM_CONFIG_FUND   = 'false'
   }
 
   stages {
@@ -32,14 +30,8 @@ pipeline {
       steps {
         sh '''
           set -euxo pipefail
-          # Show current UID/GID so we know what owns files we create
           id
-
-          # Take ownership of the workspace (in case previous runs wrote as a different user)
-          # If you previously ran as root, some files may be root-owned; fix that now.
           chown -R $(id -u):$(id -g) "$WORKSPACE" || true
-
-          # Remove stale node_modules that Git can't clean due to perms
           rm -rf node_modules || true
         '''
       }
@@ -48,29 +40,32 @@ pipeline {
     stage('Checkout') {
       steps {
         checkout scm
-        // Optional: clean again now that perms are fixed
         sh 'git clean -ffdx || true'
       }
     }
 
-    stage('Install & Run Cypress (All)') {
+    stage('Install deps') {
       steps {
         sh '''
           set -euxo pipefail
+          npm ci --no-progress --foreground-scripts --loglevel=info &
+          CI_PID=$!
+          while kill -0 "$CI_PID" 2>/dev/null; do
+            echo "[heartbeat] npm ci still running $(date)"
+            sleep 20
+          done
+          wait "$CI_PID"
+        '''
+      }
+    }
 
-          # Heartbeat so Jenkins Durable Task never thinks we're idle
-          ( while true; do echo "[heartbeat] npm still running $(date)"; sleep 30; done ) &
-          HB=$!
-
-          npm ci --no-progress --foreground-scripts --loglevel=info
-
-          kill $HB || true
-
+    stage('Run Cypress (all specs)') {
+      steps {
+        sh '''
+          set -euxo pipefail
           npx cypress verify
+          mkdir -p "${JUNIT_DIR}"
 
-          mkdir -p reports/junit
-
-          # Run ALL tests (default cypress.config specPattern)
           npx cypress run \
             --browser chrome \
             --reporter junit \
@@ -82,7 +77,7 @@ pipeline {
 
   post {
     always {
-      junit allowEmptyResults: true, testResults: 'reports/junit/*.xml'
+      junit allowEmptyResults: true, testResults: '${JUNIT_DIR}/*.xml'
       archiveArtifacts allowEmptyArchive: true, artifacts: 'cypress/screenshots/**/*, cypress/videos/**/*'
     }
   }
