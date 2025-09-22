@@ -1,55 +1,72 @@
-# README #
-### What is this repository for? ###
-* Quick summary
+# voto-cypress
 
-This repository contains end-to-end (e2e) tests for the VOTO5 app, utilizing the Cypress testing framework. The tests are organized following the Page Object Model design pattern to enhance maintainability and readability. The repository also includes a comprehensive reporting functionality to facilitate test analysis.
+## Overview
+This repository contains the Cypress end-to-end (E2E) regression and smoke suites for the VOTO5 web application. Tests follow a Page Object Model structure and produce JUnit reports, screenshots, and videos for analysis.
 
+## Prerequisites
+- Node.js 16+ (matches the Cypress base image)
+- npm
+- Docker (optional, required for the Jenkins-aligned workflow)
+- `just` task runner (optional locally; the Docker image ships with it). If you do not have `just` installed, run `./scripts/run-just.sh --list` to bootstrap a local copy into `./bin`.
 
-* Version
+## Getting Started
+1. Clone this repository.
+2. Duplicate `example.cypress.env.json` to `cypress.env.json` and populate it with environment-specific credentials.
+3. Install dependencies:
+   ```bash
+   just install      # preferred (validates env file)
+   # or
+   npm ci
+   ```
 
-### How do I get set up? ###
+> **Note:** `just install` aborts in CI if `cypress.env.json` is missing. Locally it will auto-copy the example file when present.
 
-* Summary of set up
+## Running Tests
+- `just run-all` – headless run of every spec under `cypress/e2e/**`
+- `just run-smoke` – only smoke specs
+- `just run-regression` – only regression specs
+- `npm run cy:open` – open the Cypress GUI runner
+- `npm run cy:run` – headless run using npm scripts
 
-After cloning the repository
-- Make a copy of example.cypress.env.json file as cypress.env.json
-- Provide target environment details in the cypress.env.json file
-- run yarn install or npm install to install all the dependencies in the project
-* How to run tests
-- yarn cy_open    to start cypress
+Artifacts are written to:
+- `cypress/reports/junit/` – JUnit XML
+- `cypress/screenshots/` – Screenshots on failure (per spec configuration)
+- `cypress/videos/` – Video recordings when enabled
 
-### File Structure
-- cypress/
-    - e2e/
-        - regression-test/
-            Contains regression test files.
-        - smoke-test/
-            Contains smoke test files.
-    - fixtures/
-        Contains fixture files providing data sources for corresponding test files.
-    - cypress.env.json
-        Git-ignored file containing essential environment data for tests.
+## Docker & CI Workflow
+The repository ships with `docker/ci/Dockerfile`, which layers on top of `cypress/included:10.7.0`, installs the `just` CLI, and expects the repository to be bind-mounted at `/e2e`.
 
+- Build & run locally: `just docker-ci` (add `smoke` or `regression` to scope the suite)
+- The container mounts the workspace, so test artifacts remain on the host.
+- npm cache is mounted at `$NPM_CACHE_DIR` (defaults to `/home/jenkins/.cache/npm` in CI) to accelerate repeated installs.
 
-### Usage
-    Prerequisites
-        - Node.js installed
-        - Cypress installed (npm install cypress)
-### Running Tests
-    - Clone the repository.
-    - Install dependencies with 'npm install'.
-    - Run Cypress with 'npm test'.
-    - Use this script to run all the tests under smoke_test with report "triggerAll-Smoke-tests"
-    - Use this script to run all the tests under regression_test with report "triggerAll-Regression-tests"
-### Test Data
-- Update test data in the 'fixtures/' folder to match your testing scenarios.
-### Environment Configuration
-- Modify the cypress.env.json file to set up your environment variables.
-### Reporting
-- The repository supports reporting for better test analysis. View reports in the reports/ directory after test execution.
+## Jenkins Pipeline
+The `Jenkinsfile` builds the Docker image and executes `just ci` inside it via `./scripts/run-just.sh`. Key behaviour:
+- Parameter `CYPRESS_SUITE` selects `all`, `smoke`, or `regression` suites.
+- Credentials expected:
+  - File credential `voto-cypress-env-json` → streamed to `cypress.env.json`.
+  - (Optional) Secret text `voto-cypress-record-key` → exported as `CYPRESS_RECORD_KEY` for Cypress Dashboard uploads.
+- `node_modules` are cached between builds via `io.viamo.jenkins.Cache` helpers.
+- Test reports and rich artifacts (screenshots/videos) are archived automatically.
 
-### Who do I talk to? ###
-For further clarification or inquiries, please reach out to the Automation Initiative team.
+## Project Structure
+```
+├── cypress/
+│   ├── e2e/
+│   │   ├── smoke_test/
+│   │   └── regression_test/
+│   ├── fixtures/
+│   └── support/
+├── docker/ci/Dockerfile
+├── justfile
+├── scripts/
+│   ├── install.sh
+│   ├── cypress-run.sh
+│   ├── docker-ci.sh
+│   └── run-just.sh
+├── cypress.config.js
+└── example.cypress.env.json
+```
 
-* Repo owner or admin
-* Other community or team contact
+## Support
+Questions? Contact the Automation Initiative team or the repository maintainers.

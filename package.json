@@ -4,10 +4,12 @@
   "description": "Voto5 cypress automation",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "cy_open": "node_modules/.bin/cypress open",
-    "triggerAll-Smoke-tests": "npx cypress run --spec ./cypress/e2e/smoke_test/*.js",
-    "triggerAll-Regression-tests": "npx cypress run --spec ./cypress/e2e/regression_test/*.js"
+    "test": "npm run cy:smoke",
+    "cy:open": "cypress open",
+    "cy:verify": "cypress verify",
+    "cy:run": "cypress run",
+    "cy:smoke": "cypress run --spec 'cypress/e2e/smoke_test/**/*.js'",
+    "cy:regression": "cypress run --spec 'cypress/e2e/regression_test/**/*.js'"
   },
   "repository": {
     "type": "git",
