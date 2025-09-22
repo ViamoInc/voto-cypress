@@ -1,9 +1,8 @@
 pipeline {
   agent {
     docker {
-      image 'cypress/included:13.7.3'
-      // Use the same uid:gid as your Jenkins user. If it's not 1000:1000, change it.
-      args '-u 1000:1000 --shm-size=2g'
+      image 'cypress/included:13.7.3'           // Node + Chrome + Cypress
+      args  '-u 1000:1000 --shm-size=2g'        // <<< change 1000:1000 to your Jenkins uid:gid if different
       reuseNode true
     }
   }
@@ -14,7 +13,7 @@ pipeline {
     skipDefaultCheckout(true)
   }
 
-  // Weekdays 06:00 (server TZ). Adjust or remove if you prefer.
+  // Weekdays 06:00 (server TZ). Adjust/remove as you like.
   triggers { cron('H 6 * * 1-5') }
 
   environment {
@@ -31,7 +30,8 @@ pipeline {
         sh '''
           set -euxo pipefail
           id
-          chown -R $(id -u):$(id -g) "$WORKSPACE" || true
+          # Fix ownership from any previous root-owned files
+          chown -R "$(id -u)":"$(id -g)" "$WORKSPACE" || true
           rm -rf node_modules || true
         '''
       }
@@ -48,13 +48,27 @@ pipeline {
       steps {
         sh '''
           set -euxo pipefail
+
+          # --- Correct order: background npm, THEN capture its PID ---
           npm ci --no-progress --foreground-scripts --loglevel=info &
           CI_PID=$!
+
+          # Heartbeat loop while npm is running (updates log every 15s)
           while kill -0 "$CI_PID" 2>/dev/null; do
             echo "[heartbeat] npm ci still running $(date)"
-            sleep 20
+            sleep 15
           done
+
+          # Propagate npm's exit code
           wait "$CI_PID"
+
+          # --------- Alternative keepalive (works too) ----------
+          # ( while true; do echo "[keepalive] $(date)"; sleep 15; done ) &
+          # KA=$!
+          # trap "kill $KA || true" EXIT
+          # npm ci --no-progress --foreground-scripts --loglevel=info
+          # kill $KA || true
+          # ------------------------------------------------------
         '''
       }
     }
@@ -66,6 +80,7 @@ pipeline {
           npx cypress verify
           mkdir -p "${JUNIT_DIR}"
 
+          # Run EVERYTHING under cypress/e2e/** (your folders: smoke_test, regression_test, other)
           npx cypress run \
             --browser chrome \
             --reporter junit \
