@@ -21,7 +21,8 @@ pipeline {
     // See Run Cypress stage for NPM_CACHE_DIR resolution.
     NPM_CACHE_DIR                    = ''
     CYPRESS_ENV_CREDENTIAL_ID        = 'voto_cypress_env_json'
-    CYPRESS_RECORD_KEY_CREDENTIAL_ID = 'voto_cypress_record_key'
+    // Optional; leave blank unless Cypress Dashboard recording is configured
+    CYPRESS_RECORD_KEY_CREDENTIAL_ID = ''
   }
 
   stages {
