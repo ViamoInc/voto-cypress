@@ -7,8 +7,11 @@ module.exports = defineConfig({
   video: false,
   e2e: {
     setupNodeEvents(on, config) {
-      // implement node event listeners here
-      require("cypress-mochawesome-reporter/plugin")(on);
+      try {
+        require("cypress-mochawesome-reporter/plugin")(on)
+      } catch (e) {
+        console.warn('[cypress] mochawesome reporter plugin not installed; skipping')
+      }
     },
     specPattern: "cypress/e2e/**/*.{js,jsx,ts,tsx,feature}",
     excludeSpecPattern: "cypress/e2e/other/**",

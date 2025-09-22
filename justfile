@@ -52,7 +52,9 @@ ci suite='all':
 	just cypress-run {{suite}}
 
 docker-build:
-	docker build --file docker/ci/Dockerfile --tag {{ci_image}} .
+	SAFE_DOCKER_CONFIG="${SAFE_DOCKER_CONFIG:-.docker-nocreds}"; \
+	mkdir -p "$SAFE_DOCKER_CONFIG"; \
+	DOCKER_BUILDKIT="${DOCKER_BUILDKIT:-0}" DOCKER_CONFIG="$SAFE_DOCKER_CONFIG" docker build --file docker/ci/Dockerfile --tag {{ci_image}} .
 
 docker-ci suite='all':
 	just docker-build

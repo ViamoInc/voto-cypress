@@ -50,7 +50,7 @@ case "${cmd}" in
     JUNIT_OUTPUT="${JUNIT_OUTPUT:-cypress/reports/junit/results-[hash].xml}"
     DEFAULT_BASE_URL="${DEFAULT_BASE_URL:-${CYPRESS_baseUrl:-https://staging.example.com}}"
     docker build --file "${REPO_ROOT}/docker/ci/Dockerfile" --tag "${CI_IMAGE}" "${REPO_ROOT}"
-    CI_IMAGE="${CI_IMAGE}"     DOCKER_SHM_SIZE="${DOCKER_SHM_SIZE}"     REPORTS_DIR="${REPORTS_DIR}"     JUNIT_OUTPUT="${JUNIT_OUTPUT}"     DEFAULT_BASE_URL="${DEFAULT_BASE_URL}"       exec "${REPO_ROOT}/scripts/docker-ci.sh" "${suite}"
+    CI_IMAGE="${CI_IMAGE}"     DOCKER_SHM_SIZE="${DOCKER_SHM_SIZE}"     REPORTS_DIR="${REPORTS_DIR}"     JUNIT_OUTPUT="${JUNIT_OUTPUT}"     DEFAULT_BASE_URL="${DEFAULT_BASE_URL}"       exec bash "${REPO_ROOT}/scripts/docker-ci.sh" "${suite}"
     ;;
 
   ci)
