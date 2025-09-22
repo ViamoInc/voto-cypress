@@ -19,17 +19,26 @@ if [[ -n "${CYPRESS_PROJECT_ID:-}" ]]; then
   EXTRA_ENV+=("-e" "CYPRESS_PROJECT_ID=${CYPRESS_PROJECT_ID}")
 fi
 
-docker run --rm \
-  --shm-size "${SHM_SIZE}" \
-  --user "${USER_ID}:${GROUP_ID}" \
-  -e HOME=/tmp \
-  -e NPM_CONFIG_CACHE=/tmp/npm-cache \
-  -e DEFAULT_BASE_URL="${DEFAULT_BASE_URL}" \
-  -e REPORTS_DIR="${REPORTS_DIR:-cypress/reports/junit}" \
-  -e JUNIT_OUTPUT="${JUNIT_OUTPUT:-cypress/reports/junit/results-[hash].xml}" \
-  -e DOCKER_SHM_SIZE="${SHM_SIZE}" \
-  -e CYPRESS_baseUrl="${CYPRESS_baseUrl:-${DEFAULT_BASE_URL}}" \
-  "${EXTRA_ENV[@]}" \
-  -v "${PWD}:/e2e" \
-  -v "${CACHE_DIR}:/tmp/npm-cache" \
-  "${CI_IMAGE}" ci "${SUITE}"
+# Compose docker run arguments
+RUN_ARGS=(
+  --rm
+  --shm-size "${SHM_SIZE}"
+  --user "${USER_ID}:${GROUP_ID}"
+  -e HOME=/tmp
+  -e NPM_CONFIG_CACHE=/tmp/npm-cache
+  -e DEFAULT_BASE_URL="${DEFAULT_BASE_URL}"
+  -e REPORTS_DIR="${REPORTS_DIR:-cypress/reports/junit}"
+  -e JUNIT_OUTPUT="${JUNIT_OUTPUT:-cypress/reports/junit/results-[hash].xml}"
+  -e DOCKER_SHM_SIZE="${SHM_SIZE}"
+  -e CYPRESS_baseUrl="${CYPRESS_baseUrl:-${DEFAULT_BASE_URL}}"
+  -v "${PWD}:/e2e"
+  -v "${CACHE_DIR}:/tmp/npm-cache"
+)
+
+# Append optional envs only if defined (works with set -u)
+if ((${#EXTRA_ENV[@]:-0})); then
+  RUN_ARGS+=("${EXTRA_ENV[@]}")
+fi
+
+# Execute
+exec docker run "${RUN_ARGS[@]}" "${CI_IMAGE}" ci "${SUITE}"
