@@ -44,8 +44,8 @@ The repository ships with `docker/ci/Dockerfile`, which layers on top of `cypres
 The `Jenkinsfile` builds the Docker image and executes `just ci` inside it via `./scripts/run-just.sh`. Key behaviour:
 - Parameter `CYPRESS_SUITE` selects `all`, `smoke`, or `regression` suites.
 - Credentials expected:
-  - File credential `voto-cypress-env-json` → streamed to `cypress.env.json`.
-  - (Optional) Secret text `voto-cypress-record-key` → exported as `CYPRESS_RECORD_KEY` for Cypress Dashboard uploads.
+  - File credential `voto_cypress_env_json` → streamed to `cypress.env.json`.
+  - (Optional) Secret text `voto_cypress_record_key` → exported as `CYPRESS_RECORD_KEY` for Cypress Dashboard uploads.
 - `node_modules` are cached between builds via `io.viamo.jenkins.Cache` helpers.
 - Test reports and rich artifacts (screenshots/videos) are archived automatically.
 

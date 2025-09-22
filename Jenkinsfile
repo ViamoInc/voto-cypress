@@ -18,8 +18,8 @@ pipeline {
     CYPRESS_baseUrl                  = 'https://darkmatter.votomobile.org'
     DOCKER_SHM_SIZE                  = '2g'
     NPM_CACHE_DIR                    = '/home/jenkins/.cache/npm'
-    CYPRESS_ENV_CREDENTIAL_ID        = 'voto-cypress-env-json'
-    CYPRESS_RECORD_KEY_CREDENTIAL_ID = 'voto-cypress-record-key'
+    CYPRESS_ENV_CREDENTIAL_ID        = 'voto_cypress_env_json'
+    CYPRESS_RECORD_KEY_CREDENTIAL_ID = 'voto_cypress_record_key'
   }
 
   stages {
