@@ -17,7 +17,9 @@ pipeline {
   environment {
     CYPRESS_baseUrl                  = 'https://darkmatter.votomobile.org'
     DOCKER_SHM_SIZE                  = '2g'
-    NPM_CACHE_DIR                    = '/home/jenkins/.cache/npm'
+    // Host-side npm cache directory will be set per-workspace at runtime.
+    // See Run Cypress stage for NPM_CACHE_DIR resolution.
+    NPM_CACHE_DIR                    = ''
     CYPRESS_ENV_CREDENTIAL_ID        = 'voto_cypress_env_json'
     CYPRESS_RECORD_KEY_CREDENTIAL_ID = 'voto_cypress_record_key'
   }
@@ -70,12 +72,14 @@ pipeline {
         script {
           def suite = params.CYPRESS_SUITE ?: 'all'
           def imageTag = "voto-cypress-ci:${env.BUILD_TAG ?: env.BUILD_NUMBER}"
-          sh "mkdir -p ${env.NPM_CACHE_DIR}"
+          // Use a workspace-local npm cache to avoid permission issues on agents
+          def npmCache = "${env.WORKSPACE}/.npm-cache"
+          sh "mkdir -p ${npmCache}"
 
           def execute = {
             withEnv([
               "CI_IMAGE=${imageTag}",
-              "NPM_CACHE_DIR=${env.NPM_CACHE_DIR}"
+              "NPM_CACHE_DIR=${npmCache}"
             ]) {
               sh "./scripts/run-just.sh docker-ci ${suite}"
             }
