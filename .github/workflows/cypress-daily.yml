@@ -55,10 +55,8 @@ jobs:
 
       - name: Notify Slack - Success
         if: steps.smoke.outcome == 'success'
-        uses: slackapi/slack-github-action@v2.0.0
+        uses: slackapi/slack-github-action@v1.27.0
         with:
-          webhook: ${{ secrets.SLACK_CYPRESS_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
           payload: |
             {
               "blocks": [
@@ -71,13 +69,14 @@ jobs:
                 }
               ]
             }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CYPRESS_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
       - name: Notify Slack - Failure
         if: steps.smoke.outcome == 'failure'
-        uses: slackapi/slack-github-action@v2.0.0
+        uses: slackapi/slack-github-action@v1.27.0
         with:
-          webhook: ${{ secrets.SLACK_CYPRESS_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
           payload: |
             {
               "blocks": [
@@ -90,6 +89,9 @@ jobs:
                 }
               ]
             }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CYPRESS_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
       - name: Fail the job if tests failed
         if: steps.smoke.outcome == 'failure'
