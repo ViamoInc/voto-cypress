@@ -34,6 +34,9 @@ jobs:
           }
           ENVEOF
 
+      - name: Create report directories
+        run: mkdir -p cypress/reports/html/.jsons cypress/screenshots
+
       - name: Run Smoke Tests
         id: smoke
         run: npx cypress run --spec 'cypress/e2e/smoke_test/**/*.js' --browser electron
