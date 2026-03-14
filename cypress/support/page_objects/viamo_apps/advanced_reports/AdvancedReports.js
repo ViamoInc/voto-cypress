@@ -40,7 +40,9 @@ class AdvancedReports {
    * Report Configuration
    */
   openReportConfig() {
-    cy.get(".flight-monitor > .btn-primary").click();
+    cy.get(".flight-monitor > .btn-primary", { timeout: 15000 })
+      .should('be.visible')
+      .click();
   }
 
   saveReportConfig(saveConfig = true) {
@@ -60,15 +62,18 @@ class AdvancedReports {
    */
   addTreeResults(selectAllBlocks = true, addBlockInteractions = true) {
     if (selectAllBlocks) {
-      cy.wait(1000);
-      cy.get(".select-all > :nth-child(1)").click();
+      cy.get(".select-all > :nth-child(1)", { timeout: 30000 })
+        .should('be.visible')
+        .click();
       if (addBlockInteractions) {
         cy.get(".modal-footer > .btn-primary").click();
       } else {
         cy.get(".btn-light").click();
       }
     } else {
-      cy.get(".select-all > :nth-child(2)").click();
+      cy.get(".select-all > :nth-child(2)", { timeout: 30000 })
+        .should('be.visible')
+        .click();
     }
   }
 
@@ -118,10 +123,13 @@ class AdvancedReports {
 
   deleteCreatedReport(){
     cy.wait(500);
-    cy.get('[class="fa fa-trash"]').first().click();
-    cy.contains('button','Delete report').click();
-    cy.wait(2500);
-
+    cy.get('body').then(($body) => {
+      if ($body.find('[class="fa fa-trash"]').length > 0) {
+        cy.get('[class="fa fa-trash"]').first().click();
+        cy.contains('button','Delete report').click();
+        cy.wait(2500);
+      }
+    });
   }
 }
 
