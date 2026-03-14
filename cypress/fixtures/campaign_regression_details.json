@@ -1,0 +1,6 @@
+{
+    "message_name": "Cypress Campaign Regression MSG",
+    "sms_content": "This is a Cypress regression test SMS message",
+    "audio_name": "Recorded by Cypress",
+    "outbound_contact": "233573193593"
+}

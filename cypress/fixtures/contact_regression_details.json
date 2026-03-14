@@ -1,0 +1,15 @@
+{
+    "phone_number": "548800001",
+    "name": "Cypress Regression Contact",
+    "edited_name": "Cypress Edited Contact",
+    "location": "Ghana",
+    "language": "English",
+    "channel": "SMS",
+    "search_term": "Cypress Regression",
+    "group_name": "Cypress Regression Group",
+    "group_description": "Regression test group for Cypress",
+    "second_phone": "548800002",
+    "second_name": "Cypress Second Contact",
+    "property_name": "Cypress Test Property",
+    "property_type": "Text"
+}
