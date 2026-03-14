@@ -10,7 +10,11 @@ class InteractionReport_Objects extends AdvancedReports {
     if (columnType == "Tree Results") {
       cy.contains("a", columnType).click();
       cy.get(".multiselect__tags").click();
-      cy.get(".multiselect__tags").type(`${nameTree} {enter}`);
+      cy.get(".multiselect__tags").type(nameTree);
+      // Wait for dropdown option to appear before selecting
+      cy.get('.multiselect__option', { timeout: 15000 })
+        .contains(nameTree)
+        .click();
       cy.wait(2000);
     }
 
