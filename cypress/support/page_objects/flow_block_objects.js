@@ -143,7 +143,7 @@ class FlowBlock_Objects{
     }
 
     flowDetails(){
-      cy.get('[data-cy="builder-toolbar--flow-details--btn"]').click()
+      cy.get('[data-cy="builder-toolbar--flow-details--btn"]', { timeout: 20000 }).should('be.visible').click()
       cy.get('[data-cy="Open-response-label"]')
       .find('textarea')
       .type('Cypress flow block test edited')

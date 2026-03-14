@@ -1,7 +1,7 @@
 {
     "beforeEdit":"Open_my_block",
     "afterEditPostFix":"updatedOpen",
-    "resourceIVR":"ThankYouHaveANiceDay.wav",
+    "resourceIVR":"Recorded by Cypress",
     "resourceSMS":"NAME for sms",
     "resourceUSSD":"What is your name USSD",
     "maxDuration":"60",

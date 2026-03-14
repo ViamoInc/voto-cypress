@@ -17,14 +17,9 @@ class ContentHandling_Objects{
         cy.contains('span','Call This Phone Number').click()
         cy.wait(5000)
         cy.get('[class = "via-helper-text tw-text-neutral-700"]').should('have.text',' Call in progress... '); // Verify initial state
-        // Wait for 10 seconds, checking every 500 milliseconds if the text changed
-        cy.wait(10000, { delay: 10000 }).then(() => {
-        cy.get('[class = "via-helper-text tw-text-neutral-700"]').should('not.have.text', ' Call Successful... ') // Assert after text change
-        .then(() => {cy.log('Call stuck in progress!');}) 
-        cy.wait(5000)
-        
-      //  cy.get('[role="alert"]').should('have.text','You have successfully published a new message.')
-  });
+        // Wait for call to complete (up to 30 seconds)
+        cy.get('[class = "via-helper-text tw-text-neutral-700"]', { timeout: 30000 })
+          .should('have.text', ' Call Successful... ');
     }
     configureVoiceEnglish(audio_name){
         cy.get('[data-icon="chevron-down"]').first().click();

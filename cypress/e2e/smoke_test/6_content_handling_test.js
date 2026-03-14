@@ -44,8 +44,9 @@ describe('group', () => {
       cy.wait(5000);
       cy.logoutOfVoto();
     });
-// Call to record 
-    it('Should call subscriber and record', () => {
+// Call to record — requires a physical phone to answer and record audio.
+    // Cannot be automated end-to-end. Run manually when testing CTR telephony.
+    it.skip('Should call subscriber and record (MANUAL — requires physical phone)', () => {
       const currentDate = new Date();
       const Configs = {
           timestamp: currentDate.getTime()
@@ -53,15 +54,16 @@ describe('group', () => {
       // creating Message  using the imported ctr message objects
       ctr.visitMessagePage();
       ctr.createMessage(data.name)
-      // Place a call to subscriber 
+      // Place a call to subscriber
       ctr.callSubscriberToRecord()
       ctr.configureSmsEnglish(data.descriptionEnglish + Configs.timestamp)
       ctr.saveCtrMessage();
       //logout
       cy.logoutOfVoto();
   });
-    // send CTR message out 
-    it('Should configure outbound call with CTR', () => {
+    // send CTR message out — requires outbound campaign setup and telephony credits.
+    // Skipped in automated runs to avoid unintended calls.
+    it.skip('Should configure outbound call with CTR (MANUAL — outbound campaign)', () => {
       cy.SendOutboundMessage(data.name);
   });
     });

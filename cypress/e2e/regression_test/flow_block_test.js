@@ -55,6 +55,8 @@ cy.fixture('flow_openendedq_block_details').then(data => { openended = data; });
     });*/
 
     it('Should edit created Flow ', () =>{
+        // Re-login and navigate back to main app from flow builder
+        cy.loginToVoto();
         cy.EditFlow_tree();
         flow.flowDetails();
         cy.save();
@@ -63,6 +65,7 @@ cy.fixture('flow_openendedq_block_details').then(data => { openended = data; });
     });
 
     it('Clean up test',()=>{
+        cy.loginToVoto();
         cy.DeleteFlow();
     });
 

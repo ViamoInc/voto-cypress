@@ -1,0 +1,96 @@
+name: Daily Cypress Smoke Tests
+
+on:
+  schedule:
+    # Run daily at 06:00 UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  cypress-smoke:
+    runs-on: ubuntu-latest
+    container:
+      image: cypress/included:10.7.0
+      options: --shm-size=2gb
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create cypress.env.json
+        run: |
+          cat > cypress.env.json << 'ENVEOF'
+          {
+            "baseUrl": "${{ secrets.CYPRESS_BASE_URL }}",
+            "email": "${{ secrets.CYPRESS_EMAIL }}",
+            "password": "${{ secrets.CYPRESS_PASSWORD }}",
+            "Outboundcontact": "${{ secrets.CYPRESS_OUTBOUND_CONTACT }}",
+            "OrgName": "${{ secrets.CYPRESS_ORG_NAME }}"
+          }
+          ENVEOF
+
+      - name: Run Smoke Tests
+        id: smoke
+        run: npx cypress run --spec 'cypress/e2e/smoke_test/**/*.js' --browser electron
+        continue-on-error: true
+
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots/
+          if-no-files-found: ignore
+
+      - name: Upload Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-reports
+          path: cypress/reports/
+          if-no-files-found: ignore
+
+      - name: Notify Slack - Success
+        if: steps.smoke.outcome == 'success'
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_CYPRESS_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":white_check_mark: *Cypress Daily Smoke Tests — PASSED*\n*Target:* darkmatter.votomobile.org\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Results>"
+                  }
+                }
+              ]
+            }
+
+      - name: Notify Slack - Failure
+        if: steps.smoke.outcome == 'failure'
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_CYPRESS_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":x: *Cypress Daily Smoke Tests — FAILED*\n*Target:* darkmatter.votomobile.org\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Results>\n*Screenshots:* Download from artifacts"
+                  }
+                }
+              ]
+            }
+
+      - name: Fail the job if tests failed
+        if: steps.smoke.outcome == 'failure'
+        run: exit 1
