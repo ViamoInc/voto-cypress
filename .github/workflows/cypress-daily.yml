@@ -1,4 +1,4 @@
-name: Daily Cypress Smoke Tests
+name: Daily Cypress Tests (Smoke + Regression)
 
 on:
   schedule:
