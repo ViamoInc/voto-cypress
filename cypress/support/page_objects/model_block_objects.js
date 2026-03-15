@@ -29,13 +29,20 @@ class ModelBlock_Objects {
 
     // Helper to add a block by its data-block-type attribute
     // The flow builder has category dropdowns (Content, Contact, Branching, Advanced)
-    // We need to hover over each category to open its dropdown, then click the block
+    // Each category is a Bootstrap-style dropdown that opens on mouseover
     addBlockByType(blockType) {
-        // Click on each category dropdown to find and click the block type
-        cy.get('[data-cy="blocks--menu"]').within(() => {
-            // Find the link with the matching data-block-type and click it
-            cy.get(`a[data-block-type="${blockType}"]`).click({ force: true });
-        });
+        // First, find the block item (it's in the DOM but hidden inside a dropdown)
+        // and get its parent dropdown category
+        cy.get(`[data-cy="blocks--menu"] a[data-block-type="${blockType}"]`, { timeout: 10000 })
+            .should('exist')
+            .parents('.nav-item.dropdown')
+            .find('a.nav-link.dropdown-toggle')
+            .trigger('mouseover');
+
+        // Now the dropdown is open, click the block
+        cy.get(`[data-cy="blocks--menu"] a[data-block-type="${blockType}"]`)
+            .should('be.visible')
+            .click();
         cy.wait(1000);
     }
 

@@ -36,7 +36,8 @@ class PlatformRegression_Objects {
     createContactProperty(name, type = 'text') {
         // The "Add Contact Property" form has a "Property Name" field
         cy.get('input[type="text"]').first().type(name);
-        cy.contains('button', 'Save').click();
+        // The submit button is "Add Property"
+        cy.contains('button', 'Add Property').click();
         cy.wait(2000);
     }
 

@@ -50,7 +50,7 @@ describe('Flow Regression - Multi-Block Flow Creation', () => {
 
     it('Should edit the flow details', () => {
         cy.loginToVoto();
-        flow.navigateAndEditFlow();
+        flow.navigateAndEditFlow(data.flow_label);
         flow.editFlowDetails(' - Updated');
         flow.saveFlow();
         cy.logoutOfVoto();
@@ -106,20 +106,36 @@ describe('Flow Regression - Duplicate Flow', () => {
             linkSelector: "[data-test='nav-menu-item--trees-and-flows']"
         });
         cy.wait(2000);
-        // Delete first flow/tree using the js-delete class selector
-        cy.contains('a', 'More').first().click();
-        cy.wait(500);
-        cy.get('a.js-delete').first().click({ force: true });
-        cy.wait(500);
-        cy.contains('button', 'Delete').click();
+
+        // Delete up to 2 flows if they exist
+        cy.get('body').then(($body) => {
+            const deleteFlow = () => {
+                if ($body.find('a:contains("More")').length > 0) {
+                    cy.contains('a', 'More').first().click();
+                    cy.wait(500);
+                    cy.get('a.js-delete').first().click({ force: true });
+                    cy.wait(500);
+                    cy.contains('button', 'Delete').click();
+                    cy.wait(3000);
+                }
+            };
+            deleteFlow();
+        });
+
+        cy.reload();
         cy.wait(3000);
-        // Delete second flow/tree
-        cy.contains('a', 'More').first().click();
-        cy.wait(500);
-        cy.get('a.js-delete').first().click({ force: true });
-        cy.wait(500);
-        cy.contains('button', 'Delete').click();
-        cy.wait(2000);
+
+        cy.get('body').then(($body) => {
+            if ($body.find('a:contains("More")').length > 0) {
+                cy.contains('a', 'More').first().click();
+                cy.wait(500);
+                cy.get('a.js-delete').first().click({ force: true });
+                cy.wait(500);
+                cy.contains('button', 'Delete').click();
+                cy.wait(2000);
+            }
+        });
+
         cy.logoutOfVoto();
     });
 });

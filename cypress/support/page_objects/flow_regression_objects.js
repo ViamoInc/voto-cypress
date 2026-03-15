@@ -139,21 +139,30 @@ class FlowRegression_Objects {
         cy.contains('button', 'Done').click();
     }
 
-    // Navigate to flows list, find and edit
-    navigateAndEditFlow() {
+    // Navigate to flows list, find and edit a specific flow by name
+    navigateAndEditFlow(flowName) {
         this.visitFlowsPage();
         cy.wait(2000);
-        cy.get('[data-icon="edit"]').first().click();
-        cy.wait(3000);
+        if (flowName) {
+            // Find the row containing the flow name and click its edit icon
+            cy.contains('tr, .list-item, [class*="row"]', flowName, { timeout: 10000 })
+                .find('[data-icon="edit"]')
+                .click();
+        } else {
+            cy.get('[data-icon="edit"]', { timeout: 10000 }).first().click();
+        }
+        // Wait for flow builder to fully load (blocks menu is a reliable indicator)
+        cy.get('[data-cy="blocks--menu"]', { timeout: 15000 }).should('be.visible');
+        cy.wait(2000);
     }
 
     // Delete flow from list
     deleteFlow() {
         this.visitFlowsPage();
         cy.wait(2000);
-        cy.contains('a', 'More').first().click();
+        cy.contains('a', 'More', { timeout: 10000 }).first().click();
         cy.wait(500);
-        cy.contains('a', 'Delete Flow').first().click({ force: true });
+        cy.get('a.js-delete', { timeout: 5000 }).first().click({ force: true });
         cy.wait(500);
         cy.contains('button', 'Delete').click();
         cy.wait(2000);
@@ -163,7 +172,7 @@ class FlowRegression_Objects {
     duplicateFlow() {
         this.visitFlowsPage();
         cy.wait(2000);
-        cy.contains('a', 'More').first().click();
+        cy.contains('a', 'More', { timeout: 10000 }).first().click();
         cy.contains('a', 'Duplicate').first().click();
         cy.wait(3000);
     }
@@ -172,7 +181,7 @@ class FlowRegression_Objects {
     assertFlowInList(flowName) {
         this.visitFlowsPage();
         cy.wait(2000);
-        cy.contains('body', flowName).should('exist');
+        cy.contains('body', flowName, { timeout: 10000 }).should('exist');
     }
 
     // Assert flow name in builder
