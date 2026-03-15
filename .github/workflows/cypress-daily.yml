@@ -46,7 +46,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cypress-screenshots
+          name: smoke-screenshots
           path: cypress/screenshots/
           if-no-files-found: ignore
 
@@ -54,7 +54,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cypress-reports
+          name: smoke-reports
           path: cypress/reports/
           if-no-files-found: ignore
 
@@ -62,14 +62,71 @@ jobs:
         if: steps.smoke.outcome == 'failure'
         run: exit 1
 
-  notify:
+  cypress-regression:
     runs-on: ubuntu-latest
     needs: cypress-smoke
     if: always()
+    container:
+      image: cypress/included:10.7.0
+      options: --shm-size=2gb
+    outputs:
+      result: ${{ steps.regression.outcome }}
 
     steps:
-      - name: Notify Slack - Success
-        if: needs.cypress-smoke.result == 'success'
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fix workspace permissions
+        run: chmod -R 777 .
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create cypress.env.json
+        run: |
+          cat > cypress.env.json << 'ENVEOF'
+          {
+            "baseUrl": "${{ secrets.CYPRESS_BASE_URL }}",
+            "email": "${{ secrets.CYPRESS_EMAIL }}",
+            "password": "${{ secrets.CYPRESS_PASSWORD }}",
+            "Outboundcontact": "${{ secrets.CYPRESS_OUTBOUND_CONTACT }}",
+            "OrgName": "${{ secrets.CYPRESS_ORG_NAME }}"
+          }
+          ENVEOF
+
+      - name: Run Regression Tests
+        id: regression
+        run: npx cypress run --spec 'cypress/e2e/regression_test/**/*.js' --browser electron
+        continue-on-error: true
+
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-screenshots
+          path: cypress/screenshots/
+          if-no-files-found: ignore
+
+      - name: Upload Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-reports
+          path: cypress/reports/
+          if-no-files-found: ignore
+
+      - name: Fail the job if tests failed
+        if: steps.regression.outcome == 'failure'
+        run: exit 1
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [cypress-smoke, cypress-regression]
+    if: always()
+
+    steps:
+      - name: Notify Slack - All Passed
+        if: needs.cypress-smoke.result == 'success' && needs.cypress-regression.result == 'success'
         uses: slackapi/slack-github-action@v1.27.0
         with:
           payload: |
@@ -79,7 +136,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":white_check_mark: *Cypress Daily Smoke Tests — PASSED*\n*Target:* darkmatter.votomobile.org\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Results>"
+                    "text": ":white_check_mark: *Cypress Daily Tests — ALL PASSED*\n*Smoke:* Passed | *Regression:* Passed\n*Target:* darkmatter.votomobile.org\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Results>"
                   }
                 }
               ]
@@ -89,7 +146,7 @@ jobs:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
       - name: Notify Slack - Failure
-        if: needs.cypress-smoke.result == 'failure'
+        if: needs.cypress-smoke.result == 'failure' || needs.cypress-regression.result == 'failure'
         uses: slackapi/slack-github-action@v1.27.0
         with:
           payload: |
@@ -99,7 +156,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":x: *Cypress Daily Smoke Tests — FAILED*\n*Target:* darkmatter.votomobile.org\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Results>\n*Screenshots:* Download from artifacts"
+                    "text": ":x: *Cypress Daily Tests — FAILURES DETECTED*\n*Smoke:* ${{ needs.cypress-smoke.result }} | *Regression:* ${{ needs.cypress-regression.result }}\n*Target:* darkmatter.votomobile.org\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Results>\n*Screenshots:* Download from artifacts"
                   }
                 }
               ]
