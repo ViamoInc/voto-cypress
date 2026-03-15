@@ -155,9 +155,11 @@ Cypress.Commands.add('EditFlow_tree', () => {
 //>>>>>>>>>Delete flow/tree created 
 Cypress.Commands.add('DeleteFlow', () => {
   cy.navigateTo(ContentNavigation.TREE)
+  cy.wait(2000)
   cy.contains('a', 'More').first().click()
-  cy.contains('a', 'Delete Flow').first().click()
-  cy.wait(150)
+  cy.wait(500)
+  cy.get('a.js-delete').first().click({ force: true })
+  cy.wait(500)
   cy.contains('button', 'Delete').click()
 })
 //>>>>>>>>>>>>>>>>>>>>Publish Flow \

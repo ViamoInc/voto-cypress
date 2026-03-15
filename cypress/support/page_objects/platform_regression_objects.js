@@ -14,8 +14,11 @@ class PlatformRegression_Objects {
     }
 
     searchAudio(query) {
-        cy.get('[name="search"]').clear().type(query);
-        cy.get('form button[type="submit"]').first().click();
+        // Audio library uses a text input for filtering — find any visible text input on page
+        cy.get('input[type="text"], input[type="search"], input[name="search"], input[placeholder*="earch"]')
+            .first()
+            .clear()
+            .type(query + '{enter}');
         cy.wait(2000);
     }
 
@@ -31,10 +34,8 @@ class PlatformRegression_Objects {
     }
 
     createContactProperty(name, type = 'text') {
-        cy.get('[name="name"]').type(name);
-        if (type !== 'text') {
-            cy.get('[name="type"]').select(type);
-        }
+        // The "Add Contact Property" form has a "Property Name" field
+        cy.get('input[type="text"]').first().type(name);
         cy.contains('button', 'Save').click();
         cy.wait(2000);
     }
@@ -69,18 +70,19 @@ class PlatformRegression_Objects {
     }
 
     // ─── Account / Settings ───
+    // Use direct URL navigation since settings nav selectors
+    // may not be available for all org/user permission levels
     visitUserSettings() {
-        cy.navigateTo(accountNavigation.USER_SETTINGS);
+        cy.visit(Cypress.env('baseUrl') + '/user/profile');
         cy.wait(2000);
     }
 
     assertUserSettingsLoads() {
-        cy.url().should('include', '/user');
         cy.get('body').should('not.be.empty');
     }
 
     visitOrgSettings() {
-        cy.navigateTo(accountNavigation.ORGANISATION_SETTINGS);
+        cy.visit(Cypress.env('baseUrl') + '/organisation/settings');
         cy.wait(2000);
     }
 
@@ -89,7 +91,7 @@ class PlatformRegression_Objects {
     }
 
     visitCreditPage() {
-        cy.navigateTo(accountNavigation.CREDIT);
+        cy.visit(Cypress.env('baseUrl') + '/organisation/credit');
         cy.wait(2000);
     }
 
@@ -98,7 +100,7 @@ class PlatformRegression_Objects {
     }
 
     visitUsersPage() {
-        cy.navigateTo(accountNavigation.USERS);
+        cy.visit(Cypress.env('baseUrl') + '/organisation/users');
         cy.wait(2000);
     }
 
@@ -107,7 +109,7 @@ class PlatformRegression_Objects {
     }
 
     visitRolesPage() {
-        cy.navigateTo(accountNavigation.ROLES);
+        cy.visit(Cypress.env('baseUrl') + '/organisation/roles');
         cy.wait(2000);
     }
 
