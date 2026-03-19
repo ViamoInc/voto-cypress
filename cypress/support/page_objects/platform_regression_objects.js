@@ -202,6 +202,36 @@ class PlatformRegression_Objects {
         cy.wait(2000);
     }
 
+    // ─── Audio Library Upload & Delete ───
+
+    visitAudioUploadPage() {
+        cy.navigateTo(ContentNavigation.ADD_AUDIO);
+        cy.wait(2000);
+    }
+
+    uploadAudioFile(filename) {
+        // Flow.js creates a hidden file input; selectFile with force bypasses visibility check
+        cy.get('input[type="file"]').selectFile(`cypress/fixtures/${filename}`, { force: true });
+        // Wait for the upload to finish — Flow.js updates the row status
+        cy.get('.flow-list, table', { timeout: 15000 }).should('be.visible');
+        cy.wait(3000);
+    }
+
+    assertAudioUploadComplete() {
+        // Flow.js marks completed uploads with a success class or removes the progress bar
+        cy.get('body').should('not.contain.text', 'Uploading');
+    }
+
+    deleteFirstAudioInLibrary() {
+        // Delete button pattern used across audio library rows
+        cy.get('[data-target*="delete-audio"], .js-delete-audio, [href*="audio"][href*="delete"]')
+            .first()
+            .click({ force: true });
+        cy.wait(500);
+        cy.get('[id*="delete"] [type="submit"]').should('be.visible').click();
+        cy.wait(2000);
+    }
+
     // ─── Contact Import/Export pages ───
     visitImportContactPage() {
         cy.navigateTo(ContactNavigation.IMPORT_CONTACT);

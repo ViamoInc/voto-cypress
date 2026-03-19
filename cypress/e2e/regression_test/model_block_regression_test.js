@@ -61,8 +61,7 @@ describe('Model Blocks - Tree Creation and AI Simulator', () => {
         cy.logoutOfVoto();
     });
 
-    // Skipped: ask-viamo-ai service returns 400 on darkmatter test environment
-    it.skip('Should send a question via simulator and get a text response', () => {
+    it('Should send a question via simulator and get a text response', () => {
         model.editTreeByName(data.flow_label + ' ' + timestamp);
         model.clickBlockOnCanvas('ModelInputBlock');
 
@@ -79,8 +78,7 @@ describe('Model Blocks - Tree Creation and AI Simulator', () => {
         cy.logoutOfVoto();
     });
 
-    // Skipped: ask-viamo-ai service returns 400 on darkmatter test environment
-    it.skip('Should generate audio response when audio checkbox is checked', () => {
+    it('Should generate audio response when audio checkbox is checked', () => {
         model.editTreeByName(data.flow_label + ' ' + timestamp);
         model.clickBlockOnCanvas('ModelInputBlock');
 

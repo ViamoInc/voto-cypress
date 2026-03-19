@@ -1,4 +1,4 @@
-import { ContentNavigation } from "../navigations";
+import { ContentNavigation, CampaignNavigation } from "../navigations";
 
 class CampaignRegression_Objects {
 
@@ -81,6 +81,49 @@ class CampaignRegression_Objects {
     assertInboundPageLoads() {
         cy.url().should('include', '/incoming');
         cy.get('body').should('not.be.empty');
+    }
+
+    // ─── Inbound Campaign CRUD ───
+
+    visitAddInboundCampaignPage() {
+        cy.navigateTo(CampaignNavigation.ADD_INBOUND_CAMPAIGN);
+        cy.wait(3000);
+    }
+
+    fillCampaignTitle(name) {
+        cy.get('input[name="title"]').should('be.visible').type(name);
+    }
+
+    selectCallHandlingAccept() {
+        cy.get('input[name="call_handling"][value="accept_call"]').check({ force: true });
+    }
+
+    selectContentTypeMessage() {
+        cy.get('input[name="content_type"][value="message"]').check({ force: true });
+        cy.wait(1000);
+    }
+
+    selectMessageContent(messageName) {
+        // The content-selection Vue component renders a searchable dropdown
+        cy.get('[placeholder*="earch"]').first().type(messageName);
+        cy.wait(1000);
+        cy.contains('.via-dropdown-item, li', messageName).first().click();
+    }
+
+    saveInboundCampaign() {
+        cy.get('form').find('[type="submit"], button').contains(/save/i).click({ force: true });
+        cy.wait(3000);
+    }
+
+    assertInboundCampaignInList(name) {
+        cy.contains('body', name).should('exist');
+    }
+
+    deleteInboundCampaign() {
+        cy.contains('a', 'More').first().click();
+        cy.get('[data-target*="delete"], .js-delete').first().click({ force: true });
+        cy.get('[id*="delete"] [type="submit"], #confirm-delete-incoming_submit').should('be.visible').click();
+        cy.wait(2000);
     }
 }
 

@@ -207,6 +207,45 @@ class ModelBlock_Objects {
         cy.wait(2000);
     }
 
+    // Select a language in the simulator modal ViaDropdown
+    // The language dropdown button shows "Select a Language" initially, then the selected name
+    selectSimulatorLanguage(languageName) {
+        cy.get('#block-llm-simulator-modal').within(() => {
+            // Target the language section label and find its sibling/nearby dropdown button
+            cy.contains(/^language$/i)
+                .closest('div')
+                .find('button')
+                .first()
+                .scrollIntoView()
+                .click({ force: true });
+        });
+        cy.wait(500);
+        // Items render outside the modal container — search globally
+        cy.get('.via-dropdown-item').contains(languageName).first().click({ force: true });
+        cy.wait(500);
+    }
+
+    // Adjust the voice speed slider on the Model Response block editor
+    // value should be between 0.1 and 2.0 (e.g. 1.5)
+    adjustVoiceSpeed(value) {
+        cy.get('.tree-sidebar-edit-block')
+            .find('[name="llmVoiceSpeed"], input[type="range"]')
+            .first()
+            .scrollIntoView()
+            .invoke('val', value)
+            .trigger('input')
+            .trigger('change');
+        cy.wait(500);
+    }
+
+    // Assert the voice speed slider shows a specific value
+    assertVoiceSpeedValue(value) {
+        cy.get('.tree-sidebar-edit-block')
+            .find('[name="llmVoiceSpeed"], input[type="range"]')
+            .first()
+            .should('have.value', String(value));
+    }
+
     // Click on a block in the tree canvas to open its editor sidebar
     // Blocks on the canvas have a .block-item-target child that triggers selection
     clickBlockOnCanvas(blockType) {
