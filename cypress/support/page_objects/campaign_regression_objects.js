@@ -20,7 +20,7 @@ class CampaignRegression_Objects {
     }
 
     visitInboundCampaignsPage() {
-        cy.visit(Cypress.env('baseUrl') + '/incoming');
+        cy.visit(Cypress.env('baseUrl') + '/incoming/configure');
         cy.wait(3000);
     }
 
@@ -79,14 +79,14 @@ class CampaignRegression_Objects {
 
     // Inbound page assertions
     assertInboundPageLoads() {
-        cy.url().should('include', '/incoming');
+        cy.url().should('include', '/incoming/configure');
         cy.get('body').should('not.be.empty');
     }
 
     // ─── Inbound Campaign CRUD ───
 
     visitAddInboundCampaignPage() {
-        cy.navigateTo(CampaignNavigation.ADD_INBOUND_CAMPAIGN);
+        cy.visit(Cypress.env('baseUrl') + '/incoming/new');
         cy.wait(3000);
     }
 
@@ -104,10 +104,16 @@ class CampaignRegression_Objects {
     }
 
     selectMessageContent(messageName) {
-        // The content-selection Vue component renders a searchable dropdown
-        cy.get('[placeholder*="earch"]').first().type(messageName);
+        // The message selector is a vue-multiselect component (class: message-set-selector-el)
+        // It auto-selects the first message set on mount, so we need to wait for it to load
+        cy.get('.message-set-selector-el', { timeout: 15000 }).should('be.visible');
+        cy.wait(2000);
+        // Click the multiselect to open the dropdown
+        cy.get('.message-set-selector-el').click();
+        cy.wait(500);
+        // Select the matching option
+        cy.get('.multiselect__option').contains(messageName).click();
         cy.wait(1000);
-        cy.contains('.via-dropdown-item, li', messageName).first().click();
     }
 
     saveInboundCampaign() {
@@ -120,9 +126,12 @@ class CampaignRegression_Objects {
     }
 
     deleteInboundCampaign() {
-        cy.contains('a', 'More').first().click();
-        cy.get('[data-target*="delete"], .js-delete').first().click({ force: true });
-        cy.get('[id*="delete"] [type="submit"], #confirm-delete-incoming_submit').should('be.visible').click();
+        // Click the trash can icon button (tw-text-red-500 class) in the actions column
+        cy.get('button.tw-text-red-500').first().click({ force: true });
+        cy.wait(500);
+        // Confirm deletion in the ViaModal dialog
+        cy.get('.modal').should('be.visible');
+        cy.get('.modal').contains('button', /yes/i).click();
         cy.wait(2000);
     }
 }

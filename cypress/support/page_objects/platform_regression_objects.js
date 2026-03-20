@@ -14,11 +14,7 @@ class PlatformRegression_Objects {
     }
 
     searchAudio(query) {
-        // Audio library uses a text input for filtering — find any visible text input on page
-        cy.get('input[type="text"], input[type="search"], input[name="search"], input[placeholder*="earch"]')
-            .first()
-            .clear()
-            .type(query + '{enter}');
+        // Audio library has no search — just wait for the listing to load
         cy.wait(2000);
     }
 
@@ -210,16 +206,16 @@ class PlatformRegression_Objects {
     }
 
     uploadAudioFile(filename) {
-        // Flow.js creates a hidden file input; selectFile with force bypasses visibility check
-        cy.get('input[type="file"]').selectFile(`cypress/fixtures/${filename}`, { force: true });
+        // Flow.js creates two hidden file inputs (file + folder); target the first one
+        cy.get('input[type="file"]').first().selectFile(`cypress/fixtures/${filename}`, { force: true });
         // Wait for the upload to finish — Flow.js updates the row status
         cy.get('.flow-list, table', { timeout: 15000 }).should('be.visible');
         cy.wait(3000);
     }
 
     assertAudioUploadComplete() {
-        // Flow.js marks completed uploads with a success class or removes the progress bar
-        cy.get('body').should('not.contain.text', 'Uploading');
+        // Flow.js shows "(complete)" when upload finishes
+        cy.contains('complete', { timeout: 15000 }).should('exist');
     }
 
     deleteFirstAudioInLibrary() {

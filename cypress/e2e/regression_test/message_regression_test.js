@@ -36,21 +36,20 @@ describe('Message Regression - TTS Audio Generation', () => {
         cy.contains('label', 'Voice').click();
         cy.wait(2000);
 
-        // Open the audio options dropdown and switch to TTS tab
-        cy.contains('span', 'New audio').click();
-        cy.contains('Text to Speech').click();
+        // Switch to the Text to speech tab
+        cy.contains('Text to speech').click();
         cy.wait(1000);
 
-        // Select an English voice from the voice dropdown
-        cy.get('[placeholder*="voice"], [placeholder*="Voice"]').first().click();
+        // Select a voice from the voice dropdown
+        cy.contains('Select a voice').click();
         cy.wait(1000);
-        cy.get('.via-dropdown-item, .multiselect__option').contains(/english/i).first().click();
+        cy.get('.via-dropdown-item, .multiselect__option')
+            .first()
+            .click();
         cy.wait(500);
 
         // Enter the TTS text
-        cy.get('textarea[placeholder*="text"], textarea[placeholder*="Text"]')
-            .first()
-            .type(data.tts_text);
+        cy.get('textarea').first().clear().type(data.tts_text);
 
         // Intercept TTS generation API and trigger generation
         cy.intercept('POST', '**/content/audio-creator/generate').as('ttsGenerate');

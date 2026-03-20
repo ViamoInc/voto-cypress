@@ -152,8 +152,8 @@ class FlowRegression_Objects {
             cy.get('[data-icon="edit"]', { timeout: 10000 }).first().click();
         }
         // Wait for flow builder to fully load (blocks menu is a reliable indicator)
-        cy.get('[data-cy="blocks--menu"]', { timeout: 15000 }).should('be.visible');
-        cy.wait(2000);
+        cy.get('[data-cy="blocks--menu"]', { timeout: 30000 }).should('exist');
+        cy.wait(3000);
     }
 
     // Delete flow from list

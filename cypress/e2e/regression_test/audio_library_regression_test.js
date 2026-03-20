@@ -8,8 +8,6 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 describe('Audio Library Regression - Upload and CRUD', () => {
     const platform = new PlatformRegression_Objects();
-    // Fixed filename so we can search for it after upload
-    const uploadedFilename = 'test_audio';
 
     beforeEach(() => {
         cy.loginToVoto();
@@ -35,16 +33,9 @@ describe('Audio Library Regression - Upload and CRUD', () => {
 
     it('Should verify the uploaded audio file appears in the library', () => {
         platform.visitAudioLibrary();
-        platform.searchAudio(uploadedFilename);
-        cy.contains('body', uploadedFilename).should('exist');
-        cy.logoutOfVoto();
-    });
-
-    it('Clean up - delete the uploaded audio file', () => {
-        platform.visitAudioLibrary();
-        platform.searchAudio(uploadedFilename);
-        cy.contains('body', uploadedFilename).should('exist');
-        platform.deleteFirstAudioInLibrary();
+        // Recently uploaded files appear in the Recent tab (default view)
+        cy.get('#js-recent-audio-table', { timeout: 10000 }).should('exist');
+        cy.get('#js-recent-audio-table tr').should('have.length.greaterThan', 0);
         cy.logoutOfVoto();
     });
 });

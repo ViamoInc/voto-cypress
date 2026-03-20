@@ -7,12 +7,29 @@ class ModelBlock_Objects {
     }
 
     // Create a tree (not a flow) — Model blocks are only available in the tree builder
-    createTree(title) {
+    // languages: array of language names to enable (e.g. ['English', 'French', 'Urdu'])
+    createTree(title, languages = []) {
         cy.get('[href="/trees/create"]', { timeout: 10000 }).click();
         cy.wait(2000);
 
         // Fill in the title
         cy.get('input[name="details[title]"]').type(title);
+
+        // Select languages — check each requested language by its label text
+        if (languages.length > 0) {
+            // First uncheck all language checkboxes
+            cy.get('input.tree-language-toggle-checkbox').each(($cb) => {
+                if ($cb.is(':checked')) {
+                    cy.wrap($cb).uncheck({ force: true });
+                }
+            });
+            // Then check the requested ones
+            languages.forEach((lang) => {
+                cy.contains('label', lang)
+                    .find('input.tree-language-toggle-checkbox')
+                    .check({ force: true });
+            });
+        }
 
         // Voice is checked by default; also check SMS
         cy.get('input[name="details[hasSms]"]').check();
@@ -29,7 +46,6 @@ class ModelBlock_Objects {
     }
 
     // Add a block by clicking its menu item in the tree builder
-    // Tree builder uses a single "Add Block" dropdown with data-block-type=className
     addBlockByType(blockType) {
         this.openAddBlockDropdown();
         cy.get(`a.tree-add-block[data-block-type="${blockType}"]`, { timeout: 5000 })
@@ -44,7 +60,7 @@ class ModelBlock_Objects {
         // Click the block on the canvas to open its editor sidebar
         this.clickBlockOnCanvas('ModelInputBlock');
 
-        // Wait for the block editor sidebar to exist (may not be "visible" due to position:fixed overflow)
+        // Wait for the block editor sidebar to exist
         cy.get('.tree-sidebar-edit-block', { timeout: 10000 })
             .should('exist');
 
@@ -66,15 +82,13 @@ class ModelBlock_Objects {
 
     // Verify the simulator button appears (only for service-based agents)
     assertSimulatorButtonVisible() {
-        cy.get('.tree-sidebar-edit-block')
-            .contains('button', /simulate/i)
+        cy.get('[data-testid="simulate-button"]', { timeout: 10000 })
             .should('exist');
     }
 
     // Open the simulator modal
     openSimulator() {
-        cy.get('.tree-sidebar-edit-block')
-            .contains('button', /simulate/i)
+        cy.get('[data-testid="simulate-button"]')
             .scrollIntoView()
             .click({ force: true });
         cy.wait(2000);
@@ -84,16 +98,34 @@ class ModelBlock_Objects {
             .should('be.visible');
     }
 
-    // Select channel in simulator (ViaDropdown component)
-    selectSimulatorChannel(channelName) {
-        // Find the Channel section and click its dropdown button
-        cy.get('#block-llm-simulator-modal')
-            .contains('button', /voice|sms|select a channel/i)
+    // Select language in simulator
+    selectSimulatorLanguage(languageName) {
+        cy.get('[data-testid="simulator-language"]')
+            .find('button')
+            .first()
             .scrollIntoView()
             .click({ force: true });
         cy.wait(500);
-        // Click the dropdown item with the channel name
-        cy.contains(channelName).click({ force: true });
+        // Dropdown items may render outside the modal — search globally
+        cy.get('[data-testid="simulator-language-option"]')
+            .contains(languageName, { matchCase: false })
+            .first()
+            .click({ force: true });
+        cy.wait(500);
+    }
+
+    // Select channel in simulator
+    selectSimulatorChannel(channelName) {
+        cy.get('[data-testid="simulator-channel"]')
+            .find('button')
+            .first()
+            .scrollIntoView()
+            .click({ force: true });
+        cy.wait(500);
+        cy.get('[data-testid="simulator-channel-option"]')
+            .contains(channelName, { matchCase: false })
+            .first()
+            .click({ force: true });
         cy.wait(500);
     }
 
@@ -107,20 +139,17 @@ class ModelBlock_Objects {
         });
     }
 
-    // Type a question into the simulator (ViaTextarea component)
+    // Type a question into the simulator
     typeSimulatorQuestion(question) {
-        cy.get('#block-llm-simulator-modal')
+        cy.get('[data-testid="simulator-question"]')
             .find('textarea')
-            .last()
             .clear()
             .type(question);
     }
 
     // Click the Run button in the simulator
     runSimulator() {
-        cy.get('#block-llm-simulator-modal')
-            .find('button[type="submit"]')
-            .click();
+        cy.get('[data-testid="simulator-run"]').click();
     }
 
     // Wait for and verify a response appears in the response log
@@ -148,7 +177,6 @@ class ModelBlock_Objects {
 
     // Close simulator modal
     closeSimulator() {
-        // Click the ViaModal close button (tertiary icon button in modal header)
         cy.get('#block-llm-simulator-modal .via-modal-header button.via-button')
             .click({ force: true });
         cy.wait(2000);
@@ -167,8 +195,7 @@ class ModelBlock_Objects {
 
     // Verify voice speed slider exists
     assertVoiceSpeedSliderExists() {
-        cy.get('.tree-sidebar-edit-block')
-            .find('[name="llmVoiceSpeed"], input[type="range"]')
+        cy.get('[data-testid="voice-speed-slider"]', { timeout: 10000 })
             .should('exist');
     }
 
@@ -207,29 +234,10 @@ class ModelBlock_Objects {
         cy.wait(2000);
     }
 
-    // Select a language in the simulator modal ViaDropdown
-    // The language dropdown button shows "Select a Language" initially, then the selected name
-    selectSimulatorLanguage(languageName) {
-        cy.get('#block-llm-simulator-modal').within(() => {
-            // Target the language section label and find its sibling/nearby dropdown button
-            cy.contains(/^language$/i)
-                .closest('div')
-                .find('button')
-                .first()
-                .scrollIntoView()
-                .click({ force: true });
-        });
-        cy.wait(500);
-        // Items render outside the modal container — search globally
-        cy.get('.via-dropdown-item').contains(languageName).first().click({ force: true });
-        cy.wait(500);
-    }
-
     // Adjust the voice speed slider on the Model Response block editor
-    // value should be between 0.1 and 2.0 (e.g. 1.5)
     adjustVoiceSpeed(value) {
-        cy.get('.tree-sidebar-edit-block')
-            .find('[name="llmVoiceSpeed"], input[type="range"]')
+        cy.get('[data-testid="voice-speed-slider"]')
+            .find('input[type="range"]')
             .first()
             .scrollIntoView()
             .invoke('val', value)
@@ -240,18 +248,15 @@ class ModelBlock_Objects {
 
     // Assert the voice speed slider shows a specific value
     assertVoiceSpeedValue(value) {
-        cy.get('.tree-sidebar-edit-block')
-            .find('[name="llmVoiceSpeed"], input[type="range"]')
+        cy.get('[data-testid="voice-speed-slider"]')
+            .find('input[type="range"]')
             .first()
             .should('have.value', String(value));
     }
 
     // Click on a block in the tree canvas to open its editor sidebar
-    // Blocks on the canvas have a .block-item-target child that triggers selection
     clickBlockOnCanvas(blockType) {
-        // The canvas block has the block type name as text content
-        // Find the block and click its .block-item-target to select it
-        cy.get('.block-item-target', { timeout: 10000 })
+        cy.get(`[data-testid="block-target-${blockType}"]`, { timeout: 10000 })
             .first()
             .click({ force: true });
         cy.wait(1000);
@@ -261,13 +266,11 @@ class ModelBlock_Objects {
     editTreeByName(treeName) {
         this.visitTreesPage();
         cy.wait(2000);
-        // Find the row containing the tree name and click its edit icon
         cy.contains('td, .list-group-item', treeName, { timeout: 10000 })
             .parents('tr')
             .find('[data-icon="edit"], a[href*="/edit"]')
             .first()
             .click();
-        // Wait for the tree builder to load (Add Block button is a reliable indicator)
         cy.contains('button', 'Add Block', { timeout: 15000 }).should('exist');
         cy.wait(3000);
     }
