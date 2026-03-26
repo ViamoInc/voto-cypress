@@ -115,15 +115,6 @@ class PlatformRegression_Objects {
     }
 
     // ─── Content Pages ───
-    visitSurveysPage() {
-        cy.navigateTo(ContentNavigation.SURVEYS);
-        cy.wait(2000);
-    }
-
-    assertSurveysPageLoads() {
-        cy.get('body').should('not.be.empty');
-    }
-
     visitPlaceholdersPage() {
         cy.navigateTo(ContentNavigation.PLACEHOLDER);
         cy.wait(2000);

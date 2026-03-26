@@ -16,8 +16,7 @@ class FlowBlock_Objects{
           .type(afterEditPostFix)
         cy.get('[data-cy="name-editor--save-btn"]').click()
             // ####### Resource UIs
-    cy.get('[data-cy="audio-library-search--btn"]').click()
-    cy.contains('.dropdown-item', resourceIVR).click()
+    cy.selectAudioLibraryResource(resourceIVR)
 
     cy.get('[data-cy="SMS-resource-variant-text--editor"]')
       .find('textarea')
@@ -69,8 +68,7 @@ class FlowBlock_Objects{
 
         // #### Resource UIs 
 
-        cy.get('[data-cy="audio-library-search--btn"]').click()
-        cy.contains('.dropdown-item', resourceIVR).click()
+        cy.selectAudioLibraryResource(resourceIVR)
       
         cy.get('[data-cy="SMS-resource-variant-text--editor"]')
           .find('textarea')
@@ -113,8 +111,7 @@ class FlowBlock_Objects{
           .type(afterEditPostFix)
         cy.get('[data-cy="name-editor--save-btn"]').click()
               // ####### Resource UIs
-  cy.get('[data-cy="audio-library-search--btn"]').click()
-  cy.contains('.dropdown-item', resourceIVR).click()
+  cy.selectAudioLibraryResource(resourceIVR)
 
   cy.get('[data-cy="SMS-resource-variant-text--editor"]')
     .find('textarea')

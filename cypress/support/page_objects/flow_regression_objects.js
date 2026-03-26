@@ -6,6 +6,26 @@ class FlowRegression_Objects {
         cy.navigateTo(ContentNavigation.TREE);
     }
 
+    searchFlows(flowName) {
+        this.visitFlowsPage();
+        cy.wait(2000);
+
+        cy.get('body').then(($body) => {
+            if ($body.find('button:contains("Reset All")').length > 0) {
+                cy.contains('button', 'Reset All').click({ force: true });
+                cy.wait(1000);
+            }
+        });
+
+        if (flowName) {
+            cy.get('input[placeholder*="Search by tree or flow"]', { timeout: 10000 })
+                .clear()
+                .type(flowName);
+            cy.contains('button', 'Search').click();
+            cy.wait(1000);
+        }
+    }
+
     // Create a flow with specific config
     createFlow(label, languages = ['English'], channels = ['IVR', 'SMS', 'USSD']) {
         cy.get('[href="/flows/new"]').click();
@@ -38,8 +58,7 @@ class FlowRegression_Objects {
             .find('textarea')
             .type(label);
 
-        cy.get('[data-cy="audio-library-search--btn"]').click();
-        cy.contains('.dropdown-item', resourceIVR).click();
+        cy.selectAudioLibraryResource(resourceIVR);
 
         cy.get('[data-cy="SMS-resource-variant-text--editor"]')
             .find('textarea')
@@ -61,8 +80,7 @@ class FlowRegression_Objects {
             .find('textarea')
             .type(label);
 
-        cy.get('[data-cy="audio-library-search--btn"]').click();
-        cy.contains('.dropdown-item', resourceIVR).click();
+        cy.selectAudioLibraryResource(resourceIVR);
 
         cy.get('[data-cy="SMS-resource-variant-text--editor"]')
             .find('textarea')
@@ -141,13 +159,13 @@ class FlowRegression_Objects {
 
     // Navigate to flows list, find and edit a specific flow by name
     navigateAndEditFlow(flowName) {
-        this.visitFlowsPage();
-        cy.wait(2000);
+        this.searchFlows(flowName);
         if (flowName) {
             // Find the row containing the flow name and click its edit icon
-            cy.contains('tr, .list-item, [class*="row"]', flowName, { timeout: 10000 })
-                .find('[data-icon="edit"]')
-                .click();
+            cy.contains('tr', flowName, { timeout: 10000 })
+                .within(() => {
+                    cy.get('[data-icon="edit"]').first().click({ force: true });
+                });
         } else {
             cy.get('[data-icon="edit"]', { timeout: 10000 }).first().click();
         }
@@ -157,30 +175,35 @@ class FlowRegression_Objects {
     }
 
     // Delete flow from list
-    deleteFlow() {
-        this.visitFlowsPage();
-        cy.wait(2000);
-        cy.contains('a', 'More', { timeout: 10000 }).first().click();
+    deleteFlow(flowName) {
+        this.searchFlows(flowName);
+        const row = flowName ? cy.contains('tr', flowName, { timeout: 10000 }) : cy.get('table tbody tr', { timeout: 10000 }).first();
+
+        row.within(() => {
+            cy.contains('a', 'More').click({ force: true });
+        });
         cy.wait(500);
-        cy.get('a.js-delete', { timeout: 5000 }).first().click({ force: true });
+        cy.get('a.js-delete:visible', { timeout: 5000 }).first().click({ force: true });
         cy.wait(500);
         cy.contains('button', 'Delete').click();
         cy.wait(2000);
     }
 
     // Duplicate flow
-    duplicateFlow() {
-        this.visitFlowsPage();
-        cy.wait(2000);
-        cy.contains('a', 'More', { timeout: 10000 }).first().click();
-        cy.contains('a', 'Duplicate').first().click();
+    duplicateFlow(flowName) {
+        this.searchFlows(flowName);
+        const row = flowName ? cy.contains('tr', flowName, { timeout: 10000 }) : cy.get('table tbody tr', { timeout: 10000 }).first();
+
+        row.within(() => {
+            cy.contains('a', 'More').click({ force: true });
+        });
+        cy.contains('a', 'Duplicate', { timeout: 10000 }).click({ force: true });
         cy.wait(3000);
     }
 
     // Assert flow exists in list
     assertFlowInList(flowName) {
-        this.visitFlowsPage();
-        cy.wait(2000);
+        this.searchFlows(flowName);
         cy.contains('body', flowName, { timeout: 10000 }).should('exist');
     }
 

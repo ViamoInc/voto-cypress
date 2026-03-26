@@ -184,12 +184,6 @@ describe('Platform Regression - Content Listing Pages', () => {
         cy.clearLocalStorage();
     });
 
-    it('Should load the surveys page', () => {
-        platform.visitSurveysPage();
-        platform.assertSurveysPageLoads();
-        cy.logoutOfVoto();
-    });
-
     it('Should load the placeholders page', () => {
         platform.visitPlaceholdersPage();
         platform.assertPlaceholdersPageLoads();

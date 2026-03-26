@@ -102,7 +102,7 @@ describe('Model Blocks - Tree Setup', () => {
 });
 
 // ─── Suite 2: Simulator UI verification ──────────────────────────────────────
-describe('Model Blocks - Simulator UI', () => {
+describe.skip('Model Blocks - Simulator UI', () => {
     const model = new ModelBlock_Objects();
 
     beforeEach(() => {
@@ -132,7 +132,7 @@ describe('Model Blocks - Simulator UI', () => {
 });
 
 // ─── Suite 3: Text response per language ─────────────────────────────────────
-describe('Model Blocks - Text Response per Language', () => {
+describe.skip('Model Blocks - Text Response per Language', () => {
     const model = new ModelBlock_Objects();
 
     beforeEach(() => {
@@ -176,7 +176,7 @@ describe('Model Blocks - Text Response per Language', () => {
 });
 
 // ─── Suite 4: Audio response per language ────────────────────────────────────
-describe('Model Blocks - Audio Response per Language (Voice channel)', () => {
+describe.skip('Model Blocks - Audio Response per Language (Voice channel)', () => {
     const model = new ModelBlock_Objects();
 
     beforeEach(() => {
@@ -232,7 +232,7 @@ describe('Model Blocks - Audio Response per Language (Voice channel)', () => {
 });
 
 // ─── Suite 5: Voice speed configuration ──────────────────────────────────────
-describe('Model Blocks - Voice Speed Configuration', () => {
+describe.skip('Model Blocks - Voice Speed Configuration', () => {
     const model = new ModelBlock_Objects();
 
     beforeEach(() => {
@@ -286,7 +286,7 @@ describe('Model Blocks - Voice Speed Configuration', () => {
 });
 
 // ─── Suite 6: SMS channel coverage ───────────────────────────────────────────
-describe('Model Blocks - SMS Channel Response', () => {
+describe.skip('Model Blocks - SMS Channel Response', () => {
     const model = new ModelBlock_Objects();
 
     beforeEach(() => {

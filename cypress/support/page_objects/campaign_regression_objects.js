@@ -125,14 +125,22 @@ class CampaignRegression_Objects {
         cy.contains('body', name).should('exist');
     }
 
-    deleteInboundCampaign() {
-        // Click the trash can icon button (tw-text-red-500 class) in the actions column
-        cy.get('button.tw-text-red-500').first().click({ force: true });
-        cy.wait(500);
+    deleteInboundCampaign(name) {
+        cy.contains('tr', name, { timeout: 10000 }).within(() => {
+            cy.get('button.tw-text-red-500').first().click({ force: true });
+        });
         // Confirm deletion in the ViaModal dialog
-        cy.get('.modal').should('be.visible');
-        cy.get('.modal').contains('button', /yes/i).click();
-        cy.wait(2000);
+        cy.get('.modal.show', { timeout: 10000 }).should('be.visible');
+        cy.get('#confirm-deleting-inbound-campaign')
+            .contains('button', 'Yes')
+            .click({ force: true });
+        cy.contains('tr', name, { timeout: 10000 }).should('not.exist');
+        cy.get('body').then(($body) => {
+            if ($body.find('.modal-backdrop.show').length > 0) {
+                cy.get('.modal-backdrop.show', { timeout: 10000 }).should('not.exist');
+            }
+        });
+        cy.wait(1000);
     }
 }
 

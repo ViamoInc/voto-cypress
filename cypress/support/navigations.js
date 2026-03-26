@@ -29,10 +29,6 @@ export const ContentNavigation = Object.freeze({
         categoryLinkSelector: Category.CONTENT,
         linkSelector: "[data-test='nav-menu-item--placeholders-management']"
     },
-    SURVEYS: {
-        categoryLinkSelector: Category.CONTENT,
-        linkSelector: "[data-test='nav-menu-item--surveys-management']"
-    },
     AUDIO: {
         categoryLinkSelector: Category.CONTENT,
         linkSelector: "[data-test='nav-menu-item--audio-library-management']"
@@ -205,4 +201,3 @@ export const accountNavigation = Object.freeze({
         linkSelector: "[data-test='nav-menu-item--roles-settings']"
     },
 });
-

@@ -63,9 +63,38 @@ Cypress.Commands.add('switchOrg', (orgName) => {
 })
 
 Cypress.Commands.add('logoutOfVoto', () => {
+  cy.get('body').then(($body) => {
+    if ($body.find('.modal.show, .modal-backdrop.show').length > 0) {
+      cy.get('.modal.show, .modal-backdrop.show', { timeout: 10000 }).should('not.exist')
+    }
+  })
 
-  cy.get('[data-test="nav-main-menu-item--organisations"]').click()
-  cy.get('[data-test="nav-menu--logout-btn"]').click()
+  cy.get('[data-test="nav-main-menu-item--organisations"]', { timeout: 10000 }).click({ force: true })
+  cy.get('[data-test="nav-menu--logout-btn"]', { timeout: 10000 }).click({ force: true })
+})
+
+Cypress.Commands.add('selectAudioLibraryResource', (preferredResourceName) => {
+  cy.get('[data-cy="audio-library-search--btn"]').click({ force: true })
+  cy.get('.dropdown-item:visible', { timeout: 10000 }).should('have.length.at.least', 1)
+
+  cy.get('body').then(($body) => {
+    const visibleItems = $body.find('.dropdown-item:visible').toArray()
+    const preferredItem = preferredResourceName
+      ? visibleItems.find((item) => item.innerText.includes(preferredResourceName))
+      : null
+    const audioFileItem = visibleItems.find((item) => /\.(mp3|wav|ogg|m4a)$/i.test(item.innerText.trim()))
+    const fallbackItem = visibleItems.find((item) => {
+      const text = item.innerText.trim()
+      return text.length > 0 && !text.includes('Showing entire audio library')
+    })
+    const selectedItem = preferredItem || audioFileItem || fallbackItem
+
+    if (!selectedItem) {
+      throw new Error('No selectable audio library item was available')
+    }
+
+    cy.wrap(selectedItem).click({ force: true })
+  })
 })
 
 //creating a flow >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

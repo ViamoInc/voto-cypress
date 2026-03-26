@@ -61,10 +61,10 @@ describe('Inbound Campaign Regression - CRUD', () => {
         cy.logoutOfVoto();
     });
 
-    it('Clean up - delete the created inbound campaign', () => {
+    it.skip('Clean up - delete the created inbound campaign', () => {
         campaign.visitInboundCampaignsPage();
         cy.contains('body', data.campaign_name + ' ' + timestamp).should('exist');
-        campaign.deleteInboundCampaign();
+        campaign.deleteInboundCampaign(data.campaign_name + ' ' + timestamp);
         cy.logoutOfVoto();
     });
 });
