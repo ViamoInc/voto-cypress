@@ -8,7 +8,8 @@ class ModelBlock_Objects {
 
     // Create a tree (not a flow) — Model blocks are only available in the tree builder
     // languages: array of language names to enable (e.g. ['English', 'French', 'Urdu'])
-    createTree(title, languages = []) {
+    createTree(title, languages = [], options = {}) {
+        const { hasSms = true } = options;
         cy.get('[href="/trees/create"]', { timeout: 10000 }).click();
         cy.wait(2000);
 
@@ -31,8 +32,16 @@ class ModelBlock_Objects {
             });
         }
 
-        // Voice is checked by default; also check SMS
-        cy.get('input[name="details[hasSms]"]').check();
+        // Voice is checked by default; SMS is configurable per test.
+        cy.get('input[name="details[hasSms]"]').then(($checkbox) => {
+            const isChecked = $checkbox.is(':checked');
+            if (hasSms && !isChecked) {
+                cy.wrap($checkbox).check({ force: true });
+            }
+            if (!hasSms && isChecked) {
+                cy.wrap($checkbox).uncheck({ force: true });
+            }
+        });
 
         // Submit the form — "Save and Continue"
         cy.contains('button', 'Save').click();
@@ -78,6 +87,22 @@ class ModelBlock_Objects {
             .scrollIntoView()
             .select(agentValue);
         cy.wait(1000);
+    }
+
+    selectAskAnExpertTopic(topicName) {
+        cy.get('#llmTopicSelect', { timeout: 10000 })
+            .scrollIntoView()
+            .select(topicName);
+        cy.wait(500);
+    }
+
+    setAllowOfftopicQuestions(enabled = true) {
+        cy.get('input[name="allow_offtopic_questions"]', { timeout: 10000 }).then(($checkbox) => {
+            const isChecked = $checkbox.is(':checked');
+            if (enabled !== isChecked) {
+                cy.wrap($checkbox).click({ force: true });
+            }
+        });
     }
 
     // Verify the simulator button appears (only for service-based agents)
@@ -129,6 +154,16 @@ class ModelBlock_Objects {
         cy.wait(500);
     }
 
+    selectSimulatorDeliveryNode(deliveryNode) {
+        cy.get('#block-llm-simulator-modal .via-dropdown button', { timeout: 10000 })
+            .eq(2)
+            .click({ force: true });
+
+        cy.contains('.via-dropdown-item', deliveryNode, { timeout: 10000 })
+            .click({ force: true });
+        cy.wait(500);
+    }
+
     // Uncheck "Generate Audio Response" for faster text-only testing
     uncheckGenerateAudio() {
         cy.get('#block-llm-simulator-modal').then(($modal) => {
@@ -175,6 +210,17 @@ class ModelBlock_Objects {
             .should('exist');
     }
 
+    assertSimulatorContainsText(text) {
+        cy.get('#block-llm-simulator-modal')
+            .should('contain.text', text);
+    }
+
+    assertSimulatorTtsInstructionValue(value) {
+        cy.get('#block-llm-simulator-modal textarea')
+            .eq(0)
+            .should('have.value', value);
+    }
+
     // Close simulator modal
     closeSimulator() {
         cy.get('#block-llm-simulator-modal .via-modal-header button.via-button')
@@ -191,6 +237,12 @@ class ModelBlock_Objects {
 
         cy.get('.tree-sidebar-edit-block', { timeout: 10000 })
             .should('exist');
+    }
+
+    selectModelResponseInputSource(label) {
+        cy.get('.tree-sidebar-edit-block select.sidebar-input', { timeout: 10000 })
+            .select(label);
+        cy.wait(500);
     }
 
     // Verify voice speed slider exists
@@ -252,6 +304,91 @@ class ModelBlock_Objects {
             .find('input[type="range"]')
             .first()
             .should('have.value', String(value));
+    }
+
+    setVoiceExtraPrompt(text) {
+        cy.get('.tree-sidebar-edit-block .list-group.mt-4')
+            .first()
+            .find('.list-group-item textarea')
+            .first()
+            .clear({ force: true })
+            .type(text, { force: true });
+    }
+
+    assertVoiceExtraPromptValue(value) {
+        cy.get('.tree-sidebar-edit-block .list-group.mt-4')
+            .first()
+            .find('.list-group-item textarea')
+            .first()
+            .should('have.value', value);
+    }
+
+    setVoiceTtsInstruction(text) {
+        cy.get('.tree-sidebar-edit-block .list-group.mt-4')
+            .eq(1)
+            .find('.list-group-item textarea')
+            .first()
+            .clear({ force: true })
+            .type(text, { force: true });
+    }
+
+    assertVoiceTtsInstructionValue(value) {
+        cy.get('.tree-sidebar-edit-block .list-group.mt-4')
+            .eq(1)
+            .find('.list-group-item textarea')
+            .first()
+            .should('have.value', value);
+    }
+
+    openEvalsModal() {
+        cy.get('.block-llm-evals-config', { timeout: 10000 })
+            .contains('button', 'Modify')
+            .click({ force: true });
+        cy.get('#block-llm-evals-modal', { timeout: 10000 })
+            .should('be.visible');
+    }
+
+    fillFirstEvalRow({ name, datatypeLabel, description }) {
+        cy.get('#block-llm-evals-modal tbody tr')
+            .first()
+            .within(() => {
+                cy.get('input')
+                    .first()
+                    .clear({ force: true })
+                    .type(name, { force: true });
+                cy.get('.block-llm-evals-modal__datatype button')
+                    .click({ force: true });
+            });
+
+        cy.contains('.via-dropdown-item', datatypeLabel, { timeout: 10000 })
+            .click({ force: true });
+
+        cy.get('#block-llm-evals-modal tbody tr')
+            .first()
+            .within(() => {
+                cy.get('textarea')
+                    .first()
+                    .clear({ force: true })
+                    .type(description, { force: true });
+            });
+    }
+
+    confirmModal(modalId) {
+        cy.get(`#${modalId}`, { timeout: 10000 })
+            .contains('button', 'Save')
+            .click({ force: true });
+        cy.wait(500);
+    }
+
+    applyServiceHintsTemplate() {
+        cy.get('.block-llm-service-hints', { timeout: 10000 })
+            .contains('button', 'Template')
+            .click({ force: true });
+    }
+
+    assertServiceHintsContains(text) {
+        cy.get('.block-llm-service-hints textarea', { timeout: 10000 })
+            .should('contain.value', text);
     }
 
     // Click on a block in the tree canvas to open its editor sidebar

@@ -1,3 +1,5 @@
+import { ContentNavigation } from "../navigations";
+
 class FlowBlock_Objects{
 
     addMessageConfig(label,afterEditPostFix,resourceIVR,resourceSMS,resourceUSSD){
@@ -138,17 +140,35 @@ class FlowBlock_Objects{
         cy.EditFlow_tree()
     }
 
-    flowAssertion(){
-      cy.get('body').contains('Cypress flow block test').should('exist');
+    flowAssertion(flowName = 'Cypress flow block test'){
+      cy.get('body').contains(flowName).should('exist');
     }
 
     flowDetails(){
       cy.get('[data-cy="builder-toolbar--flow-details--btn"]', { timeout: 20000 }).should('be.visible').click()
-      cy.get('[data-cy="Open-response-label"]')
+      cy.get('[data-cy="flow-label--editor"]', { timeout: 10000 })
       .find('textarea')
+      .clear()
       .type('Cypress flow block test edited')
       cy.contains('button', 'Done').click()
 
+    }
+
+    deleteFlowByName(flowName) {
+      cy.navigateTo(ContentNavigation.TREE)
+      cy.get('input[placeholder*="Search by tree or flow"]', { timeout: 10000 })
+        .clear()
+        .type(flowName)
+      cy.contains('button', 'Search').click()
+      cy.contains('a', flowName, { timeout: 15000 })
+        .parents('tr')
+        .first()
+        .within(() => {
+          cy.contains('a', 'More').click({ force: true })
+        })
+      cy.get('a.js-delete', { timeout: 5000 }).first().click({ force: true })
+      cy.contains('button', 'Delete').click()
+      cy.contains(flowName).should('not.exist')
     }
 
 }

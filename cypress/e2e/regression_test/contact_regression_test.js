@@ -12,10 +12,12 @@ describe('Contact Regression - Create, Search, and View', () => {
     const subscriber = new SubscriberPage_Object();
     const contact = new ContactRegression_Objects();
     const timestamp = Date.now();
+    let uniquePhoneNumber;
 
     before(() => {
         cy.fixture('contact_regression_details').then((d) => {
             data = d;
+            uniquePhoneNumber = `${d.phone_number}${String(timestamp).slice(-4)}`;
         });
     });
 
@@ -31,7 +33,7 @@ describe('Contact Regression - Create, Search, and View', () => {
     it('Should create a new contact', () => {
         subscriber.visitSubscriberPage();
         subscriber.createSubscriber(
-            data.phone_number,
+            uniquePhoneNumber,
             data.name + timestamp,
             data.location,
             data.language,
@@ -69,7 +71,7 @@ describe('Contact Regression - Create, Search, and View', () => {
     it('Should search by phone number', () => {
         contact.visitContactsPage();
         cy.wait(2000);
-        cy.get('[name="phone_filter"]').clear().type(data.phone_number);
+        cy.get('[name="phone_filter"]').clear().type(uniquePhoneNumber);
         cy.get('form#search button[type="submit"]').click();
         cy.wait(3000);
         contact.assertContactVisible(data.name + timestamp);
