@@ -3,6 +3,26 @@
 ## Overview
 This repository contains the Cypress end-to-end (E2E) regression and smoke suites for the VOTO5 web application. Tests follow a Page Object Model structure and produce JUnit reports, screenshots, and videos for analysis.
 
+## Quick Start: Running Against Your Local voto5 Docker Stack
+
+The easiest way to run the suite is from the `voto5` repo, against your local Docker stack — no Node/npm on the host required (the suite runs inside `cypress/included`):
+
+```bash
+cd ../voto5
+make up           # bring up the voto5 stack (if not already running)
+make e2e-setup    # one-time: writes cypress.env.json here, disables debugbar, seeds e2e data
+make e2e-smoke    # run the smoke suite
+make e2e-regression
+make e2e-run SPEC=cypress/e2e/smoke_test/1_subscriber_test.js   # single spec
+make e2e-clean    # remove reports/screenshots (root-owned by the container)
+```
+
+Details that matter:
+- **Seeded data and credentials** come from `voto5/database/seeders/CypressE2ESeeder.php` (orgs "Automated Testing Placeholder" + "HNI 321 Mali", login user, languages, voice routes, audio files, the report tree, etc.). `make e2e-seed` is idempotent and also resets the login user's active org — run it if specs were interrupted mid-suite.
+- **Smoke specs are order-dependent**: `1_subscriber_test` creates the "Cypress Evaluation" contact later specs use. Run whole suites, not shuffled subsets.
+- **Laravel Debugbar must be off** in voto5 (`APP_DEBUG_DEBUGBAR=0`) — its hidden inputs break the suite's generic selectors. `make e2e-setup` handles this.
+- **Known local limits**: report data/exports and audience-targeting estimation require BigQuery; call-to-record requires live telephony. Those tests fail against a local stack today.
+
 ## Prerequisites
 - Node.js 16+ (matches the Cypress base image)
 - npm

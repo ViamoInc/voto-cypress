@@ -46,17 +46,25 @@ Cypress.Commands.add('loginToVoto', () => {
   cy.visit(defaultlogin.BaseUrl)
   cy.get('[name="email"]').type(defaultlogin.email)
   cy.get('[name="password"]').type(defaultlogin.password)
-  cy.get('[type="submit"]').click()
+  // Scope to the login form — some environments render more than one [type="submit"] on this page.
+  cy.get('[name="password"]').closest('form').find('[type="submit"]').click()
 })
 
 Cypress.Commands.add('switchOrg', (orgName) => {
   cy.wait(700);
+  // The switch endpoint logs out and re-logs-in, regenerating the session id.
+  // Concurrent SPA XHRs still carrying the old cookie then receive a fresh GUEST
+  // session cookie, clobbering the authenticated one — so the post-switch session
+  // in the browser is unreliable. Wait for the switch to persist server-side
+  // (users.org_id updated), then take a clean authenticated session.
+  cy.intercept('POST', '**/users/switch-organisation').as('switchOrgRequest')
   cy.get('[data-test="nav-main-menu-item--organisations"]').click({force:true})
   cy.get('div.multiselect__select').click()
   cy.get('input[placeholder="Switch..."]').type(orgName)
   cy.contains('li', orgName).click()
-  cy.wait(2000);
-  cy.reload();
+  cy.wait('@switchOrgRequest').its('response.statusCode').should('eq', 200)
+  cy.clearCookies()
+  cy.loginToVoto()
   cy.contains('footer', orgName).should('be.visible')
   cy.wait(200);
 
