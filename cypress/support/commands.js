@@ -52,19 +52,20 @@ Cypress.Commands.add('loginToVoto', () => {
 
 Cypress.Commands.add('switchOrg', (orgName) => {
   cy.wait(700);
-  // The switch endpoint logs out and re-logs-in, regenerating the session id.
-  // Concurrent SPA XHRs still carrying the old cookie then receive a fresh GUEST
-  // session cookie, clobbering the authenticated one — so the post-switch session
-  // in the browser is unreliable. Wait for the switch to persist server-side
-  // (users.org_id updated), then take a clean authenticated session.
+  // post_switchOrganisation now keeps the same authenticated session (it no longer
+  // logout()/loginUsingId()), so the post-switch session is reliable. Follow the redirect
+  // URL the server returns — exactly what the SPA does (window.location.href = response) —
+  // instead of clearing cookies and logging in again (the old workaround for the session
+  // being clobbered mid-switch).
   cy.intercept('POST', '**/users/switch-organisation').as('switchOrgRequest')
   cy.get('[data-test="nav-main-menu-item--organisations"]').click({force:true})
   cy.get('div.multiselect__select').click()
   cy.get('input[placeholder="Switch..."]').type(orgName)
   cy.contains('li', orgName).click()
-  cy.wait('@switchOrgRequest').its('response.statusCode').should('eq', 200)
-  cy.clearCookies()
-  cy.loginToVoto()
+  cy.wait('@switchOrgRequest').then((interception) => {
+    expect(interception.response.statusCode).to.eq(200)
+    cy.visit(interception.response.body)
+  })
   cy.contains('footer', orgName).should('be.visible')
   cy.wait(200);
 
