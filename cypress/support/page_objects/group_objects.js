@@ -30,10 +30,11 @@ class GroupPage_Objects{
         cy.get('[id="description"]').type(description).should('have.value', description)
     }
     editGroup(name, description){
+        // open the edit-group form for the first group; do NOT submit here —
+        // the size-adjustment options (shrink/expand) only exist on this form,
+        // so submitting now would redirect to the listing before shrinkGroup() runs.
         cy.get('a[aria-label="Edit"]:first').click();
-        cy.get('button[data-test="submit-button"]').click();
-
-        
+        cy.get('[data-test="edit-group"]').should('be.visible');
     }
     populateGroup(name,description){
         cy.contains('a','New Group').click()
@@ -60,15 +61,22 @@ class GroupPage_Objects{
 
     }
     shrinkGroup(){
+        // choose "Remove some contacts" (shrink) as the size-adjustment method
         cy.contains('label.form-check-label', 'Remove some contacts').find('input[type="radio"]').check();
         cy.contains('label.form-check-label', 'Remove some contacts').find('input[type="radio"]').should('be.checked');
+        // pick criteria-based subscriber selection
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').check();
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').should('be.checked');
-        // cy.contains('h3', 'Demographics').click();
-        // cy.get('button#gender').click();
-        // cy.get('input#gender-male').uncheck();
+        // submit; because the adjustment method is not "none", a confirmation modal appears
         cy.get('[data-test="submit-button"]').click();
-
+        // Let the Bootstrap confirm modal finish its show transition before confirming.
+        // Clicking "Yes, Proceed" mid-transition makes .modal('hide') race .modal('show'),
+        // which orphans the .modal-backdrop on <body> and blocks the next interaction.
+        cy.get('#confirm-update-group').should('be.visible');
+        cy.wait(500);
+        cy.contains('#confirm-update-group button', 'Yes, Proceed').click();
+        // on success the SPA redirects back to the groups listing
+        cy.location('pathname', { timeout: 15000 }).should('eq', '/groups');
     }
     addSubscriberToGroup(contact_name){
         cy.contains('a','Choose Contacts...').click()
