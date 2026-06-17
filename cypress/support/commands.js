@@ -52,21 +52,30 @@ Cypress.Commands.add('loginToVoto', () => {
 
 Cypress.Commands.add('switchOrg', (orgName) => {
   cy.wait(700);
-  // post_switchOrganisation now keeps the same authenticated session (it no longer
-  // logout()/loginUsingId()), so the post-switch session is reliable. Follow the redirect
-  // URL the server returns — exactly what the SPA does (window.location.href = response) —
-  // instead of clearing cookies and logging in again (the old workaround for the session
-  // being clobbered mid-switch).
-  cy.intercept('POST', '**/users/switch-organisation').as('switchOrgRequest')
-  cy.get('[data-test="nav-main-menu-item--organisations"]').click({force:true})
-  cy.get('div.multiselect__select').click()
-  cy.get('input[placeholder="Switch..."]').type(orgName)
-  cy.contains('li', orgName).click()
-  cy.wait('@switchOrgRequest').then((interception) => {
-    expect(interception.response.statusCode).to.eq(200)
-    cy.visit(interception.response.body)
+  // Idempotent: if we're already on this org (the footer shows its name), there's nothing
+  // to switch — and the org dropdown won't fire a request, so attempting the switch would
+  // hang. This keeps one spec's failure (leaving the user on the wrong org) from cascading
+  // into the next spec's beforeEach switchOrg.
+  cy.get('body').then(($body) => {
+    if ($body.find('footer').text().includes(orgName)) {
+      return
+    }
+    // post_switchOrganisation now keeps the same authenticated session (it no longer
+    // logout()/loginUsingId()), so the post-switch session is reliable. Follow the redirect
+    // URL the server returns — exactly what the SPA does (window.location.href = response) —
+    // instead of clearing cookies and logging in again (the old workaround for the session
+    // being clobbered mid-switch).
+    cy.intercept('POST', '**/users/switch-organisation').as('switchOrgRequest')
+    cy.get('[data-test="nav-main-menu-item--organisations"]').click({force:true})
+    cy.get('div.multiselect__select').click()
+    cy.get('input[placeholder="Switch..."]').type(orgName)
+    cy.contains('li', orgName).click()
+    cy.wait('@switchOrgRequest').then((interception) => {
+      expect(interception.response.statusCode).to.eq(200)
+      cy.visit(interception.response.body)
+    })
+    cy.contains('footer', orgName).should('be.visible')
   })
-  cy.contains('footer', orgName).should('be.visible')
   cy.wait(200);
 
 })
