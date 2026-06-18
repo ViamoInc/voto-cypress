@@ -48,6 +48,19 @@ Cypress.Commands.add('loginToVoto', () => {
   cy.get('[name="password"]').type(defaultlogin.password)
   // Scope to the login form — some environments render more than one [type="submit"] on this page.
   cy.get('[name="password"]').closest('form').find('[type="submit"]').click()
+
+  // The first-time-user welcome modal (#welcome-modal) renders already-shown on the
+  // home page for orgs with no content and covers the main nav, which blocks every
+  // navigation a spec attempts. In the ordered smoke run an earlier spec dismisses it;
+  // when a report spec is run on its own it is still present. Dismiss it if shown
+  // (idempotent — a no-op when the modal isn't there).
+  cy.get('[data-test="nav-main-menu-item--apps"]', { timeout: 20000 }).should('exist')
+  cy.get('body').then(($body) => {
+    if ($body.find('#welcome-modal').is(':visible')) {
+      cy.get('#welcome-modal .close').click({ force: true })
+      cy.get('#welcome-modal').should('not.be.visible')
+    }
+  })
 })
 
 Cypress.Commands.add('switchOrg', (orgName) => {
