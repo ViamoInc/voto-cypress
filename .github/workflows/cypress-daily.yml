@@ -45,7 +45,8 @@ jobs:
             "email": "${{ secrets.CYPRESS_EMAIL }}",
             "password": "${{ secrets.CYPRESS_PASSWORD }}",
             "Outboundcontact": "${{ secrets.CYPRESS_OUTBOUND_CONTACT }}",
-            "OrgName": "${{ secrets.CYPRESS_ORG_NAME }}"
+            "OrgName": "${{ secrets.CYPRESS_ORG_NAME }}",
+            "podcastFeedBaseUrl": "${{ secrets.CYPRESS_PODCAST_FEED_BASE_URL }}"
           }
           ENVEOF
 
@@ -114,7 +115,8 @@ jobs:
             "email": "${{ secrets.CYPRESS_EMAIL }}",
             "password": "${{ secrets.CYPRESS_PASSWORD }}",
             "Outboundcontact": "${{ secrets.CYPRESS_OUTBOUND_CONTACT }}",
-            "OrgName": "${{ secrets.CYPRESS_ORG_NAME }}"
+            "OrgName": "${{ secrets.CYPRESS_ORG_NAME }}",
+            "podcastFeedBaseUrl": "${{ secrets.CYPRESS_PODCAST_FEED_BASE_URL }}"
           }
           ENVEOF
 
@@ -144,6 +146,54 @@ jobs:
       - name: Fail the job if tests failed
         if: steps.regression.outcome == 'failure'
         run: exit 1
+
+  # Needs an audiofiles queue worker and ffmpeg on the target environment, so it
+  # cannot gate the daily run: a red result here means "check the worker" at
+  # least as often as it means "the code broke". Runs for information only and is
+  # deliberately left out of the Slack pass/fail summary below.
+  cypress-podcast-processing:
+    runs-on: ubuntu-latest
+    needs: cypress-regression
+    if: always()
+    continue-on-error: true
+    container:
+      image: cypress/included:10.7.0
+      options: --shm-size=2gb
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fix workspace permissions
+        run: chmod -R 777 .
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Create cypress.env.json
+        run: |
+          cat > cypress.env.json << 'ENVEOF'
+          {
+            "baseUrl": "${{ secrets.CYPRESS_BASE_URL }}",
+            "email": "${{ secrets.CYPRESS_EMAIL }}",
+            "password": "${{ secrets.CYPRESS_PASSWORD }}",
+            "Outboundcontact": "${{ secrets.CYPRESS_OUTBOUND_CONTACT }}",
+            "OrgName": "${{ secrets.CYPRESS_ORG_NAME }}",
+            "podcastFeedBaseUrl": "${{ secrets.CYPRESS_PODCAST_FEED_BASE_URL }}"
+          }
+          ENVEOF
+
+      - name: Run podcast processing tests
+        run: npm run cy:podcast-processing -- --browser electron
+        continue-on-error: true
+
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: podcast-processing-screenshots
+          path: cypress/screenshots/
+          if-no-files-found: ignore
 
   notify:
     runs-on: ubuntu-latest

@@ -46,6 +46,15 @@ run-regression:
 run-all:
 	just cypress-run all
 
+# Podcast browser coverage. run-podcast is deterministic and safe for CI;
+# run-podcast-processing needs an audiofiles queue worker and ffmpeg on the
+# target environment, so it is opt-in.
+run-podcast:
+	npm run cy:podcast
+
+run-podcast-processing:
+	npm run cy:podcast-processing
+
 ci suite='all':
 	just install
 	just verify

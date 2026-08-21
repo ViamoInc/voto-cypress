@@ -17,6 +17,18 @@ export const ContentNavigation = Object.freeze({
         categoryLinkSelector: Category.CONTENT,
         linkSelector: "[data-test='nav-menu-item-action--create-tree']"
     },
+    PODCAST: {
+        categoryLinkSelector: Category.CONTENT,
+        linkSelector: "[data-test='nav-menu-item--podcasts']"
+    },
+    ADD_PODCAST: {
+        categoryLinkSelector: Category.CONTENT,
+        linkSelector: "[data-test='nav-menu-item-action--create-podcast']"
+    },
+    PLAYLIST: {
+        categoryLinkSelector: Category.CONTENT,
+        linkSelector: "[data-test='nav-menu-item--playlists']"
+    },
     MESSAGE: {
         categoryLinkSelector: Category.CONTENT,
         linkSelector: "[data-test='nav-menu-item--messages-management']"

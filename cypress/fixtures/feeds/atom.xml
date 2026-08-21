@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Cypress Podcast — Atom</title>
+  <link href="https://example.com/cypress-podcast-atom"/>
+  <updated>2026-01-03T10:00:00Z</updated>
+  <id>urn:uuid:cypress-atom-feed</id>
+  <entry>
+    <title>Atom episode 1</title>
+    <id>cy-atom-1</id>
+    <updated>2026-01-03T10:00:00Z</updated>
+    <published>2026-01-03T10:00:00Z</published>
+    <summary>An Atom entry carrying an audio enclosure.</summary>
+    <link rel="enclosure" type="audio/mpeg" length="630764" href="__BASE__/audio/podcast-tone-silence.mp3"/>
+  </entry>
+  <entry>
+    <title>Atom episode 2</title>
+    <id>cy-atom-2</id>
+    <updated>2026-01-04T10:00:00Z</updated>
+    <published>2026-01-04T10:00:00Z</published>
+    <summary>A second Atom entry.</summary>
+    <link rel="enclosure" type="audio/mpeg" length="630764" href="__BASE__/audio/podcast-tone-silence.mp3"/>
+  </entry>
+</feed>
