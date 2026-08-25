@@ -120,6 +120,17 @@ jobs:
           }
           ENVEOF
 
+      # This is an explicit allowlist, not a glob (see 0404065, "Stabilize daily
+      # Cypress regression workflow") — a spec only joins the daily run once it
+      # has been shown to pass reliably, because a failure here fails the job and
+      # turns the Slack summary red for everyone.
+      #
+      # podcast_regression_test.js is deliberately NOT in the list yet: it cannot
+      # pass until ENABLE_PODCASTS is enabled for the test org, so adding it now
+      # would red the daily run every morning for a reason nobody can act on from
+      # the alert. Once the org is enabled and `npm run cy:podcast` is green twice
+      # in a row, append it here:
+      #   ,cypress/e2e/regression_test/podcast_regression_test.js
       - name: Run Regression Tests
         id: regression
         run: |

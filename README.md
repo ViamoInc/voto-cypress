@@ -76,8 +76,11 @@ The `Jenkinsfile` builds the Docker image and executes `just ci` inside it via `
 ## Podcast specs
 
 `cypress/e2e/regression_test/podcast_regression_test.js` covers Content →
-Podcasts (VAI-1680) and runs as part of the regression suite. It touches nothing
-asynchronous, so it is deterministic and safe for the daily job.
+Podcasts (VAI-1680). It touches nothing asynchronous, so it is deterministic and
+safe for the daily job — but it is **not in the daily run yet**. The regression
+job uses an explicit spec allowlist, and this spec cannot pass until
+ENABLE_PODCASTS is enabled for the test org. Run it on demand with
+`npm run cy:podcast`; the workflow comment says where to add it once it is green.
 
 `cypress/e2e/podcast_processing/` covers what happens after an import — episodes
 becoming segmented Messages on the linked playlist. That needs an `audiofiles`
