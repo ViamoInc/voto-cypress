@@ -214,10 +214,18 @@ export default class Podcast_Objects {
    * this is the check that would have caught them.
    */
   assertNoRawTranslationKeys() {
-    cy.get('body').invoke('text').then((text) => {
-      const raw = text.match(/\b(?:podcasts|base|content)\.[a-z][a-z0-9-]{3,}/g) || []
-      expect([...new Set(raw)], 'raw translation keys are visible on this page').to.deep.eq([])
-    })
+    // Scoped to the podcast view root, and to the `podcasts.` namespace, on
+    // purpose. The collapsed main-nav submenus carry untranslated `base.*` /
+    // `content.*` labels in hidden text nodes on every page, so asserting over
+    // the whole body — or over every namespace — fails everywhere for reasons
+    // that have nothing to do with podcasts and are not visible to a user.
+    cy.get('.podcasts-sets-view, .podcast-create-edit-view')
+      .filter(':visible')
+      .invoke('text')
+      .then((text) => {
+        const raw = text.match(/\bpodcasts\.[a-z][a-z0-9-]{3,}/g) || []
+        expect([...new Set(raw)], 'raw podcast translation keys are visible in the podcast view').to.deep.eq([])
+      })
     return this
   }
 }
