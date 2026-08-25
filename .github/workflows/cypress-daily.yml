@@ -121,20 +121,18 @@ jobs:
           ENVEOF
 
       # This is an explicit allowlist, not a glob (see 0404065, "Stabilize daily
-      # Cypress regression workflow") — a spec only joins the daily run once it
-      # has been shown to pass reliably, because a failure here fails the job and
-      # turns the Slack summary red for everyone.
+      # Cypress regression workflow"): a failure here fails the job and reds the
+      # Slack summary, so specs are added deliberately.
       #
-      # podcast_regression_test.js is deliberately NOT in the list yet: it cannot
-      # pass until ENABLE_PODCASTS is enabled for the test org, so adding it now
-      # would red the daily run every morning for a reason nobody can act on from
-      # the alert. Once the org is enabled and `npm run cy:podcast` is green twice
-      # in a row, append it here:
-      #   ,cypress/e2e/regression_test/podcast_regression_test.js
+      # podcast_regression_test.js will fail until ENABLE_PODCASTS is enabled for
+      # the test org. That is intended — the spec's precondition check reports the
+      # exact blocker ("Enable ENABLE_PLAYLISTS + ENABLE_PODCASTS in voto5admin for
+      # the org ..."), so the daily alert is actionable rather than mysterious, and
+      # the feature stays visibly untested until someone flips the flag.
       - name: Run Regression Tests
         id: regression
         run: |
-          REGRESSION_SPECS="cypress/e2e/regression_test/audio_library_regression_test.js,cypress/e2e/regression_test/campaign_regression_test.js,cypress/e2e/regression_test/contact_import_regression_test.js,cypress/e2e/regression_test/flow_block_test.js,cypress/e2e/regression_test/message_regression_test.js,cypress/e2e/regression_test/platform_regression_test.js"
+          REGRESSION_SPECS="cypress/e2e/regression_test/audio_library_regression_test.js,cypress/e2e/regression_test/campaign_regression_test.js,cypress/e2e/regression_test/contact_import_regression_test.js,cypress/e2e/regression_test/flow_block_test.js,cypress/e2e/regression_test/message_regression_test.js,cypress/e2e/regression_test/platform_regression_test.js,cypress/e2e/regression_test/podcast_regression_test.js"
           npx cypress run --spec "$REGRESSION_SPECS" --browser electron
         continue-on-error: true
 
