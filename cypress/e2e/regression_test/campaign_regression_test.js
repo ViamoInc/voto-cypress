@@ -85,9 +85,12 @@ describe('Campaign Regression - Create SMS Message & Campaign', () => {
         // This test creates and sends a real outbound campaign.
         // Skipped by default to avoid consuming credits.
         // Un-skip for manual regression testing.
+        // VAI-1985: read the destination from Cypress.env, as cy.SendOutboundMessage already
+        // does. It used to be hardcoded in the fixture, which meant a real dialable MSISDN was
+        // committed and duplicated the CYPRESS_OUTBOUND_CONTACT secret that CI already supplies.
         campaign.configureOutboundSMSCampaign(
             data.message_name + timestamp,
-            data.outbound_contact
+            Cypress.env('Outboundcontact')
         );
         campaign.saveCampaign();
         campaign.confirmAndSendCampaign();
