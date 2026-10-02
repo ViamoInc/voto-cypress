@@ -60,14 +60,16 @@ export default class Podcast_Objects {
 
   // --- create / edit form --------------------------------------------------
 
+  // ViaMultiSelect binds data-cy on both its wrapper and the inner .multiselect,
+  // so an unscoped selector yields two elements and click() refuses it.
   selectPlaylist(name) {
-    cy.get('[data-cy="podcast-playlist--selector"]').click()
+    cy.get('.multiselect[data-cy="podcast-playlist--selector"]').click()
     cy.contains('.multiselect__option', name).click()
     return this
   }
 
   selectLanguage(name) {
-    cy.get('[data-cy="podcast-language--selector"]').click()
+    cy.get('.multiselect[data-cy="podcast-language--selector"]').click()
     cy.contains('.multiselect__option', name).click()
     return this
   }
@@ -105,7 +107,9 @@ export default class Podcast_Objects {
   }
 
   assertFeedError(expectedText) {
-    cy.contains(expectedText, { timeout: 30000 }).should('be.visible')
+    // The toast body renders twice, stacked in the same spot, so Cypress reports
+    // the first copy as covered by the second. Assert on the text, not visibility.
+    cy.contains('.Vue-Toastification__toast-body', expectedText, { timeout: 30000 }).should('exist')
     cy.get('[data-cy="podcast-episode-list"]').should('not.exist')
     return this
   }
@@ -184,14 +188,19 @@ export default class Podcast_Objects {
     return this
   }
 
+  // ViaModal renders through a portal: data-cy="podcast-delete--modal" lands on
+  // an empty .v-portal placeholder, and the dialog itself mounts in .via-modal-bg.
+  deleteModalActions() {
+    return cy.get('.via-modal-bg .via-modal-actions').filter(':visible')
+  }
+
   confirmDelete() {
-    cy.get('[data-cy="podcast-delete--modal"]').should('be.visible')
-    cy.get('[data-cy="podcast-delete--modal"]').contains('button', /delete/i).click({ force: true })
+    this.deleteModalActions().should('have.length', 1).contains('button', /delete/i).click({ force: true })
     return this
   }
 
   cancelDelete() {
-    cy.get('[data-cy="podcast-delete--modal"]').contains('button', /cancel/i).click({ force: true })
+    this.deleteModalActions().should('have.length', 1).contains('button', /cancel/i).click({ force: true })
     return this
   }
 

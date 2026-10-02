@@ -19,6 +19,11 @@ import { RUN_TAG, cleanUp, createPlaylist } from '../../support/podcast_lifecycl
  *   - podcastFeedBaseUrl in cypress.env.json points at a host the CN can reach
  *     server-side (see scripts/publish-podcast-feeds.sh)
  */
+// A failed Laravel validation redirects back unless the client asks for JSON, and
+// cy.request follows that redirect, so a rejected request reads as the previous
+// URL's 200. Send this on any request whose error status the test asserts.
+const JSON_ONLY = { Accept: 'application/json' }
+
 describe('podcasts', () => {
   const podcast = new Podcast_Objects()
   let data
@@ -74,7 +79,7 @@ describe('podcasts', () => {
     cy.get('[data-cy="podcasts--table"], [data-cy="podcasts--empty-state"]').should('exist')
     cy.get('body').then(($body) => {
       if ($body.find('[data-cy="podcasts--table"]').length) {
-        const headers = ['Title', 'Linked playlist', 'Status', 'Episodes', 'Tags']
+        const headers = ['Title', 'Linked Playlist', 'Status', 'Episodes', 'Tags']
         headers.forEach((header) => cy.get('[data-cy="podcasts--table"]').should('contain.text', header))
       }
     })
@@ -305,6 +310,7 @@ describe('podcasts', () => {
         cy.request({
           method: 'PUT',
           url: `/resource/podcasts/${podcastId}`,
+          headers: JSON_ONLY,
           body: { min_duration_minutes: 60 },
           failOnStatusCode: false,
         }).then((response) => {
@@ -314,6 +320,7 @@ describe('podcasts', () => {
         cy.request({
           method: 'PUT',
           url: `/resource/podcasts/${podcastId}`,
+          headers: JSON_ONLY,
           body: { max_duration_minutes: 1 },
           failOnStatusCode: false,
         }).then((response) => {
@@ -353,6 +360,7 @@ describe('podcasts', () => {
           cy.request({
             method: 'POST',
             url: `/resource/podcasts/${podcastId}/sync-now`,
+            headers: JSON_ONLY,
             failOnStatusCode: false,
           }).its('status').should('eq', 422)
         })
