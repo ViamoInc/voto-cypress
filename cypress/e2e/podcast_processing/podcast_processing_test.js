@@ -100,8 +100,7 @@ suite('podcast episode processing', () => {
       expect(language, `the org has no "${data.language}" language configured`).to.not.be.undefined
 
       podcast.visitPodcastsPage().startCreate()
-      cy.get('[data-cy="podcast-playlist--selector"]').click()
-      cy.contains('.multiselect__option', RUN_TAG).click()
+      podcast.selectPlaylist(RUN_TAG)
       podcast.selectLanguage(data.language)
       podcast.setDurations(data.minDuration, data.maxDuration)
       podcast.connectFeed(podcast.feedUrl(feedFixture))
