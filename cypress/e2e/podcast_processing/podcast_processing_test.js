@@ -53,6 +53,9 @@ suite('podcast episode processing', () => {
   })
 
   after(() => {
+    // after() inherits the last test's session, so loginToVoto would land on
+    // /home with no login form and fail the hook even on a fully green run.
+    cy.clearCookies()
     cy.loginToVoto()
     cleanUp(created)
   })
