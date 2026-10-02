@@ -1,0 +1,45 @@
+name: Publish podcast feed fixtures
+
+# The CN fetches podcast feeds and enclosures server-side, so the podcast specs
+# need cypress/fixtures/feeds on a public host. This publishes them to GitHub
+# Pages; the CYPRESS_PODCAST_FEED_BASE_URL secret must match the deployed URL
+# (https://viamoinc.github.io/voto-cypress).
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'cypress/fixtures/feeds/**'
+      - 'scripts/publish-podcast-feeds.sh'
+      - '.github/workflows/podcast-feeds-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Bake the feeds with the Pages base URL
+        run: bash ./scripts/publish-podcast-feeds.sh "${{ steps.pages.outputs.base_url }}" ./dist-feeds
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist-feeds
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
