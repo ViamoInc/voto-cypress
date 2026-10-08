@@ -6,6 +6,15 @@ on:
     - cron: '0 6 * * *'
   workflow_dispatch: # Allow manual trigger
 
+# A quarantined spec still runs and is reported in Slack, but does not red the
+# summary until QUARANTINE_EXPIRES has passed (VAI-1976). Fix the spec and move it
+# back into REGRESSION_SPECS, or extend the date deliberately.
+env:
+  QUARANTINE_SPEC: cypress/e2e/regression_test/podcast_regression_test.js
+  QUARANTINE_OWNER: daniel.melfah@viamo.io
+  QUARANTINE_EXPIRES: '2026-10-31'
+  QUARANTINE_REASON: header case, leaked [cy-podcast] fixtures, F14 orphaned-podcast picker
+
 jobs:
   cypress-smoke:
     runs-on: ubuntu-latest
@@ -122,17 +131,12 @@ jobs:
 
       # This is an explicit allowlist, not a glob (see 0404065, "Stabilize daily
       # Cypress regression workflow"): a failure here fails the job and reds the
-      # Slack summary, so specs are added deliberately.
-      #
-      # podcast_regression_test.js will fail until ENABLE_PODCASTS is enabled for
-      # the test org. That is intended — the spec's precondition check reports the
-      # exact blocker ("Enable ENABLE_PLAYLISTS + ENABLE_PODCASTS in voto5admin for
-      # the org ..."), so the daily alert is actionable rather than mysterious, and
-      # the feature stays visibly untested until someone flips the flag.
+      # Slack summary, so specs are added deliberately. A spec that is red for a
+      # known reason goes in QUARANTINE_SPEC (top of file) instead.
       - name: Run Regression Tests
         id: regression
         run: |
-          REGRESSION_SPECS="cypress/e2e/regression_test/audio_library_regression_test.js,cypress/e2e/regression_test/campaign_regression_test.js,cypress/e2e/regression_test/contact_import_regression_test.js,cypress/e2e/regression_test/flow_block_test.js,cypress/e2e/regression_test/message_regression_test.js,cypress/e2e/regression_test/platform_regression_test.js,cypress/e2e/regression_test/podcast_regression_test.js"
+          REGRESSION_SPECS="cypress/e2e/regression_test/audio_library_regression_test.js,cypress/e2e/regression_test/campaign_regression_test.js,cypress/e2e/regression_test/contact_import_regression_test.js,cypress/e2e/regression_test/flow_block_test.js,cypress/e2e/regression_test/message_regression_test.js,cypress/e2e/regression_test/platform_regression_test.js"
           npx cypress run --spec "$REGRESSION_SPECS" --browser electron
         continue-on-error: true
 
@@ -156,13 +160,69 @@ jobs:
         if: steps.regression.outcome == 'failure'
         run: exit 1
 
+  # Runs after regression so the two never touch the shared test org at once.
+  cypress-quarantine:
+    runs-on: ubuntu-latest
+    needs: cypress-regression
+    if: always()
+    container:
+      image: cypress/included:10.7.0
+      options: --shm-size=2gb
+    outputs:
+      result: ${{ steps.quarantine.outcome }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fix workspace permissions
+        run: chmod -R 777 .
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Create cypress.env.json
+        run: |
+          cat > cypress.env.json << 'ENVEOF'
+          {
+            "baseUrl": "${{ secrets.CYPRESS_BASE_URL }}",
+            "email": "${{ secrets.CYPRESS_EMAIL }}",
+            "password": "${{ secrets.CYPRESS_PASSWORD }}",
+            "Outboundcontact": "${{ secrets.CYPRESS_OUTBOUND_CONTACT }}",
+            "OrgName": "${{ secrets.CYPRESS_ORG_NAME }}",
+            "podcastFeedBaseUrl": "${{ secrets.CYPRESS_PODCAST_FEED_BASE_URL }}"
+          }
+          ENVEOF
+
+      - name: Run quarantined spec
+        id: quarantine
+        run: npx cypress run --spec "$QUARANTINE_SPEC" --browser electron
+        continue-on-error: true
+
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quarantine-screenshots
+          path: cypress/screenshots/
+          if-no-files-found: ignore
+
+      - name: Fail the job only once the quarantine has expired
+        if: steps.quarantine.outcome == 'failure'
+        run: |
+          if [ "$(date -u +%Y%m%d)" -gt "$(echo "$QUARANTINE_EXPIRES" | tr -d -)" ]; then
+            echo "::error::Quarantine of $QUARANTINE_SPEC expired on $QUARANTINE_EXPIRES (owner $QUARANTINE_OWNER). Fix the spec or extend the date."
+            exit 1
+          fi
+          echo "::warning::$QUARANTINE_SPEC failed but is quarantined until $QUARANTINE_EXPIRES (owner $QUARANTINE_OWNER)."
+
   # Needs an audiofiles queue worker and ffmpeg on the target environment, so it
   # cannot gate the daily run: a red result here means "check the worker" at
   # least as often as it means "the code broke". Runs for information only and is
   # deliberately left out of the Slack pass/fail summary below.
   cypress-podcast-processing:
     runs-on: ubuntu-latest
-    needs: cypress-regression
+    needs: cypress-quarantine
     if: always()
     continue-on-error: true
     container:
@@ -206,12 +266,12 @@ jobs:
 
   notify:
     runs-on: ubuntu-latest
-    needs: [cypress-smoke, cypress-regression]
+    needs: [cypress-smoke, cypress-regression, cypress-quarantine]
     if: always()
 
     steps:
       - name: Notify Slack - All Passed
-        if: needs.cypress-smoke.result == 'success' && needs.cypress-regression.result == 'success'
+        if: needs.cypress-smoke.result == 'success' && needs.cypress-regression.result == 'success' && needs.cypress-quarantine.result == 'success'
         uses: slackapi/slack-github-action@v1.27.0
         with:
           payload: |
@@ -221,7 +281,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":white_check_mark: *Cypress Daily Tests — ALL PASSED*\n*Smoke:* Passed | *Regression:* Passed\n*Target:* darkmatter.votomobile.org\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Results>"
+                    "text": ":white_check_mark: *Cypress Daily Tests — ALL PASSED*\n*Smoke:* Passed | *Regression:* Passed\n*Quarantined:* ${{ env.QUARANTINE_SPEC }} — ${{ needs.cypress-quarantine.outputs.result || 'not run' }} (owner ${{ env.QUARANTINE_OWNER }}, expires ${{ env.QUARANTINE_EXPIRES }}: ${{ env.QUARANTINE_REASON }})\n*Target:* darkmatter.votomobile.org\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Results>"
                   }
                 }
               ]
@@ -231,7 +291,7 @@ jobs:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
       - name: Notify Slack - Failure
-        if: needs.cypress-smoke.result == 'failure' || needs.cypress-regression.result == 'failure'
+        if: needs.cypress-smoke.result == 'failure' || needs.cypress-regression.result == 'failure' || needs.cypress-quarantine.result == 'failure'
         uses: slackapi/slack-github-action@v1.27.0
         with:
           payload: |
@@ -241,7 +301,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":x: *Cypress Daily Tests — FAILURES DETECTED*\n*Smoke:* ${{ needs.cypress-smoke.result }} | *Regression:* ${{ needs.cypress-regression.result }}\n*Target:* darkmatter.votomobile.org\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Results>\n*Screenshots:* Download from artifacts"
+                    "text": ":x: *Cypress Daily Tests — FAILURES DETECTED*\n*Smoke:* ${{ needs.cypress-smoke.result }} | *Regression:* ${{ needs.cypress-regression.result }}\n*Quarantined:* ${{ env.QUARANTINE_SPEC }} — ${{ needs.cypress-quarantine.outputs.result || 'not run' }} (owner ${{ env.QUARANTINE_OWNER }}, expires ${{ env.QUARANTINE_EXPIRES }}: ${{ env.QUARANTINE_REASON }})\n*Target:* darkmatter.votomobile.org\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Results>\n*Screenshots:* Download from artifacts"
                   }
                 }
               ]
