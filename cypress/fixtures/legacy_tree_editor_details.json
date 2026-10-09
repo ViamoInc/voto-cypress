@@ -1,0 +1,18 @@
+{
+    "tree_title": "Cypress Legacy Tree",
+    "languages": ["English"],
+    "blocks": [
+        { "type": "MessageBlock", "label": "Legacy Welcome Message" },
+        { "type": "MultipleChoiceQuestionBlock", "label": "Legacy Favourite Crop" },
+        { "type": "NumericQuestionBlock", "label": "Legacy Household Size" },
+        { "type": "OpenQuestionBlock", "label": "Legacy Open Feedback" }
+    ],
+    "renamed_block": {
+        "type": "MessageBlock",
+        "label": "Legacy Greeting Rewritten"
+    },
+    "disposable_block": {
+        "type": "NumericQuestionBlock",
+        "label": "Legacy Household Size"
+    }
+}
