@@ -51,3 +51,9 @@ Thumbs.db
 *.mov
 *.wmv
 
+# VAI-1985: the QA credentials file was tracked because this list only covered the
+# `.json` spelling, while the committed file was named `voto-cypress-env-json` — no
+# extension, so the pattern never matched it. Cover both, and any future variant.
+voto-cypress-env-json
+*cypress*env*json*
+!example.cypress.env.json
