@@ -189,6 +189,17 @@ class FlowRegression_Objects {
         cy.wait(2000);
     }
 
+    // Cleanup-safe delete: does nothing when the flow was never created, so a
+    // failed creation test doesn't also fail the after() hook.
+    deleteFlowIfPresent(flowName) {
+        this.searchFlows(flowName);
+        cy.get('body').then(($body) => {
+            if ($body.find(`tr:contains("${flowName}")`).length > 0) {
+                this.deleteFlow(flowName);
+            }
+        });
+    }
+
     // Duplicate flow
     duplicateFlow(flowName) {
         this.searchFlows(flowName);
