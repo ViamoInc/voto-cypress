@@ -6,6 +6,18 @@ Cypress.on('uncaught:exception', (err, runnable) => {
     return false;
 });
 
+// Runs in after() so a flow is removed even when an earlier test fails; the
+// it.skip cleanups this replaces left one flow per run in the QA org.
+// clearCookies first: the last test may still be logged in, and loginToVoto
+// then never finds the login form (see the podcast specs' after hooks).
+const cleanUpFlows = (flow, ...labels) => {
+    cy.clearCookies();
+    cy.clearLocalStorage();
+    cy.loginToVoto();
+    labels.forEach((label) => flow.deleteFlowIfPresent(label));
+    cy.logoutOfVoto();
+};
+
 describe('Flow Regression - Multi-Block Flow Creation', () => {
     let data;
     let flowLabel;
@@ -61,11 +73,8 @@ describe('Flow Regression - Multi-Block Flow Creation', () => {
         cy.logoutOfVoto();
     });
 
-    it.skip('Clean up - delete the flow', () => {
-        cy.loginToVoto();
-        flow.deleteFlow(editedFlowLabel);
-        cy.logoutOfVoto();
-    });
+    // The edit test is skipped, so the flow usually still has its original label.
+    after(() => cleanUpFlows(flow, flowLabel, editedFlowLabel));
 });
 
 describe('Flow Regression - Duplicate Flow', () => {
@@ -107,12 +116,8 @@ describe('Flow Regression - Duplicate Flow', () => {
         cy.logoutOfVoto();
     });
 
-    it.skip('Clean up - delete both flows', () => {
-        cy.loginToVoto();
-        flow.deleteFlow(duplicateFlowLabel);
-        flow.deleteFlow(duplicateFlowLabel);
-        cy.logoutOfVoto();
-    });
+    // Twice: the original, plus the copy when the duplicate test runs.
+    after(() => cleanUpFlows(flow, duplicateFlowLabel, duplicateFlowLabel));
 });
 
 describe('Flow Regression - SMS-Only Flow', () => {
@@ -154,9 +159,5 @@ describe('Flow Regression - SMS-Only Flow', () => {
         cy.logoutOfVoto();
     });
 
-    it.skip('Clean up - delete SMS-only flow', () => {
-        cy.loginToVoto();
-        flow.deleteFlow(smsOnlyFlowLabel);
-        cy.logoutOfVoto();
-    });
+    after(() => cleanUpFlows(flow, smsOnlyFlowLabel));
 });

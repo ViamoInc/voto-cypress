@@ -61,10 +61,19 @@ describe('Inbound Campaign Regression - CRUD', () => {
         cy.logoutOfVoto();
     });
 
-    it.skip('Clean up - delete the created inbound campaign', () => {
+    // after(), not an it: the skipped cleanup left one campaign per run in the
+    // QA org. Tolerates the campaign never having been created.
+    after(() => {
+        const name = data.campaign_name + ' ' + timestamp;
+        cy.clearCookies();
+        cy.clearLocalStorage();
+        cy.loginToVoto();
         campaign.visitInboundCampaignsPage();
-        cy.contains('body', data.campaign_name + ' ' + timestamp).should('exist');
-        campaign.deleteInboundCampaign(data.campaign_name + ' ' + timestamp);
+        cy.get('body').then(($body) => {
+            if ($body.find(`tr:contains("${name}")`).length > 0) {
+                campaign.deleteInboundCampaign(name);
+            }
+        });
         cy.logoutOfVoto();
     });
 });
