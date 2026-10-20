@@ -7,7 +7,8 @@ Cypress.on('uncaught:exception', (err, runnable) => {
     return false;
   });
   
-describe('Testing Flow', () => {
+// The tests build one flow in sequence, so the page must survive between them.
+describe('Testing Flow', { testIsolation: false }, () => {
     let message, numeric,openended;
     
     before(() => {
