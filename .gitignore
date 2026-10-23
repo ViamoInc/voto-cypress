@@ -10,6 +10,7 @@ cypress.env.json
 cypress/reports/
 cypress/videos/
 cypress/screenshots/
+cypress/downloads/
 # Compiled Java class files
 *.class
 

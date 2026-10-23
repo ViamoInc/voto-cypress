@@ -46,18 +46,38 @@ Cypress.Commands.add('loginToVoto', () => {
   cy.visit(defaultlogin.BaseUrl)
   cy.get('[name="email"]').type(defaultlogin.email)
   cy.get('[name="password"]').type(defaultlogin.password)
-  cy.get('[type="submit"]').click()
+  // Some environments render more than one [type="submit"] on this page.
+  cy.get('[name="password"]').closest('form').find('[type="submit"]').click()
+
+  // Orgs with no content open on the welcome modal, which covers the main nav.
+  cy.get('[data-test="nav-main-menu-item--apps"]', { timeout: 20000 }).should('exist')
+  cy.get('body').then(($body) => {
+    if ($body.find('#welcome-modal').is(':visible')) {
+      cy.get('#welcome-modal .close').click({ force: true })
+      cy.get('#welcome-modal').should('not.be.visible')
+    }
+  })
 })
 
 Cypress.Commands.add('switchOrg', (orgName) => {
   cy.wait(700);
-  cy.get('[data-test="nav-main-menu-item--organisations"]').click({force:true})
-  cy.get('div.multiselect__select').click()
-  cy.get('input[placeholder="Switch..."]').type(orgName)
-  cy.contains('li', orgName).click()
-  cy.wait(2000);
-  cy.reload();
-  cy.contains('footer', orgName).should('be.visible')
+  // Switching to the current org fires no request, so waiting for one would hang.
+  cy.get('body').then(($body) => {
+    if ($body.find('footer').text().includes(orgName)) {
+      return
+    }
+    // Follow the redirect URL the server returns, as the SPA does.
+    cy.intercept('POST', '**/users/switch-organisation').as('switchOrgRequest')
+    cy.get('[data-test="nav-main-menu-item--organisations"]').click({force:true})
+    cy.get('div.multiselect__select').click()
+    cy.get('input[placeholder="Switch..."]').type(orgName)
+    cy.contains('li', orgName).click()
+    cy.wait('@switchOrgRequest').then((interception) => {
+      expect(interception.response.statusCode).to.eq(200)
+      cy.visit(interception.response.body)
+    })
+    cy.contains('footer', orgName).should('be.visible')
+  })
   cy.wait(200);
 
 })

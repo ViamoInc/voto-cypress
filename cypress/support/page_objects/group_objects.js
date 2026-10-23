@@ -30,10 +30,9 @@ class GroupPage_Objects{
         cy.get('[id="description"]').type(description).should('have.value', description)
     }
     editGroup(name, description){
+        // Leaves the form open: shrinkGroup() needs its size-adjustment options.
         cy.get('a[aria-label="Edit"]:first').click();
-        cy.get('button[data-test="submit-button"]').click();
-
-        
+        cy.get('[data-test="edit-group"]').should('be.visible');
     }
     populateGroup(name,description){
         cy.contains('a','New Group').click()
@@ -64,11 +63,12 @@ class GroupPage_Objects{
         cy.contains('label.form-check-label', 'Remove some contacts').find('input[type="radio"]').should('be.checked');
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').check();
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').should('be.checked');
-        // cy.contains('h3', 'Demographics').click();
-        // cy.get('button#gender').click();
-        // cy.get('input#gender-male').uncheck();
         cy.get('[data-test="submit-button"]').click();
-
+        // Confirming mid show-transition orphans the .modal-backdrop, which blocks the next click.
+        cy.get('#confirm-update-group').should('be.visible');
+        cy.wait(500);
+        cy.contains('#confirm-update-group button', 'Yes, Proceed').click();
+        cy.location('pathname', { timeout: 15000 }).should('eq', '/groups');
     }
     addSubscriberToGroup(contact_name){
         cy.contains('a','Choose Contacts...').click()
@@ -89,23 +89,14 @@ class GroupPage_Objects{
         cy.contains('button','Add group').click()
         cy.get('.alert-success').should('be.visible')
     }
-    cleanup(){
+    cleanup(name){
         cy.wait(6000);
         cy.reload();
-        //cy.get('span.badge-warning').should('contain.text', 'Saving...100%');
-
-        // Select the second, third, and fourth checkboxes by index and click them
-        cy.get('[type="checkbox"]').eq(1).click(); // 2nd checkbox (index 1)
-        cy.get('[type="checkbox"]').eq(2).click(); // 3rd checkbox (index 2)
-        cy.get('[type="checkbox"]').eq(3).click(); // 4th checkbox (index 3)
-       //cy.get('[type="checkbox"]').eq(4).click(); // 5th checkbox (index 4)
-
-        cy.get('select[name="action_type"]').select('delete'); // Selects the option with value="delete"
+        // Only this spec's group and the parts Divide Group named "<name> (n)", so seeded groups survive.
+        cy.get('tbody tr').filter(`:contains("${name}")`).find('[type="checkbox"]').check({ force: true });
+        cy.get('select[name="action_type"]').select('delete');
         cy.contains('button','GO').click();
         cy.reload();
-
-
-
     }
 }
 export default GroupPage_Objects;

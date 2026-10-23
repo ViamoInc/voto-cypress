@@ -37,7 +37,7 @@ describe('audience targeting group', () => {
         group.createGroupWithSubscriber(data.name +' created @ ' + Configs.timestamp, data.describe +' created @ ' + Configs.timestamp);
        // group.editGroup();
         group.expandGroup();
-        group.cleanup(); 
+        group.cleanup(data.name);
         cy.switchOrg(data.defaultOrg);
         cy.logoutOfVoto();
 
