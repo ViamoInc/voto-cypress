@@ -97,23 +97,14 @@ class GroupPage_Objects{
         cy.contains('button','Add group').click()
         cy.get('.alert-success').should('be.visible')
     }
-    cleanup(){
+    cleanup(name){
         cy.wait(6000);
         cy.reload();
-        //cy.get('span.badge-warning').should('contain.text', 'Saving...100%');
-
-        // Select the second, third, and fourth checkboxes by index and click them
-        cy.get('[type="checkbox"]').eq(1).click(); // 2nd checkbox (index 1)
-        cy.get('[type="checkbox"]').eq(2).click(); // 3rd checkbox (index 2)
-        cy.get('[type="checkbox"]').eq(3).click(); // 4th checkbox (index 3)
-       //cy.get('[type="checkbox"]').eq(4).click(); // 5th checkbox (index 4)
-
-        cy.get('select[name="action_type"]').select('delete'); // Selects the option with value="delete"
+        // Only this spec's group and the parts Divide Group named "<name> (n)", so seeded groups survive.
+        cy.get('tbody tr').filter(`:contains("${name}")`).find('[type="checkbox"]').check({ force: true });
+        cy.get('select[name="action_type"]').select('delete');
         cy.contains('button','GO').click();
         cy.reload();
-
-
-
     }
 }
 export default GroupPage_Objects;
