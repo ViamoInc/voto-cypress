@@ -30,9 +30,7 @@ class GroupPage_Objects{
         cy.get('[id="description"]').type(description).should('have.value', description)
     }
     editGroup(name, description){
-        // open the edit-group form for the first group; do NOT submit here —
-        // the size-adjustment options (shrink/expand) only exist on this form,
-        // so submitting now would redirect to the listing before shrinkGroup() runs.
+        // Leaves the form open: shrinkGroup() needs its size-adjustment options.
         cy.get('a[aria-label="Edit"]:first').click();
         cy.get('[data-test="edit-group"]').should('be.visible');
     }
@@ -61,21 +59,15 @@ class GroupPage_Objects{
 
     }
     shrinkGroup(){
-        // choose "Remove some contacts" (shrink) as the size-adjustment method
         cy.contains('label.form-check-label', 'Remove some contacts').find('input[type="radio"]').check();
         cy.contains('label.form-check-label', 'Remove some contacts').find('input[type="radio"]').should('be.checked');
-        // pick criteria-based subscriber selection
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').check();
         cy.get('input[name="selected_subscriber_method"][value="criteria_based"]').should('be.checked');
-        // submit; because the adjustment method is not "none", a confirmation modal appears
         cy.get('[data-test="submit-button"]').click();
-        // Let the Bootstrap confirm modal finish its show transition before confirming.
-        // Clicking "Yes, Proceed" mid-transition makes .modal('hide') race .modal('show'),
-        // which orphans the .modal-backdrop on <body> and blocks the next interaction.
+        // Confirming mid show-transition orphans the .modal-backdrop, which blocks the next click.
         cy.get('#confirm-update-group').should('be.visible');
         cy.wait(500);
         cy.contains('#confirm-update-group button', 'Yes, Proceed').click();
-        // on success the SPA redirects back to the groups listing
         cy.location('pathname', { timeout: 15000 }).should('eq', '/groups');
     }
     addSubscriberToGroup(contact_name){

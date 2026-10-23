@@ -46,14 +46,10 @@ Cypress.Commands.add('loginToVoto', () => {
   cy.visit(defaultlogin.BaseUrl)
   cy.get('[name="email"]').type(defaultlogin.email)
   cy.get('[name="password"]').type(defaultlogin.password)
-  // Scope to the login form — some environments render more than one [type="submit"] on this page.
+  // Some environments render more than one [type="submit"] on this page.
   cy.get('[name="password"]').closest('form').find('[type="submit"]').click()
 
-  // The first-time-user welcome modal (#welcome-modal) renders already-shown on the
-  // home page for orgs with no content and covers the main nav, which blocks every
-  // navigation a spec attempts. In the ordered smoke run an earlier spec dismisses it;
-  // when a report spec is run on its own it is still present. Dismiss it if shown
-  // (idempotent — a no-op when the modal isn't there).
+  // Orgs with no content open on the welcome modal, which covers the main nav.
   cy.get('[data-test="nav-main-menu-item--apps"]', { timeout: 20000 }).should('exist')
   cy.get('body').then(($body) => {
     if ($body.find('#welcome-modal').is(':visible')) {
@@ -65,19 +61,12 @@ Cypress.Commands.add('loginToVoto', () => {
 
 Cypress.Commands.add('switchOrg', (orgName) => {
   cy.wait(700);
-  // Idempotent: if we're already on this org (the footer shows its name), there's nothing
-  // to switch — and the org dropdown won't fire a request, so attempting the switch would
-  // hang. This keeps one spec's failure (leaving the user on the wrong org) from cascading
-  // into the next spec's beforeEach switchOrg.
+  // Switching to the current org fires no request, so waiting for one would hang.
   cy.get('body').then(($body) => {
     if ($body.find('footer').text().includes(orgName)) {
       return
     }
-    // post_switchOrganisation now keeps the same authenticated session (it no longer
-    // logout()/loginUsingId()), so the post-switch session is reliable. Follow the redirect
-    // URL the server returns — exactly what the SPA does (window.location.href = response) —
-    // instead of clearing cookies and logging in again (the old workaround for the session
-    // being clobbered mid-switch).
+    // Follow the redirect URL the server returns, as the SPA does.
     cy.intercept('POST', '**/users/switch-organisation').as('switchOrgRequest')
     cy.get('[data-test="nav-main-menu-item--organisations"]').click({force:true})
     cy.get('div.multiselect__select').click()
