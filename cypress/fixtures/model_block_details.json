@@ -1,0 +1,10 @@
+{
+    "flow_label": "Cypress Model Block Test",
+    "model_input_label": "Cypress AI Question",
+    "simulator_question_1": "What is the capital of Ghana?",
+    "simulator_question_2": "Translate 'hello' to French",
+    "simulator_question_sms": "What is 2 plus 2?",
+    "eval_name": "sentiment",
+    "eval_datatype": "string",
+    "eval_description": "Determine the sentiment of the user input: positive, negative, or neutral"
+}

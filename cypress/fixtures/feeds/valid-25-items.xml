@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <channel>
+    <title>Cypress Podcast — 25 Episodes</title>
+    <link>https://example.com/cypress-podcast</link>
+    <description>Deterministic RSS fixture for the voto5 podcast Cypress suite.</description>
+    <language>en-us</language>
+    <item>
+      <title>Episode 1: Maize planting week 1</title>
+      <description>Advice for smallholder farmers, part 1. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-1</guid>
+      <pubDate>Fri, 02 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 2: Maize planting week 2</title>
+      <description>Advice for smallholder farmers, part 2. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-2</guid>
+      <pubDate>Sat, 03 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 3: Maize planting week 3</title>
+      <description>Advice for smallholder farmers, part 3. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-3</guid>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 4: Maize planting week 4</title>
+      <description>Advice for smallholder farmers, part 4. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-4</guid>
+      <pubDate>Mon, 05 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 5: Maize planting week 5</title>
+      <description>Advice for smallholder farmers, part 5. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-5</guid>
+      <pubDate>Tue, 06 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 6: Maize planting week 6</title>
+      <description>Advice for smallholder farmers, part 6. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-6</guid>
+      <pubDate>Wed, 07 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 7: Maize planting week 7</title>
+      <description>Advice for smallholder farmers, part 7. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-7</guid>
+      <pubDate>Thu, 08 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 8: Maize planting week 8</title>
+      <description>Advice for smallholder farmers, part 8. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-8</guid>
+      <pubDate>Fri, 09 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 9: Maize planting week 9</title>
+      <description>Advice for smallholder farmers, part 9. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-9</guid>
+      <pubDate>Sat, 10 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 10: Maize planting week 10</title>
+      <description>Advice for smallholder farmers, part 10. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-10</guid>
+      <pubDate>Sun, 11 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 11: Maize planting week 11</title>
+      <description>Advice for smallholder farmers, part 11. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-11</guid>
+      <pubDate>Mon, 12 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 12: Maize planting week 12</title>
+      <description>Advice for smallholder farmers, part 12. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-12</guid>
+      <pubDate>Tue, 13 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 13: Maize planting week 13</title>
+      <description>Advice for smallholder farmers, part 13. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-13</guid>
+      <pubDate>Wed, 14 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 14: Maize planting week 14</title>
+      <description>Advice for smallholder farmers, part 14. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-14</guid>
+      <pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 15: Maize planting week 15</title>
+      <description>Advice for smallholder farmers, part 15. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-15</guid>
+      <pubDate>Fri, 16 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 16: Maize planting week 16</title>
+      <description>Advice for smallholder farmers, part 16. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-16</guid>
+      <pubDate>Sat, 17 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 17: Maize planting week 17</title>
+      <description>Advice for smallholder farmers, part 17. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-17</guid>
+      <pubDate>Sun, 18 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 18: Maize planting week 18</title>
+      <description>Advice for smallholder farmers, part 18. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-18</guid>
+      <pubDate>Mon, 19 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 19: Maize planting week 19</title>
+      <description>Advice for smallholder farmers, part 19. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-19</guid>
+      <pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 20: Maize planting week 20</title>
+      <description>Advice for smallholder farmers, part 20. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-20</guid>
+      <pubDate>Wed, 21 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 21: Maize planting week 21</title>
+      <description>Advice for smallholder farmers, part 21. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-21</guid>
+      <pubDate>Thu, 22 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 22: Maize planting week 22</title>
+      <description>Advice for smallholder farmers, part 22. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-22</guid>
+      <pubDate>Fri, 23 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 23: Maize planting week 23</title>
+      <description>Advice for smallholder farmers, part 23. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-23</guid>
+      <pubDate>Sat, 24 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 24: Maize planting week 24</title>
+      <description>Advice for smallholder farmers, part 24. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-24</guid>
+      <pubDate>Sun, 25 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode 25: Maize planting week 25</title>
+      <description>Advice for smallholder farmers, part 25. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-25</guid>
+      <pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+      <enclosure url="__BASE__/audio/podcast-tone-silence.mp3" length="630764" type="audio/mpeg"/>
+    </item>
+  </channel>
+</rss>

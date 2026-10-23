@@ -1,0 +1,28 @@
+{
+  "language": "English",
+  "minDuration": 1,
+  "maxDuration": 2,
+  "feeds": {
+    "many": "valid-25-items.xml",
+    "few": "valid-3-items.xml",
+    "longEpisode": "long-episode.xml",
+    "videoEnclosure": "video-enclosure.xml",
+    "noEnclosure": "no-enclosure.xml",
+    "noPubDate": "no-pubdate.xml",
+    "empty": "zero-items.xml",
+    "malformed": "malformed.xml",
+    "atom": "atom.xml",
+    "noGuid": "no-guid.xml"
+  },
+  "unreachableFeed": "https://feed-that-does-not-resolve.invalid/rss.xml",
+  "errors": {
+    "empty": "The feed contains no episodes.",
+    "malformed": "The feed could not be parsed.",
+    "unreachable": "Could not read the feed at",
+    "duplicate": "A podcast with this RSS feed URL already exists.",
+    "alreadyLinked": "This playlist is already linked to another podcast.",
+    "tooManyEpisodes": "You can select at most 5 episodes to import."
+  },
+  "maxSelectableEpisodes": 5,
+  "episodesPerPage": 20
+}

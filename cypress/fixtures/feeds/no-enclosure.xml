@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <channel>
+    <title>Cypress Podcast — No Audio</title>
+    <link>https://example.com/cypress-podcast</link>
+    <description>Deterministic RSS fixture for the voto5 podcast Cypress suite.</description>
+    <language>en-us</language>
+    <item>
+      <title>Episode 1: Maize planting week 1</title>
+      <description>Advice for smallholder farmers, part 1. Recorded for automated testing.</description>
+      <guid isPermaLink="false">cy-episode-1</guid>
+      <pubDate>Fri, 02 Jan 2026 00:00:00 +0000</pubDate>
+      <itunes:duration>03:30</itunes:duration>
+    </item>
+  </channel>
+</rss>

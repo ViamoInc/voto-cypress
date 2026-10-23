@@ -1,0 +1,19 @@
+{
+    "flow_label": "Cypress Regression Flow",
+    "flow_edited_label": "Cypress Regression Flow Edited",
+    "duplicate_label": "Cypress Duplicate Flow",
+    "message_block_label": "Regression MSG Block",
+    "numeric_block_label": "Regression Numeric Block",
+    "choice_block_label": "Regression Choice Block",
+    "resourceIVR": "Recorded by Cypress",
+    "resourceSMS": "Cypress regression SMS resource",
+    "resourceUSSD": "Cypress regression USSD resource",
+    "minimum": "1",
+    "maximum": "100",
+    "maxiDigit": "3",
+    "choice_1": "Option One",
+    "choice_2": "Option Two",
+    "exits_name": "Regression Exit",
+    "exit_expression": "@block.value = 'test'",
+    "tag_name": "my tag 1"
+}

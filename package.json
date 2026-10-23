@@ -9,7 +9,9 @@
     "cy:verify": "cypress verify",
     "cy:run": "cypress run",
     "cy:smoke": "cypress run --spec 'cypress/e2e/smoke_test/**/*.js'",
-    "cy:regression": "cypress run --spec 'cypress/e2e/regression_test/**/*.js'"
+    "cy:regression": "cypress run --spec 'cypress/e2e/regression_test/**/*.js'",
+    "cy:podcast": "cypress run --spec 'cypress/e2e/regression_test/podcast_regression_test.js'",
+    "cy:podcast-processing": "cypress run --spec 'cypress/e2e/podcast_processing/**/*.js' --env podcastProcessing=true"
   },
   "repository": {
     "type": "git",

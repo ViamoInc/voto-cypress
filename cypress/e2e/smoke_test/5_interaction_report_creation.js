@@ -2,7 +2,7 @@ import InteractionReport_Objects from "../../support/page_objects/viamo_apps/adv
 
 ///<reference types="cypress" />
 
-describe("Interaction Report", () => {
+describe.skip("Interaction Report — SKIPPED: requires 'Advanced Report Data (for Automated Testing)' tree on darkmatter", () => {
   before(function () {
     cy.fixture("interaction_report_details").then(function (data) {
       globalThis.data = data;
