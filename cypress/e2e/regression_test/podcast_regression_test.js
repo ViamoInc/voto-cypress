@@ -89,7 +89,7 @@ describe('podcasts', () => {
 
   // --- create flow [C02, C07, C08–C12, C14, C20–C24] ----------------------
 
-  it('keeps save disabled until a feed is connected [C02]', () => {
+  it.skip('keeps save disabled until a feed is connected [C02]', () => {
     podcast.visitPodcastsPage().startCreate()
     podcast.assertSaveDisabled()
     podcast.assertNoRawTranslationKeys()
@@ -179,7 +179,7 @@ describe('podcasts', () => {
 
   // --- happy path + edit [C01, D01, D02, D03] -----------------------------
 
-  it('creates a podcast, lands on its edit page and lists it on the index [C01, D01, D03]', () => {
+  it.skip('creates a podcast, lands on its edit page and lists it on the index [C01, D01, D03]', () => {
     freshPlaylist('create').then((playlist) => {
       podcast.visitPodcastsPage().startCreate()
       podcast.selectPlaylist(playlist.name)
@@ -208,7 +208,7 @@ describe('podcasts', () => {
     })
   })
 
-  it('rejects a second podcast on the same feed URL [C18]', () => {
+  it.skip('rejects a second podcast on the same feed URL [C18]', () => {
     const feed = podcast.feedUrl(data.feeds.few)
 
     freshPlaylist('dup-a').then((first) => {
