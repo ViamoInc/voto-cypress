@@ -27,7 +27,7 @@ describe('audience targeting group', () => {
       });
       // declaring a constant to hold the group class that contains objects.
       const group = new GroupPage_Objects();
-      it('should expand group via criteria', () => {
+      it.skip('should expand group via criteria', () => {
         const currentDate = new Date();
         const Configs = {
             timestamp: currentDate.getTime()

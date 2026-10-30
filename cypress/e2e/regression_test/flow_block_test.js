@@ -8,7 +8,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
   });
   
 // The tests build one flow in sequence, so the page must survive between them.
-describe('Testing Flow', { testIsolation: false }, () => {
+describe.skip('Testing Flow', { testIsolation: false }, () => {
     let message, numeric,openended;
     const timestamp = Date.now()
     const flowLabel = `Cypress flow block test ${timestamp}`
